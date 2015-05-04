@@ -1,6 +1,4 @@
 Attribute VB_Name = "GroupWorksheet"
-
-
 Sub CheckGroups()
 
 Set mySheet = Worksheets("Notification XML")
@@ -468,7 +466,7 @@ End If
 
 If IsEmpty(mySheet.Range("J" & (rowNum))) Or _
         IsError(mySheet.Range("J" & (rowNum))) Then
-    mySheet.Range("J" & (rowNum)).Value = "PDF"
+    mySheet.Range("J" & (rowNum)).Value = Empty
 ElseIf IsEmpty(mySheet.Range("A" & (rowNum))) Then
     mySheet.Range("J" & (rowNum)) = Empty
 End If
@@ -480,13 +478,13 @@ End If
 'End If
 
 If mySheet.Range("D" & (rowNum)).Value = "DAMAGE" And IsEmpty(mySheet.Range("K" & (rowNum))) Then
-    mySheet.Range("K" & (rowNum)).Value = "MMI"
+    mySheet.Range("K" & (rowNum)).Value = Empty
 ElseIf IsEmpty(mySheet.Range("D" & (rowNum))) Then
     mySheet.Range("K" & (rowNum)) = Empty
 End If
 
 If mySheet.Range("D" & (rowNum)).Value = "NEW_EVENT" And IsEmpty(mySheet.Range("K" & (rowNum))) Then
-    mySheet.Range("K" & (rowNum)).Value = "MMI"
+    mySheet.Range("K" & (rowNum)).Value = Empty
 ElseIf IsEmpty(mySheet.Range("D" & (rowNum))) Then
     mySheet.Range("K" & (rowNum)) = Empty
 End If

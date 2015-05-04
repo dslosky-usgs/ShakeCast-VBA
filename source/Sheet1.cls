@@ -64,7 +64,7 @@ Private Sub Worksheet_Change(ByVal target As Range)
         
         CheckFacilities Me.Range(interCol & target.row)
         
-    ElseIf target.Rows.CountLarge < 1000 Then
+    ElseIf target.Rows.CountLarge < 100 Then
     
     
         If endRow > lastRow Then Exit Sub
@@ -112,7 +112,7 @@ Private Sub Worksheet_Change(ByVal target As Range)
         startRow = Me.Range("A" & TargetLoc(0)).row
         endRow = Me.Range("A" & TargetLoc(1)).row
         
-        If endRow > lastRow Then Exit Sub
+        If endRow > lastRow Then GoTo ExitHandler
         
         If Intersect(Me.Range("N:N"), target) Is Nothing Then
             interCol = "B"
@@ -208,3 +208,7 @@ ExitHandler:
     Application.EnableEvents = True
     
 End Sub
+
+
+
+
