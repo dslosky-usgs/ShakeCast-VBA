@@ -94,3 +94,11 @@ End With
 
 End Sub
 
+Sub SaveCodeModulesWork()
+    SaveCodeModules "C:\Users\dslosky\Documents\stuff\Jobs\Worksheet Optimization\ShakeCast-VBA\source\"
+End Sub
+
+Sub ImportCodeModulesWork()
+    ImportCodeModules "C:\Users\dslosky\Documents\stuff\Jobs\Worksheet Optimization\ShakeCast-VBA\source\"
+End Sub
+

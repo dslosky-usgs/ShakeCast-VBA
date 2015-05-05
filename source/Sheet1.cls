@@ -13,7 +13,7 @@ End Sub
 
 Private Sub Worksheet_Change(ByVal target As Range)
     On Error GoTo ExitHandler
-    If Intersect(target, Me.Range("A:O")) Is Nothing Then Exit Sub
+    If Intersect(target, Me.Range("A:M")) Is Nothing Then Exit Sub
     Application.EnableEvents = False 'to prevent endless loop
     Application.ScreenUpdating = False
 
@@ -28,8 +28,12 @@ Private Sub Worksheet_Change(ByVal target As Range)
     lastRow = Me.Cells(Rows.count, "A").End(xlUp).row
     
     If target.Cells.CountLarge = 1 Then
-    
-        CheckFacilities target
+        
+        If Intersect(Me.Range("M:M"), target) Is Nothing Then
+            CheckFacilities Me.Range("A" & target.row)
+        Else
+            CheckFacilities target
+        End If
         
         ' check for special XML characters
          Application.Run "checkXMLchars", target
@@ -37,9 +41,10 @@ Private Sub Worksheet_Change(ByVal target As Range)
     ElseIf target.Rows.CountLarge = 1 Then
     
         
-        If Intersect(Me.Range("N:N"), target) Is Nothing Then
+        If Intersect(Me.Range("M:M"), target) Is Nothing Then
             interCol = "A"
-        ElseIf Intersect(Me.Range("O:O"), target) Is Nothing And _
+        ElseIf Intersect(Me.Range("N:N"), target) Is Nothing And _
+            Intersect(Me.Range("O:O"), target) Is Nothing And _
             Intersect(Me.Range("P:P"), target) Is Nothing And _
             Intersect(Me.Range("Q:Q"), target) Is Nothing And _
             Intersect(Me.Range("R:R"), target) Is Nothing And _
@@ -53,10 +58,9 @@ Private Sub Worksheet_Change(ByVal target As Range)
             Intersect(Me.Range("Z:Z"), target) Is Nothing And _
             Intersect(Me.Range("AA:AA"), target) Is Nothing And _
             Intersect(Me.Range("AB:AB"), target) Is Nothing And _
-            Intersect(Me.Range("AC:AC"), target) Is Nothing And _
-            Intersect(Me.Range("AD:AD"), target) Is Nothing Then
+            Intersect(Me.Range("AC:AC"), target) Is Nothing Then
 
-            interCol = "N"
+            interCol = "M"
             
         Else
             interCol = "A"
@@ -75,9 +79,10 @@ Private Sub Worksheet_Change(ByVal target As Range)
         endRow = Me.Range("A" & TargetLoc(1)).row
         
         
-        If Intersect(Me.Range("N:N"), target) Is Nothing Then
+        If Intersect(Me.Range("M:M"), target) Is Nothing Then
             interCol = "A"
-        ElseIf Intersect(Me.Range("O:O"), target) Is Nothing And _
+        ElseIf Intersect(Me.Range("N:N"), target) Is Nothing And _
+            Intersect(Me.Range("O:O"), target) Is Nothing And _
             Intersect(Me.Range("P:P"), target) Is Nothing And _
             Intersect(Me.Range("Q:Q"), target) Is Nothing And _
             Intersect(Me.Range("R:R"), target) Is Nothing And _
@@ -91,10 +96,9 @@ Private Sub Worksheet_Change(ByVal target As Range)
             Intersect(Me.Range("Z:Z"), target) Is Nothing And _
             Intersect(Me.Range("AA:AA"), target) Is Nothing And _
             Intersect(Me.Range("AB:AB"), target) Is Nothing And _
-            Intersect(Me.Range("AC:AC"), target) Is Nothing And _
-            Intersect(Me.Range("AD:AD"), target) Is Nothing Then
+            Intersect(Me.Range("AC:AC"), target) Is Nothing Then
 
-            interCol = "N"
+            interCol = "M"
             
         Else
             interCol = "A"
@@ -116,7 +120,8 @@ Private Sub Worksheet_Change(ByVal target As Range)
         
         If Intersect(Me.Range("N:N"), target) Is Nothing Then
             interCol = "B"
-        ElseIf Intersect(Me.Range("O:O"), target) Is Nothing And _
+        ElseIf Intersect(Me.Range("N:N"), target) Is Nothing And _
+            Intersect(Me.Range("O:O"), target) Is Nothing And _
             Intersect(Me.Range("P:P"), target) Is Nothing And _
             Intersect(Me.Range("Q:Q"), target) Is Nothing And _
             Intersect(Me.Range("R:R"), target) Is Nothing And _
@@ -130,10 +135,9 @@ Private Sub Worksheet_Change(ByVal target As Range)
             Intersect(Me.Range("Z:Z"), target) Is Nothing And _
             Intersect(Me.Range("AA:AA"), target) Is Nothing And _
             Intersect(Me.Range("AB:AB"), target) Is Nothing And _
-            Intersect(Me.Range("AC:AC"), target) Is Nothing And _
-            Intersect(Me.Range("AD:AD"), target) Is Nothing Then
+            Intersect(Me.Range("AC:AC"), target) Is Nothing Then
 
-            interCol = "N"
+            interCol = "M"
             
         Else
             interCol = "B"
@@ -191,7 +195,7 @@ Private Sub Worksheet_PivotTableBeforeCommitChanges(ByVal TargetPivotTable As Pi
 End Sub
 
 Private Sub Worksheet_SelectionChange(ByVal target As Range)
-    If Intersect(target, Me.Range("AE:AE")) Is Nothing Then Exit Sub
+    If Intersect(target, Me.Range("AD:AD")) Is Nothing Then Exit Sub
     If target.Cells.CountLarge > 1 Then Exit Sub
     If ActiveCell.row < 4 Then Exit Sub
     Application.EnableEvents = False 'to prevent endless loop
@@ -204,10 +208,12 @@ Private Sub Worksheet_SelectionChange(ByVal target As Range)
 ExitHandler:
 
     
-    Me.ScrollArea = "A:AG"
+    Me.ScrollArea = ""
     Application.EnableEvents = True
     
 End Sub
+
+
 
 
 

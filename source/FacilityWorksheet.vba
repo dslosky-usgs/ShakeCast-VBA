@@ -39,13 +39,13 @@ lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row ' where we stop!
     ' check for no user input
     If WorksheetFunction.CountBlank(mySheet.Range("A" & checkRow, "C" & checkRow)) = 3 And _
             WorksheetFunction.CountBlank(mySheet.Range("F" & checkRow, "H" & checkRow)) = 3 And _
-            WorksheetFunction.CountBlank(mySheet.Range("K" & checkRow, "N" & checkRow)) = 4 Then
+            WorksheetFunction.CountBlank(mySheet.Range("J" & checkRow, "M" & checkRow)) = 4 Then
 
     ' The user input for the row is empty, so lets just clear the row
-        mySheet.Range("A" & checkRow, "AF" & checkRow).Clear
-        mySheet.Range("A" & checkRow, "AF" & checkRow).Locked = False
+        mySheet.Range("A" & checkRow, "AE" & checkRow).Clear
+        mySheet.Range("A" & checkRow, "AE" & checkRow).Locked = False
         
-        ChangeColors "Good", mySheet.Range("A" & checkRow, "AE" & checkRow), "Facility"
+        ChangeColors "Good", mySheet.Range("A" & checkRow, "AD" & checkRow), "Facility"
         
         GoTo NextRow
     
@@ -53,28 +53,28 @@ lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row ' where we stop!
     ElseIf IsEmpty(mySheet.Range("A" & checkRow)) Or _
             IsEmpty(mySheet.Range("B" & checkRow)) Or _
             IsEmpty(mySheet.Range("F" & checkRow)) Or _
-            IsEmpty(mySheet.Range("K" & checkRow)) Or _
-            IsEmpty(mySheet.Range("L" & checkRow)) Then
+            IsEmpty(mySheet.Range("J" & checkRow)) Or _
+            IsEmpty(mySheet.Range("K" & checkRow)) Then
 
-        ChangeColors "Bad", mySheet.Range("A" & checkRow, "AE" & checkRow), "Facility"
+        ChangeColors "Bad", mySheet.Range("A" & checkRow, "AD" & checkRow), "Facility"
         
-        mySheet.Range("AF" & checkRow).Value = "Bad"
+        mySheet.Range("AE" & checkRow).Value = "Bad"
         
     ' otherwise the row is good!
     Else
         ' all the required fields are filled
         ChangeColors "Good", mySheet.Range("A" & checkRow, "AE" & checkRow), "Facility"
-        mySheet.Range("AF" & checkRow).Value = "Good"
+        mySheet.Range("AE" & checkRow).Value = "Good"
     End If
 
 
     ' change HAZUS info when column 14 is altered
-    If target.column = 14 Then
+    If target.column = 13 Then
         Application.Run "fillHazus", target
     End If
     
     ' make drop down data validation when the facility ID is completed, but not above row 5000 to avoid breaking software
-    If target.column = 1 And target.row < 5000 Then
+    If target.column = 1 Then
         Application.Run "facDropDowns", target
     End If
     
@@ -87,12 +87,12 @@ NextRow:
 
     If WorksheetFunction.CountBlank(mySheet.Range("A" & checkRow, "C" & checkRow)) = 3 And _
             WorksheetFunction.CountBlank(mySheet.Range("F" & checkRow, "H" & checkRow)) = 3 And _
-            WorksheetFunction.CountBlank(mySheet.Range("K" & checkRow, "N" & checkRow)) = 4 Then
+            WorksheetFunction.CountBlank(mySheet.Range("J" & checkRow, "M" & checkRow)) = 4 Then
 
 
         ' The user input for the row is empty, so lets just clear the row
-        mySheet.Range("A" & checkRow, "AF" & checkRow).Clear
-        mySheet.Range("A" & checkRow, "AF" & checkRow).Locked = False
+        mySheet.Range("A" & checkRow, "AE" & checkRow).Clear
+        mySheet.Range("A" & checkRow, "AE" & checkRow).Locked = False
 
         ChangeColors "Good", mySheet.Range("A" & checkRow, "AE" & checkRow), "Facility"
     End If
@@ -115,13 +115,14 @@ Set mySheet = Worksheets("Facility XML")
 
 ' Fill info that user will not edit
 mySheet.Range("C" & checkRow).Value = FillFacility(mySheet.Range("B" & checkRow), mySheet.Range("C" & checkRow))
-mySheet.Range("J" & checkRow).Value = ManLatLong(mySheet.Range("K" & checkRow), mySheet.Range("L" & checkRow))
-mySheet.Range("I" & checkRow).Value = GeomType(mySheet.Range("J" & checkRow))
+' mySheet.Range("J" & checkRow).Value = ManLatLong(mySheet.Range("K" & checkRow), mySheet.Range("L" & checkRow))
+' mySheet.Range("I" & checkRow).Value = GeomType(mySheet.Range("J" & checkRow))
+mySheet.Range("I" & checkRow).Value = GeomType(ManLatLong(mySheet.Range("J" & checkRow), mySheet.Range("K" & checkRow)))
 
+mySheet.Range("J" & checkRow).HorizontalAlignment = xlCenter
 mySheet.Range("K" & checkRow).HorizontalAlignment = xlCenter
-mySheet.Range("L" & checkRow).HorizontalAlignment = xlCenter
 
-
+' fill component and component class if left empty
 If IsEmpty(mySheet.Range("D" & checkRow)) And Not IsEmpty(mySheet.Range("A" & checkRow)) Then
     mySheet.Range("D" & checkRow).Value = FillSystem(mySheet.Range("A1"))
 ElseIf IsEmpty(mySheet.Range("A" & checkRow)) Then
@@ -150,7 +151,7 @@ checkRow = target.row
     
     If IsEmpty(target) Then
     
-        mySheet.Range("O" & checkRow, "AD" & checkRow).ClearContents
+        mySheet.Range("N" & checkRow, "AC" & checkRow).ClearContents
         Exit Sub
     End If
     Set hazSheet = Worksheets("HAZUS Facility Model Data")
@@ -161,11 +162,11 @@ checkRow = target.row
     For Each hazMod In hazSheet.Range("A1:A" & lastHazRow)
     
         If target.Value = hazMod.Value Then
-            mySheet.Range("O" & checkRow).Value = hazSheet.Range("B" & hazMod.row).Value
-            mySheet.Range("P" & checkRow, "AD" & checkRow).Value = hazSheet.Range("F" & hazMod.row, "T" & hazMod.row).Value
+            mySheet.Range("N" & checkRow).Value = hazSheet.Range("B" & hazMod.row).Value
+            mySheet.Range("O" & checkRow, "AC" & checkRow).Value = hazSheet.Range("F" & hazMod.row, "T" & hazMod.row).Value
         
-            mySheet.Range("O" & checkRow).HorizontalAlignment = xlCenter
-            mySheet.Range("P" & checkRow, "AD" & checkRow).HorizontalAlignment = xlCenter
+            ' mySheet.Range("O" & checkRow).HorizontalAlignment = xlCenter
+            mySheet.Range("N" & checkRow, "AC" & checkRow).HorizontalAlignment = xlCenter
         
             Exit Sub
         End If
@@ -188,7 +189,7 @@ Set mySheet = Worksheets("Facility XML")
 
 ' create User Type and Group drop down menus
 Set FacType = mySheet.Range("B" & checkRow)
-Set ModType = mySheet.Range("N" & checkRow)
+Set ModType = mySheet.Range("M" & checkRow)
 
 Dim FacTypes() As String
 Dim ModTypes() As String
@@ -955,7 +956,7 @@ Do While FacRow < endRow + 1
     
 '    ' check facilities on export
 '    If FacRow > 3 And (Application.WorksheetFunction.CountBlank(FacSheet.Range(RowRange1, RowRange2)) > 0 Or _
-'            FacSheet.Range("AF" & FacRow) = "Bad") Then
+'            FacSheet.Range("AE" & FacRow) = "Bad") Then
 '        CheckFacilities FacRow
 '    End If
     If Application.WorksheetFunction.CountBlank(Range(RowRange1, RowRange2)) = 31 Then
@@ -966,14 +967,14 @@ Do While FacRow < endRow + 1
     ElseIf IsEmpty(FacSheet.Range("A" & FacRow)) Or _
         IsEmpty(FacSheet.Range("B" & FacRow)) Or _
         IsEmpty(FacSheet.Range("F" & FacRow)) Or _
-        IsEmpty(FacSheet.Range("K" & FacRow)) Or _
-        IsEmpty(FacSheet.Range("L" & FacRow)) Then
+        IsEmpty(FacSheet.Range("J" & FacRow)) Or _
+        IsEmpty(FacSheet.Range("K" & FacRow)) Then
             
             ' Count the number of facilities that will be rejected
             xmlNums(1) = xmlNums(1) + 1
             
-            If FacSheet.Range("AF" & FacRow).Value <> "bad" Then
-                FacSheet.Range("AF" & FacRow).Value = "bad"
+            If FacSheet.Range("AE" & FacRow).Value <> "bad" Then
+                FacSheet.Range("AE" & FacRow).Value = "bad"
                 ChangeColors "Bad", Range(RowRange1, RowRange2), "Facility"
             End If
             
@@ -982,7 +983,7 @@ Do While FacRow < endRow + 1
             GoTo ContinueLoop
         ' A row with zero attempted fields is unattempted, so we don't need to highlight it
 
-'    ElseIf IsEmpty(FacSheet.Range("AF" & FacRow)) Then
+'    ElseIf IsEmpty(FacSheet.Range("AE" & FacRow)) Then
 '        GoTo ContinueLoop
     End If
 
@@ -998,9 +999,10 @@ Do While FacRow < endRow + 1
 
     ' copy data from Facility Sheet to the XML table
     XMLSheet.Range("A" & XMLrow, "B" & XMLrow).Value = FacSheet.Range("A" & FacRow, "B" & FacRow).Value
-    XMLSheet.Range("C" & XMLrow, "I" & XMLrow).Value = FacSheet.Range("D" & FacRow, "J" & FacRow).Value
-    XMLSheet.Range("J" & XMLrow, "K" & XMLrow).Value = FacSheet.Range("M" & FacRow, "N" & FacRow).Value
-    XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).Value = FacSheet.Range("P" & FacRow, "AE" & FacRow).Value
+    XMLSheet.Range("C" & XMLrow, "H" & XMLrow).Value = FacSheet.Range("D" & FacRow, "I" & FacRow).Value
+    XMLSheet.Range("I" & XMLrow).Value = ManLatLong(FacSheet.Range("J4"), FacSheet.Range("K4"))
+    XMLSheet.Range("J" & XMLrow, "K" & XMLrow).Value = FacSheet.Range("L" & FacRow, "M" & FacRow).Value
+    XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).Value = FacSheet.Range("O" & FacRow, "AD" & FacRow).Value
             
     
     XMLrow = XMLrow + 1
@@ -1101,15 +1103,15 @@ End Function
 '' GEOM_TYPE for the XML file
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function GeomType(LatLon As Range)
+Function GeomType(LatLon As String)
 
 ' If there are no new lines in the input string, then there is only one specified point
-If IsEmpty(LatLon) Or IsError(LatLon) Or LatLon.Value = "" Then
+If LatLon = "" Or InStr(LatLon, "ERROR") = 1 Then
 
     GeomType = ""
     Exit Function
     
-ElseIf InStr(LatLon.Value, " ") = 0 Then
+ElseIf InStr(LatLon, " ") = 0 Then
     GeomType = "POINT"
     
     Exit Function
@@ -1117,7 +1119,7 @@ ElseIf InStr(LatLon.Value, " ") = 0 Then
 ' Otherwise, we have to break up the string to find out how many points have been specified
 Else
     Dim LatLonArr As Variant
-    LatLonArr = Split(LatLon.Value, " ")
+    LatLonArr = Split(LatLon, " ")
     
     Dim Lats As Variant
     Dim Longs As Variant
@@ -1138,6 +1140,7 @@ End If
 If UBound(LatLonArr) > 0 And UBound(LatLonArr) <= 2 Then
     GeomType = "POLYLINE"
     
+    Exit Function
 ' Check for the special case of a rectangle
 ElseIf UBound(LatLonArr) = 4 And (StrComp(Lats(0), Lats(UBound(Lats))) = 0 And _
         StrComp(Longs(0), Longs(UBound(Longs)) = 0)) Then
@@ -1154,10 +1157,15 @@ ElseIf UBound(LatLonArr) = 4 And (StrComp(Lats(0), Lats(UBound(Lats))) = 0 And _
        ((StrComp(Lats(2), Lats(1)) = 0 And StrComp(Longs(2), Longs(3)) = 0) Or _
        (StrComp(Lats(2), Lats(3)) = 0 And StrComp(Longs(2), Longs(1)) = 0)) Then
        
-        GeomType = "RECTANGLE"
+        ' don't support rectangle anymore
+        ' GeomType = "RECTANGLE"
+        GeomType = "POLYGON"
         
+        Exit Function
     Else
         GeomType = "POLYGON"
+        
+        Exit Function
         
     End If
     
@@ -1166,12 +1174,15 @@ ElseIf UBound(LatLonArr) > 2 And (StrComp(Lats(0), Lats(UBound(Lats))) = 0 And _
         StrComp(Longs(0), Longs(UBound(Longs)) = 0)) Then
     
     GeomType = "POLYGON"
+    Exit Function
     
 Else
     GeomType = "POLYLINE"
+    Exit Function
     
 End If
 
+GeomType = ""
 
 End Function
 
@@ -1281,7 +1292,7 @@ Dim LatArray As Variant    ' Array of latitude rows
 Dim LongArray As Variant   ' Array of longitude rows
 Dim printStr As String
  
-If IsEmpty(LatCell) Or IsEmpty(LongCell) Or IsError(LatCell) Or IsError(LongCell) Or LatCell.Value = Empty Or LongCell.Value = Empty Then
+If IsEmpty(LatCell) Or IsEmpty(LongCell) Or IsError(LatCell) Or IsError(LongCell) Then
     ManLatLong = ""
     Exit Function
     
@@ -1311,6 +1322,8 @@ End If
 ' Check that the latitude and longitude inputs have the same amount of rows
 If LatRows > LongRows Or LatRows < LongRows Then
     ManLatLong = "ERROR: CHECK LAT LONG"
+    MsgBox "Error: IT looks like your latitude and longitude in row " & LatCell.row & " doesn't make sense! " & _
+        "Check to make sure you have the same number of latitude and longitude entries."
     Exit Function
     
 ElseIf LatRows = 1 And LongRows = 1 Then
@@ -1561,10 +1574,10 @@ Sub UpdateFacButton()
     startRow = 4
     startCol = 1
     
-    If FacSheet.Cells(Rows.count, "A").End(xlUp).row > FacSheet.Cells(Rows.count, "AF").End(xlUp).row Then
+    If FacSheet.Cells(Rows.count, "A").End(xlUp).row > FacSheet.Cells(Rows.count, "AE").End(xlUp).row Then
         endRow = FacSheet.Cells(Rows.count, "A").End(xlUp).row
     Else
-        endRow = FacSheet.Cells(Rows.count, "AF").End(xlUp).row
+        endRow = FacSheet.Cells(Rows.count, "AE").End(xlUp).row
     End If
     
     endCol = 30
@@ -1631,7 +1644,7 @@ Private Sub facilityUnlock()
     
     startRow = 4
     startCol = "A"
-    endCol = "AF"
+    endCol = "AE"
     
     endRow = mySheet.Cells(Rows.count, "A").End(xlUp).row
     

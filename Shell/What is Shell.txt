@@ -1,0 +1,2 @@
+This workbook is used for distribution. When the VBA is ready for distribution, import new all VBA into this workbook and send it out. If changes are made to the actual worksheets,
+a new shell should be created.

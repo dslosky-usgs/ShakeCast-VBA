@@ -21,7 +21,6 @@ Private Sub Workbook_Activate()
         Worksheets("Welcome").Range("Z200").Activate
     End If
 
-    
 End Sub
 
 Private Sub Workbook_BeforeClose(Cancel As Boolean)
@@ -62,5 +61,6 @@ Private Sub Workbook_Open()
     Application.EnableEvents = True
     
 End Sub
+
 
 

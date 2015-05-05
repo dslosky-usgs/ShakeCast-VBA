@@ -54,6 +54,8 @@ ExitHandler:
     Application.ScreenUpdating = False
     Application.EnableEvents = True
     Me.ScrollArea = ""
+    
+    
 End Sub
 
 Private Sub Worksheet_SelectionChange(ByVal target As Range)
@@ -81,5 +83,6 @@ ExitHandler:
     Application.EnableEvents = True
 
 End Sub
+
 
 

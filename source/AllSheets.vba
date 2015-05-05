@@ -304,42 +304,42 @@ ElseIf GoodBad = "Good" And whichSheet = "Facility" Then
          .Color = RGB(218, 238, 243)
     End With
             
-    Set ColorCells = mySheet.Range("I" & rowNum, "M" & rowNum)
+    Set ColorCells = mySheet.Range("I" & rowNum, "L" & rowNum)
     With ColorCells.Interior
         .Color = RGB(235, 241, 222)
     End With
         
-    Set ColorCells = mySheet.Range("N" & rowNum, "O" & rowNum)
+    Set ColorCells = mySheet.Range("M" & rowNum, "N" & rowNum)
     With ColorCells.Interior
         .Color = RGB(191, 191, 191)
     End With
     
-    Set ColorCells = mySheet.Range("P" & rowNum, "R" & rowNum)
+    Set ColorCells = mySheet.Range("O" & rowNum, "Q" & rowNum)
     With ColorCells.Interior
         .Color = RGB(0, 176, 80)
     End With
     
-    Set ColorCells = mySheet.Range("S" & rowNum, "U" & rowNum)
+    Set ColorCells = mySheet.Range("R" & rowNum, "T" & rowNum)
     With ColorCells.Interior
         .Color = RGB(255, 255, 0)
     End With
     
-    Set ColorCells = mySheet.Range("V" & rowNum, "X" & rowNum)
+    Set ColorCells = mySheet.Range("U" & rowNum, "W" & rowNum)
     With ColorCells.Interior
         .Color = RGB(255, 192, 0)
     End With
     
-    Set ColorCells = mySheet.Range("Y" & rowNum, "AA" & rowNum)
+    Set ColorCells = mySheet.Range("X" & rowNum, "Z" & rowNum)
     With ColorCells.Interior
         .Color = RGB(255, 0, 0)
     End With
     
-    Set ColorCells = mySheet.Range("AB" & rowNum, "AD" & rowNum)
+    Set ColorCells = mySheet.Range("AA" & rowNum, "AC" & rowNum)
     With ColorCells.Interior
         .Color = RGB(242, 242, 242)
     End With
     
-    Set ColorCells = mySheet.Range("AE" & rowNum, "AE" & rowNum)
+    Set ColorCells = mySheet.Range("AD" & rowNum, "AD" & rowNum)
     With ColorCells.Interior
         .Color = RGB(221, 217, 196)
     End With

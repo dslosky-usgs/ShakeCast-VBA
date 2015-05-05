@@ -15,6 +15,7 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
 
+
 Private Sub ACText_BeforeUpdate(ByVal Cancel As MSForms.ReturnBoolean)
 
 End Sub
