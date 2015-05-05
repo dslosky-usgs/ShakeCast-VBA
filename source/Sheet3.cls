@@ -20,6 +20,10 @@ Private Sub Worksheet_Change(ByVal target As Range)
     
 On Error GoTo ExitHandler
 
+Dim TargetLoc() As String
+Dim startRow As Integer
+Dim endRow As Integer
+
 If target.Cells.count = 1 Then
 
     CheckUsers target.row
@@ -27,24 +31,66 @@ If target.Cells.count = 1 Then
     ' check for special XML characters
      Application.Run "checkXMLchars", target
      
-Else
+ElseIf target.Rows.count = 1 Then
 
-    Dim TargetLoc() As String
-    Dim startRow As Integer
-    Dim endRow As Integer
-    
+    CheckUsers target.row
+
+ElseIf target.Rows.count < 100 Then
     TargetLoc = Split(target.Address(False, False), ":")
-    startRow = Me.Range(TargetLoc(0)).row
-    endRow = Me.Range(TargetLoc(1)).row
+    startRow = Me.Range("A" & TargetLoc(0)).row
+    endRow = Me.Range("A" & TargetLoc(1)).row
     
     For row = startRow To endRow
     
         CheckUsers row
     
     Next row
-
+    
+Else
+    
+    TargetLoc = Split(target.Address(False, False), ":")
+    startRow = Me.Range("A" & TargetLoc(0)).row
+    endRow = Me.Range("A" & TargetLoc(1)).row
+    
+    ' set up progress bar
+    Dim progressCount As Long
+    Dim progressWhen As Long
+    Dim pcntDone As Double
+   
+    progressCount = 0
+    progressWhen = (endRow - startRow) * 0.01
+    pcntDone = 0
+    ProgressForm.ProcessName.Caption = "Updating Worksheet"
+    ProgressForm.ProgressLabel.Width = 0
+   
+    ProgressForm.Show vbModeless
+   
+    For row = startRow To endRow
+   
+        CheckUsers row
+       
+        If progressCount > progressWhen Then
+       
+            pcntDone = ((row - startRow - 4) / (endRow - startRow - 3))
+           
+            ProgressForm.ProgressLabel.Width = pcntDone * ProgressForm.MaxWidth.Caption
+            ProgressForm.ProgressFrame.Caption = Round(pcntDone * 100, 0) & "%"
+           
+            DoEvents
+            progressCount = 0
+       
+        End If
+       
+        progressCount = progressCount + 1
+   
+    Next row
+   
+   
+    Unload ProgressForm
 
 End If
+
+
 
 
 
@@ -54,7 +100,7 @@ ExitHandler:
     Application.ScreenUpdating = False
     Application.EnableEvents = True
     Me.ScrollArea = ""
-    
+    Application.Run (protectWorkbook)
     
 End Sub
 

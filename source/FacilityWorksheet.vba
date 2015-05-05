@@ -1659,13 +1659,6 @@ Sub OptionsButton()
 
 End Sub
 
-Private Sub afterPaste(startRow As Integer, _
-                        endRow As Long, _
-                        iterCol As String)
-                        
-                        
-                        
-End Sub
 
 Private Sub FacSheetInfo()
 

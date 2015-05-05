@@ -626,8 +626,6 @@ Private Sub protectWorkbook()
 
     Next Sheet
 
-    Application.EnableEvents = True
-
 End Sub
 
 Private Sub clearSheet()
@@ -638,7 +636,7 @@ Dim endRow As Long
 startRow = 5
 endRow = 5
 ' A AF N K are the letters where each row is defined and evaluated for all worksheets
-For Each letter In Split("A,AF,N,K", ",")
+For Each letter In Split("A,AE,N,K", ",")
     
     If ActiveSheet.Cells(Rows.count, letter).End(xlUp).row > endRow Then
         endRow = ActiveSheet.Cells(Rows.count, letter).End(xlUp).row + 1
