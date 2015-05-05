@@ -100,6 +100,11 @@ Sub FillUserInfo(ByVal checkRow As Integer)
 Set mySheet = Worksheets("User XML")
 Set groupSheet = Worksheets("Notification XML")
 
+
+
+mySheet.Unprotect
+' Fill delivery information
+
 ' PAGER
 If IsEmpty(mySheet.Range("H" & checkRow)) Then
     mySheet.Range("H" & checkRow).Value = mySheet.Range("E" & checkRow).Value
@@ -211,6 +216,8 @@ Else
     GroupName.Value = Empty
 End If
 
+
+Application.Run "protectWorkbook"
 End Sub
 
 
@@ -1033,10 +1040,8 @@ UserRow = UserRow + 1
     
 Loop
 
-ProgressForm.ProgressLabel.Width = ProgressForm.MaxWidth.Caption
-ProgressForm.ProgressFrame.Caption = "100" & "%"
-
-Unload ProgressForm
+mySheet.ScrollArea = "A:L"
+Application.EnableEvents = True
 
 End Sub
 

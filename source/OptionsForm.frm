@@ -149,7 +149,7 @@ ElseIf Me.OptionCombo.Value = "Access General User Worksheet" Then
         ' hide Component and Component Class
         ' hide geometry info
         
-        Range("D:E, I:I, AE:AE").EntireColumn.Hidden = True
+        Range("D:E, I:I, AD:AD").EntireColumn.Hidden = True
         
         
         
@@ -241,7 +241,7 @@ ElseIf Me.OptionCombo.Value = "Access Advanced User Worksheet" Then
         ' Unhide Component and Component Class
         ' Unhide geometry info
     
-        Range("D:E, I:I, AE:AE").EntireColumn.Hidden = False
+        Range("D:E, I:I, AD:AD").EntireColumn.Hidden = False
     
         ' Change the color of the headers
     
