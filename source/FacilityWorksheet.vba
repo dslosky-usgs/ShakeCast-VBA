@@ -1574,10 +1574,10 @@ Sub UpdateFacButton()
     startRow = 4
     startCol = 1
     
-    If FacSheet.Cells(Rows.count, "A").End(xlUp).row > FacSheet.Cells(Rows.count, "AE").End(xlUp).row Then
+    If FacSheet.Cells(Rows.count, "A").End(xlUp).row > FacSheet.Cells(Rows.count, "AD").End(xlUp).row Then
         endRow = FacSheet.Cells(Rows.count, "A").End(xlUp).row
     Else
-        endRow = FacSheet.Cells(Rows.count, "AE").End(xlUp).row
+        endRow = FacSheet.Cells(Rows.count, "AD").End(xlUp).row
     End If
     
     endCol = 30
@@ -1610,8 +1610,8 @@ Sub UpdateFacButton()
             
         End If
     
-        If WorksheetFunction.CountBlank(FacSheet.Range("O" & FacRow, "AD" & FacRow)) = 16 Then
-            CheckFacilities FacSheet.Range("N" & FacRow)
+        If WorksheetFunction.CountBlank(FacSheet.Range("N" & FacRow, "AC" & FacRow)) = 16 Then
+            CheckFacilities FacSheet.Range("M" & FacRow)
         Else
             CheckFacilities FacSheet.Range("B" & FacRow)
         End If

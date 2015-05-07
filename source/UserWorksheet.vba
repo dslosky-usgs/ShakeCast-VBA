@@ -1117,7 +1117,15 @@ If blankCount > 10 Then GoTo QuitGroupLoop
 Next groupCell
 QuitGroupLoop:
 
-
+' get the groups from the current cell
+Dim selGroups() As String
+If InStr(ActiveCell.Value, ":") Then
+    selGroups = Split(ActiveCell.Value, ":")
+Else
+    ReDim selGroups(0 To 0) As String
+    selGroups(0) = ActiveCell.Value
+    
+End If
 
 ' turn list into check boxes
 Dim curColumn   As Long
@@ -1140,10 +1148,11 @@ For i = 0 To UBound(GroupNames)
     chkBox.Caption = GroupNames(i)
     chkBox.Left = 5
     chkBox.Top = 5 + (i * 20 - a * 20)
+    chkBox.Font.Size = 12
     chkBox.AutoSize = True
     
     ' select the right checkboxes
-    If InStr(ActiveCell.Value, GroupNames(i)) Then
+    If InArray(selGroups, GroupNames(i)) Then
         chkBox.Value = True
     End If
     

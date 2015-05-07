@@ -112,9 +112,6 @@ Private Sub Worksheet_SelectionChange(ByVal target As Range)
         
         Application.EnableEvents = False 'to prevent endless loop
     
-        
-    
-        Application.Run "makeGroupChecklist"
         GroupCheckBox.Show
         'ActiveCell.Offset(0, 1).Select
         
@@ -129,6 +126,7 @@ ExitHandler:
     Application.EnableEvents = True
 
 End Sub
+
 
 
 
