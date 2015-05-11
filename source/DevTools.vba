@@ -2,21 +2,21 @@ Attribute VB_Name = "DevTools"
 Sub SaveCodeModules(dir As String)
 
 'This code Exports all VBA modules
-Dim i%, sName$
+Dim moduleName As String
 Dim vbaType As Integer
 
 With ThisWorkbook.VBProject
-    For i% = 1 To .VBComponents.count
-        If .VBComponents(i%).CodeModule.CountOfLines > 0 Then
-            sName$ = .VBComponents(i%).CodeModule.Name
-            vbaType = .VBComponents(i%).Type
+    For i = 1 To .VBComponents.count
+        If .VBComponents(i).CodeModule.CountOfLines > 0 Then
+            moduleName = .VBComponents(i).CodeModule.Name
+            vbaType = .VBComponents(i).Type
             
             If vbaType = 1 Then
-                .VBComponents(i%).Export dir & sName$ & ".vba"
+                .VBComponents(i).Export dir & moduleName & ".vba"
             ElseIf vbaType = 3 Then
-                .VBComponents(i%).Export dir & sName$ & ".frm"
+                .VBComponents(i).Export dir & moduleName & ".frm"
             ElseIf vbaType = 100 Then
-                .VBComponents(i%).Export dir & sName$ & ".cls"
+                .VBComponents(i).Export dir & moduleName & ".cls"
             End If
             
         End If
@@ -31,10 +31,8 @@ Dim modList(0 To 0) As String
 Dim vbaType As Integer
 
 With ThisWorkbook.VBProject
-    'For i% = 1 To .VBComponents.count
     For Each comp In .VBComponents
     
-        'modulename = .VBComponents(i%).CodeModule.Name
         moduleName = comp.CodeModule.Name
         
         vbaType = .VBComponents(moduleName).Type
@@ -46,7 +44,10 @@ With ThisWorkbook.VBProject
                 .VBComponents.Remove .VBComponents(moduleName)
                 
             ElseIf vbaType = 100 Then
+            
+                ' we can't simply delete these objects, so instead we empty them
                 .VBComponents(moduleName).CodeModule.DeleteLines 1, .VBComponents(moduleName).CodeModule.CountOfLines
+            
             End If
         End If
     Next comp
@@ -54,34 +55,42 @@ End With
 
 ' make a list of files in the target directory
 Set FSO = CreateObject("Scripting.FileSystemObject")
-Set dirContents = FSO.getfolder(dir)
+Set dirContents = FSO.getfolder(dir) ' figure out what is in the directory we're importing
 
 With ThisWorkbook.VBProject
     For Each moduleName In dirContents.Files
 
+        ' I don't want to import the module this script is in
         If moduleName.Name <> "DevTools.vba" Then
+        
+            ' if the current code is a module or form
             If Right(moduleName.Name, 4) = ".vba" Or _
                 Right(moduleName.Name, 4) = ".frm" Then
+                
+                ' just import it normally
                 .VBComponents.Import dir & moduleName.Name
                 
+            ' if the current code is a microsoft excel object
             ElseIf Right(moduleName.Name, 4) = ".cls" Then
-                Dim r As Integer
+                Dim count As Integer
                 Dim fullmoduleString As String
                 Open moduleName.Path For Input As #1
                 
-                r = 0
-                fullmoduleString = ""
-                Do Until EOF(1)
-                    Line Input #1, moduleString
-                    If r > 8 Then
-                        If Right(moduleString, 1) = "_" Then
-                            fullmoduleString = fullmoduleString & moduleString & vbNewLine
-                        Else
-                            fullmoduleString = fullmoduleString & moduleString & vbNewLine
-                        End If
+                count = 0              ' count which line we're on
+                fullmoduleString = ""  ' build the string we want to put into the MEO
+                Do Until EOF(1)        ' loop through all the lines in the file
+                    
+                    Line Input #1, moduleString  ' the current line is moduleString
+                    If count > 8 Then            ' skip the junk at the top of the file
+                        
+                        ' append the current line `to the string we'll insert into the MEO
+                        fullmoduleString = fullmoduleString & moduleString & vbNewLine
+                        
                     End If
-                    r = r + 1
+                    count = count + 1
                 Loop
+                
+                ' insert the lines into the MEO
                 .VBComponents(Replace(moduleName.Name, ".cls", "")).CodeModule.InsertLines .VBComponents(Replace(moduleName.Name, ".cls", "")).CodeModule.CountOfLines + 1, fullmoduleString
                         
                 Close #1
