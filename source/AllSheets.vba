@@ -1,4 +1,127 @@
 Attribute VB_Name = "AllSheets"
+Private Sub importCSV(csvFile As String)
+    Application.EnableEvents = False
+    Application.ScreenUpdating = False
+    On Error GoTo ExitHandler
+    
+    Open csvFile For Input As #1
+    
+    Dim count As Integer        ' Count how many lines we're importing
+    Dim headCount As Integer    ' Counts the number of headers
+    Dim sheetName As String     ' used to make sure we pipe information the right way
+    Dim rowNum As Integer       ' keeps track of where we are in the worksheet
+    Dim fields As String        ' this is where we will store the fields for each worksheet
+    Dim lineArr() As String     ' used to read the csv one line at a time
+    Dim replace As String       ' used to replace the comma delimeter
+    Dim newStr As String        ' we use this to build a new csvLine without comma delimeters
+    
+    headCount = 0
+    count = 0
+    replace = "on"
+    
+    Do Until EOF(1)
+        Line Input #1, csvLine
+            
+        newStr = ""
+        ' replace comma delimeter to something more exotic
+        For i = 1 To Len(csvLine)
+        
+            If Mid(csvLine, i, 1) = """" And replace = "on" Then
+                replace = "off"
+            ElseIf Mid(csvLine, i, 1) = """" And replace = "off" Then
+                replace = "on"
+            End If
+            
+            
+            If replace = "on" And Mid(csvLine, i, 1) = "," Then
+                newStr = newStr & ":*$*:"
+            Else
+                newStr = newStr & Mid(csvLine, i, 1)
+            End If
+        
+        Next i
+        
+        ' store CSV info in an array
+        lineArr = Split(newStr, ":*$*:")
+        
+            '''''''''''''''' Create column association with the first row '''''''''''''
+            
+        If count = 0 Then
+        
+            Dim sheetHead() As String
+        
+            ' determine which worksheet we're dealing with
+            If InArray(lineArr, "EXTERNAL_FACILITY_ID") Then
+                sheetName = "Facility XML"
+                fields = "EXTERNAL_FACILITY_ID,FACILITY_TYPE,space,COMPONENT_CLASS,COMPONENT,FACILITY_NAME,DESCRIPTION,SHORT_NAME,GEOM_TYPE,GEOM,space,space,GEOM:DESCRIPTION,HAZUS,space,METRIC:MMI:GREEN,space,space,METRIC:MMI:YELLOW,space,space,METRIC:MMI:ORANGE,space,space,METRIC:MMI:RED"
+                
+            ElseIf InArray(lineArr, "POLY") Then
+                sheetName = "Notification XML"
+                fields = "GROUP_NAME,FACILITY_TYPE,POLY,NOTIFICATION_TYPE,DAMAGE_LEVEL,LIMIT_VALUE,EVENT_TYPE,DELIVERY_METHOD,MESSAGE_FORMAT,PRODUCT_TYPE,METRIC,AGGREGATE,AGGREGATE_GROUP"
+            
+            ElseIf InArray(lineArr, "USERNAME") Then
+                sheetName = "User XML"
+                Field = "USERNAME,USER_TYPE,PASSWORD,FULL_NAME,EMAIL_ADDRESS,PHONE_NUMBER,GROUP,EMAIL_HTML,EMAIL_TEXT,EMAIL_PAGER"
+                
+            Else
+                MsgBox "ERROR: MISSING HEADERS"
+                GoTo ExitHandler
+            End If
+            
+            ' set up info for worksheet
+            Set mySheet = Worksheets(sheetName)
+            
+            Dim sheetHeads() As String
+            sheetHeads = Split(fields, ",")
+            
+            ' create an array to store the column numbers for each
+            Dim colNums() As Variant
+            
+            ' get the start row for our input
+            Dim lastRow As Integer
+            lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row
+            
+            ' make an array of the column numbers associated with the fields in the csv
+            headCount = 0
+            For Each Head In lineArr
+            
+                ReDim Preserve colNums(0 To headCount)
+                colNums(headCount) = ArrayIndex(sheetHeads, Head)
+                
+                headCount = headCount + 1
+            Next Head
+            
+            GoTo NextLine
+        End If
+        
+            ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        ' update the row
+        rowNum = lastRow + count
+        
+        ' get info out of a general info line and into workbook
+        Dim lineCount As Integer
+        lineCount = 0
+        
+        For Each arrVal In lineArr
+            If colNums(lineCount) <> -99 Then
+                mySheet.Cells(rowNum, colNums(lineCount) + 1) = arrVal
+            End If
+            lineCount = lineCount + 1
+            
+        Next arrVal
+        
+        
+        
+NextLine:
+        count = count + 1
+    Loop
+    
+ExitHandler:
+    Application.EnableEvents = True
+    Application.ScreenUpdating = True
+    Close #1
+End Sub
+
 '' masterXMLexport
 '' Daniel Slosky
 '' Last Updated: 3/4/2014
@@ -510,9 +633,9 @@ If ErrAdd(1) > 0 Then
                 ' we want to skip it!
                 If ((InStr(cell.Address, "B") Or InStr(cell.Address, "C") Or _
                         InStr(cell.Address, "H")) And _
-                        mySheet.Range("A" & cell.row).Value = mySheet.Range("A" & cell.row - 1).Value) Or _
-                        (InStr(cell.Address, "E") And mySheet.Range("D" & cell.row).Value = "NEW_EVENT") Or _
-                        (InStr(cell.Address, "F") And mySheet.Range("D" & cell.row).Value = "DAMAGE") Or _
+                        mySheet.Range("A" & cell.row).value = mySheet.Range("A" & cell.row - 1).value) Or _
+                        (InStr(cell.Address, "E") And mySheet.Range("D" & cell.row).value = "NEW_EVENT") Or _
+                        (InStr(cell.Address, "F") And mySheet.Range("D" & cell.row).value = "DAMAGE") Or _
                         InStr(cell.Address, "I") Then GoTo NextCell
                         
             
@@ -527,7 +650,7 @@ If ErrAdd(1) > 0 Then
                 
             ElseIf (IsEmpty(cell) Or IsError(cell)) And whichSheet = "User" Then
             
-                If (InStr(cell.Address, "F") And mySheet.Range("B" & cell.row).Value = "USER") Or _
+                If (InStr(cell.Address, "F") And mySheet.Range("B" & cell.row).value = "USER") Or _
                         InStr(cell.Address, "J") Then GoTo NextCell
             
                 If rowCheck < 1 Then
@@ -605,10 +728,57 @@ If Err Then
 End If
 End Function
 
+Function ArrayIndex(ByVal searchArray As Variant, ByVal value As String, Optional multi As Boolean)
+    
+    ' the function returns false if the index was not found
+    ArrayIndex = -99
+    
+    ' test for the start position of the array
+    Dim testIndex As Integer
+    Dim testStr As String
+    Dim count As Integer
+    
+    testIndex = 0
+    
+    On Error Resume Next
+    testStr = searchArray(testIndex)
+    
+    If Err Then
+        count = 1                  ' if there's an error, we know the array starts at 1, not 0
+    Else
+        count = 0
+    End If
+    
+    Dim indexArray() As Variant    ' contains the index for each instance of the search value
+    Dim indexCount As Integer      ' counts the number of instances
+    
+    indexCount = 0
+    
+    For Each arrVal In searchArray
+        
+        If arrVal = value Then
+            If multi = True Then
+            
+                ReDim Preserve indexArray(0 To indexCount)
+                
+                indexArray(indexCount) = count
+                indexCount = indexCount + 1
+                
+                ArrayIndex = indexArray
+            Else
+                ArrayIndex = count
+                Exit Function
+            End If
+        End If
+        
+        count = count + 1
+    Next arrVal
+End Function
+
 Private Sub checkXMLchars(ByVal target As Range)
 
-     For i = 1 To Len(target.Value)
-        If InStr("&", Mid(target.Value, i, 1)) Then
+     For i = 1 To Len(target.value)
+        If InStr("&", Mid(target.value, i, 1)) Then
             MsgBox "WARNING: We have detected an & in this cell. Unless you are using the ampersand as an escape character " & _
                 "this text will not be presented correctly in the ShakeCast application."
                 
@@ -669,7 +839,7 @@ End Sub
 Private Sub progressBar()
 
     Dim process As String
-    process = Worksheets("ShakeCast Ref Lookup Values").Range(Q2).Value
+    process = Worksheets("ShakeCast Ref Lookup Values").Range(Q2).value
 
     If process = "FacilityXML" Then
         Unload OptionsForm

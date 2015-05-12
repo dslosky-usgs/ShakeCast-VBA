@@ -325,42 +325,42 @@ Dim tutRow As Integer
 Dim copyRow As Integer
 Set copySheet = Worksheets("ShakeCast Ref Lookup Values")
 
-If copySheet.Range("A99").Value = "yes" Then
+If copySheet.Range("A99").value = "yes" Then
     Set mySheet = Worksheets("Facility XML")
     tutRow = 4
     copyRow = 100
-    mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).Value = _
-        copySheet.Range("A" & copyRow & ":" & "AF" & copyRow).Value
+    mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).value = _
+        copySheet.Range("A" & copyRow & ":" & "AF" & copyRow).value
     
     copySheet.Rows(copyRow & ":" & copyRow).EntireRow.Clear
     
-    copySheet.Range("A99").Value = "no"
+    copySheet.Range("A99").value = "no"
 End If
 
-If copySheet.Range("A199").Value = "yes" Then
+If copySheet.Range("A199").value = "yes" Then
     Set mySheet = Worksheets("Notification XML")
     tutRow = 4
     copyRow = 200
 
-    mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Value = _
-        copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 9).Value
+    mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).value = _
+        copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 9).value
         
     copySheet.Rows(copyRow & ":" & copyRow + 9).EntireRow.Clear
 
-    copySheet.Range("A199").Value = "no"
+    copySheet.Range("A199").value = "no"
 End If
 
-If copySheet.Range("A299").Value = "yes" Then
+If copySheet.Range("A299").value = "yes" Then
     Set mySheet = Worksheets("User XML")
     tutRow = 4
     copyRow = 300
 
-    mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Value = _
-        copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 1).Value
+    mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).value = _
+        copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 1).value
         
     copySheet.Rows(copyRow & ":" & copyRow + 9).EntireRow.Clear
 
-    copySheet.Range("A299").Value = "no"
+    copySheet.Range("A299").value = "no"
 End If
 
 Worksheets("Welcome").Activate

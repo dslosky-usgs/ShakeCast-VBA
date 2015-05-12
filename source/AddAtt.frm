@@ -32,7 +32,7 @@ If Me.Caption = "Add an Attribute" Then
     Set mySheet = Worksheets("ShakeCast Ref Lookup Values")
     ' get attribute string
     Dim attStr As String
-    attStr = mySheet.Range("P2").Value
+    attStr = mySheet.Range("P2").value
     ' add value to it
     Dim newAttStr As String
     
@@ -49,7 +49,7 @@ If Me.Caption = "Add an Attribute" Then
         End If
     End If
     
-    mySheet.Range("P2").Value = newAttStr
+    mySheet.Range("P2").value = newAttStr
     
     ' refresh the ManageAtts form
     
@@ -66,7 +66,7 @@ If Me.Caption = "Add an Attribute" Then
     
     Dim attList() As String
     
-    attList = Split(attCell.Value, "%")
+    attList = Split(attCell.value, "%")
     
     'For Each attCell In attCells
     '
@@ -132,7 +132,7 @@ ElseIf Me.Caption = "Create a Facility Type" Then
 
     lastRow = mySheet.Cells(Rows.count, "C").End(xlUp).row + 1
     
-    mySheet.Range("C" & lastRow).Value = AttName.Text
+    mySheet.Range("C" & lastRow).value = AttName.Text
 End If
 
 Unload Me

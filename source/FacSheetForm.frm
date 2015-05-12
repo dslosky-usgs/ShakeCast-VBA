@@ -28,7 +28,7 @@ Private Sub AdvUser_Click()
 
 ActiveSheet.Unprotect
 
-If ActiveSheet.Range("A1").Value = "Facility Worksheet" Then
+If ActiveSheet.Range("A1").value = "Facility Worksheet" Then
 
     Dim AdvCaption As String
     AdvCaption = FacSheetForm.AdvUser.Caption
@@ -56,7 +56,7 @@ If ActiveSheet.Range("A1").Value = "Facility Worksheet" Then
     ' Change Adv/Gen user caption
     
         Range("A2").Select
-        Selection.Value = "Advanced User"
+        Selection.value = "Advanced User"
         
         With Selection.Font
             .Color = RGB(31, 73, 152)
@@ -89,7 +89,7 @@ If ActiveSheet.Range("A1").Value = "Facility Worksheet" Then
     ' Change Adv/Gen user caption
     
         Range("A2").Select
-        Selection.Value = "General User"
+        Selection.value = "General User"
         
         With Selection.Font
             .ThemeColor = xlThemeColorAccent6
@@ -101,7 +101,7 @@ If ActiveSheet.Range("A1").Value = "Facility Worksheet" Then
 
     End If
 
-ElseIf ActiveSheet.Range("A1").Value = "Notification Worksheet" Then
+ElseIf ActiveSheet.Range("A1").value = "Notification Worksheet" Then
 
     Set mySheet = Worksheets("Notification XML")
 
@@ -121,7 +121,7 @@ ElseIf ActiveSheet.Range("A1").Value = "Notification Worksheet" Then
     
     ' Change Adv/Gen user caption
     
-        mySheet.Range("A2").Value = "Advanced User"
+        mySheet.Range("A2").value = "Advanced User"
         
         With mySheet.Range("A2").Font
             .Color = RGB(31, 73, 152)
@@ -143,7 +143,7 @@ ElseIf ActiveSheet.Range("A1").Value = "Notification Worksheet" Then
     
     ' Change Adv/Gen user caption
     
-        mySheet.Range("A2").Value = "General User"
+        mySheet.Range("A2").value = "General User"
         
         With mySheet.Range("A1", "P2").Interior
             .Color = RGB(196, 215, 155)

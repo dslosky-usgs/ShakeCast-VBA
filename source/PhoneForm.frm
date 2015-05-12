@@ -93,14 +93,14 @@ End Sub
 Private Sub OkayButton_Click()
 
     If Me.ACText.Text = "" And Me.bDash.Text = "" And Me.aDash.Text = "" Then
-        ActiveCell.Value = Empty
+        ActiveCell.value = Empty
         Unload Me
     ElseIf Me.ACText.Text = "" Or Me.bDash.Text = "" Or Me.aDash.Text = "" Then
         MsgBox "Invalid Phone Number"
         
     Else
     
-        ActiveCell.Value = "(" & Me.ACText.Text & ")" & " " & Me.bDash.Text & "-" & Me.aDash.Text
+        ActiveCell.value = "(" & Me.ACText.Text & ")" & " " & Me.bDash.Text & "-" & Me.aDash.Text
         Unload Me
     End If
     

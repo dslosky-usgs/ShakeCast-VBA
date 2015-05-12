@@ -38,7 +38,7 @@ Private Sub UserForm_Activate()
     Set processCell = Worksheets("ShakeCast Ref Lookup Values").Range("Q2")
 
     Dim process As String
-    process = processCell.Value
+    process = processCell.value
 
     If process = "FacilityXML" Then
     
@@ -69,7 +69,7 @@ Private Sub UserForm_Activate()
         
     End If
 
-    processCell.Value = Empty
+    processCell.value = Empty
 
 End Sub
 

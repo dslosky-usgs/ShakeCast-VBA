@@ -33,27 +33,27 @@ Private Sub AddButton_Click()
     lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row
     
     For i = startRow To lastRow
-        If mySheet.Range("A" & i).Value = Me.ModName.Text Then
+        If mySheet.Range("A" & i).value = Me.ModName.Text Then
         
-            mySheet.Range("B" & i).Value = Me.ModDesc.Text
-            mySheet.Range("C" & i).Value = ""
-            mySheet.Range("D" & i).Value = "SYSTEM"
-            mySheet.Range("E" & i).Value = "SYSTEM"
-            mySheet.Range("F" & i).Value = Me.MetricCombo.Value
-            mySheet.Range("G" & i).Value = Me.GreenAlpha.Text
-            mySheet.Range("H" & i).Value = Me.GreenBeta.Text
-            mySheet.Range("I" & i).Value = Me.MetricCombo.Value
-            mySheet.Range("J" & i).Value = Me.YellowAlpha.Text
-            mySheet.Range("K" & i).Value = Me.YellowBeta.Text
-            mySheet.Range("L" & i).Value = Me.MetricCombo.Value
-            mySheet.Range("M" & i).Value = Me.OrangeAlpha.Text
-            mySheet.Range("N" & i).Value = Me.OrangeBeta.Text
-            mySheet.Range("O" & i).Value = Me.MetricCombo.Value
-            mySheet.Range("P" & i).Value = Me.RedAlpha.Text
-            mySheet.Range("Q" & i).Value = Me.RedBeta.Text
-            mySheet.Range("R" & i).Value = Me.MetricCombo.Value
-            mySheet.Range("S" & i).Value = Me.GreyAlpha.Text
-            mySheet.Range("T" & i).Value = Me.GreyBeta.Text
+            mySheet.Range("B" & i).value = Me.ModDesc.Text
+            mySheet.Range("C" & i).value = ""
+            mySheet.Range("D" & i).value = "SYSTEM"
+            mySheet.Range("E" & i).value = "SYSTEM"
+            mySheet.Range("F" & i).value = Me.MetricCombo.value
+            mySheet.Range("G" & i).value = Me.GreenAlpha.Text
+            mySheet.Range("H" & i).value = Me.GreenBeta.Text
+            mySheet.Range("I" & i).value = Me.MetricCombo.value
+            mySheet.Range("J" & i).value = Me.YellowAlpha.Text
+            mySheet.Range("K" & i).value = Me.YellowBeta.Text
+            mySheet.Range("L" & i).value = Me.MetricCombo.value
+            mySheet.Range("M" & i).value = Me.OrangeAlpha.Text
+            mySheet.Range("N" & i).value = Me.OrangeBeta.Text
+            mySheet.Range("O" & i).value = Me.MetricCombo.value
+            mySheet.Range("P" & i).value = Me.RedAlpha.Text
+            mySheet.Range("Q" & i).value = Me.RedBeta.Text
+            mySheet.Range("R" & i).value = Me.MetricCombo.value
+            mySheet.Range("S" & i).value = Me.GreyAlpha.Text
+            mySheet.Range("T" & i).value = Me.GreyBeta.Text
             
             MsgBox "You already defined this fragility model, so we just updated its information."
             
@@ -68,26 +68,26 @@ Private Sub AddButton_Click()
         End If
     Next i
 
-    mySheet.Range("A" & lastRow + 1).Value = Me.ModName.Text
-    mySheet.Range("B" & lastRow + 1).Value = Me.ModDesc.Text
-    mySheet.Range("C" & lastRow + 1).Value = ""
-    mySheet.Range("D" & lastRow + 1).Value = "SYSTEM"
-    mySheet.Range("E" & lastRow + 1).Value = "SYSTEM"
-    mySheet.Range("F" & lastRow + 1).Value = Me.MetricCombo.Value
-    mySheet.Range("G" & lastRow + 1).Value = Me.GreenAlpha.Text
-    mySheet.Range("H" & lastRow + 1).Value = Me.GreenBeta.Text
-    mySheet.Range("I" & lastRow + 1).Value = Me.MetricCombo.Value
-    mySheet.Range("J" & lastRow + 1).Value = Me.YellowAlpha.Text
-    mySheet.Range("K" & lastRow + 1).Value = Me.YellowBeta.Text
-    mySheet.Range("L" & lastRow + 1).Value = Me.MetricCombo.Value
-    mySheet.Range("M" & lastRow + 1).Value = Me.OrangeAlpha.Text
-    mySheet.Range("N" & lastRow + 1).Value = Me.OrangeBeta.Text
-    mySheet.Range("O" & lastRow + 1).Value = Me.MetricCombo.Value
-    mySheet.Range("P" & lastRow + 1).Value = Me.RedAlpha.Text
-    mySheet.Range("Q" & lastRow + 1).Value = Me.RedBeta.Text
-    mySheet.Range("R" & lastRow + 1).Value = Me.MetricCombo.Value
-    mySheet.Range("S" & lastRow + 1).Value = Me.GreyAlpha.Text
-    mySheet.Range("T" & lastRow + 1).Value = Me.GreyBeta.Text
+    mySheet.Range("A" & lastRow + 1).value = Me.ModName.Text
+    mySheet.Range("B" & lastRow + 1).value = Me.ModDesc.Text
+    mySheet.Range("C" & lastRow + 1).value = ""
+    mySheet.Range("D" & lastRow + 1).value = "SYSTEM"
+    mySheet.Range("E" & lastRow + 1).value = "SYSTEM"
+    mySheet.Range("F" & lastRow + 1).value = Me.MetricCombo.value
+    mySheet.Range("G" & lastRow + 1).value = Me.GreenAlpha.Text
+    mySheet.Range("H" & lastRow + 1).value = Me.GreenBeta.Text
+    mySheet.Range("I" & lastRow + 1).value = Me.MetricCombo.value
+    mySheet.Range("J" & lastRow + 1).value = Me.YellowAlpha.Text
+    mySheet.Range("K" & lastRow + 1).value = Me.YellowBeta.Text
+    mySheet.Range("L" & lastRow + 1).value = Me.MetricCombo.value
+    mySheet.Range("M" & lastRow + 1).value = Me.OrangeAlpha.Text
+    mySheet.Range("N" & lastRow + 1).value = Me.OrangeBeta.Text
+    mySheet.Range("O" & lastRow + 1).value = Me.MetricCombo.value
+    mySheet.Range("P" & lastRow + 1).value = Me.RedAlpha.Text
+    mySheet.Range("Q" & lastRow + 1).value = Me.RedBeta.Text
+    mySheet.Range("R" & lastRow + 1).value = Me.MetricCombo.value
+    mySheet.Range("S" & lastRow + 1).value = Me.GreyAlpha.Text
+    mySheet.Range("T" & lastRow + 1).value = Me.GreyBeta.Text
     
     MsgBox "Your new fragility model, """ & Me.ModName.Text & """, has been created. Update your worksheet in order to see this fragility model in drop down menus."
     Unload Me
@@ -113,24 +113,24 @@ Private Sub ModName_Click()
     Set mySheet = Worksheets("HAZUS Facility Model Data")
     For Each cell In mySheet.Range("A:A")
     
-        If cell.Value <> Me.ModName.Value Then GoTo NextCell
+        If cell.value <> Me.ModName.value Then GoTo NextCell
         If IsEmpty(cell) Then GoTo TheEnd
 
         Dim rowNum As Integer
         rowNum = cell.row
 
-        Me.ModDesc.Text = mySheet.Range("B" & rowNum).Value
-        Me.MetricCombo.Value = mySheet.Range("F" & rowNum).Value
-        Me.GreenAlpha = mySheet.Range("G" & rowNum).Value
-        Me.GreenBeta = mySheet.Range("H" & rowNum).Value
-        Me.YellowAlpha = mySheet.Range("J" & rowNum).Value
-        Me.YellowBeta = mySheet.Range("K" & rowNum).Value
-        Me.OrangeAlpha = mySheet.Range("M" & rowNum).Value
-        Me.OrangeBeta = mySheet.Range("N" & rowNum).Value
-        Me.RedAlpha = mySheet.Range("P" & rowNum).Value
-        Me.RedBeta = mySheet.Range("Q" & rowNum).Value
-        Me.GreyAlpha = mySheet.Range("S" & rowNum).Value
-        Me.GreyBeta = mySheet.Range("T" & rowNum).Value
+        Me.ModDesc.Text = mySheet.Range("B" & rowNum).value
+        Me.MetricCombo.value = mySheet.Range("F" & rowNum).value
+        Me.GreenAlpha = mySheet.Range("G" & rowNum).value
+        Me.GreenBeta = mySheet.Range("H" & rowNum).value
+        Me.YellowAlpha = mySheet.Range("J" & rowNum).value
+        Me.YellowBeta = mySheet.Range("K" & rowNum).value
+        Me.OrangeAlpha = mySheet.Range("M" & rowNum).value
+        Me.OrangeBeta = mySheet.Range("N" & rowNum).value
+        Me.RedAlpha = mySheet.Range("P" & rowNum).value
+        Me.RedBeta = mySheet.Range("Q" & rowNum).value
+        Me.GreyAlpha = mySheet.Range("S" & rowNum).value
+        Me.GreyBeta = mySheet.Range("T" & rowNum).value
         
         GoTo TheEnd
         
@@ -164,7 +164,7 @@ Private Sub UserForm_Initialize()
         If cell.row = 1 Then GoTo NextCell
         If IsEmpty(cell) Then GoTo TheEnd
 
-        Me.ModName.AddItem cell.Value
+        Me.ModName.AddItem cell.value
     
 NextCell:
     Next cell

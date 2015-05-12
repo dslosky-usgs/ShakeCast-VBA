@@ -24,7 +24,7 @@ Private Sub AllButton_Click()
 
 For Each cont In Me.AttFrame.Controls
     If TypeOf cont Is MSForms.CheckBox Then
-        cont.Value = True
+        cont.value = True
     End If
 Next cont
 
@@ -46,7 +46,7 @@ Private Sub ClearButton_Click()
 
 For Each cont In Me.AttFrame.Controls
     If TypeOf cont Is MSForms.CheckBox Then
-        cont.Value = False
+        cont.value = False
     End If
 Next cont
 
@@ -71,7 +71,7 @@ If Me.Caption = "Select Facility Attributes" Then
     Dim attArr() As String
     Dim eachAtt() As String
     
-    attStr = ActiveCell.Value
+    attStr = ActiveCell.value
     attArr = Split(attStr, "%")
     
     
@@ -81,7 +81,7 @@ If Me.Caption = "Select Facility Attributes" Then
     
     For Each Control In Me.AttFrame.Controls
         If TypeOf Control Is MSForms.CheckBox Then
-            If Control.Value = True Then
+            If Control.value = True Then
                 
                 Set lab = myFrame.Controls.Add("Forms.Label.1", "CheckBox_" & i)
                 lab.Caption = Control.Caption
@@ -139,7 +139,7 @@ ElseIf Me.Caption = "Select Facility Types" Then
     facCount = 0
     For Each Control In Me.AttFrame.Controls
         If TypeOf Control Is MSForms.CheckBox Then
-            If Control.Value = True Then
+            If Control.value = True Then
             
                 If facCount = 0 Then
                     facString = Control.Caption
@@ -153,7 +153,7 @@ ElseIf Me.Caption = "Select Facility Types" Then
         End If
     Next Control
     
-    ActiveCell.Value = facString
+    ActiveCell.value = facString
     
     Application.ScreenUpdating = False
     CheckGroups
@@ -173,9 +173,9 @@ For Each Control In Me.AttFrame.Controls
     End If
 Next Control
 
-If InStr(ActiveCell.Address, "AE") And ActiveSheet.Range("A1").Value = "Facility Worksheet" Then
+If InStr(ActiveCell.Address, "AE") And ActiveSheet.Range("A1").value = "Facility Worksheet" Then
     makeAttCheck
-ElseIf InStr(ActiveCell.Address, "B") And ActiveSheet.Range("A1").Value = "Notification Worksheet" Then
+ElseIf InStr(ActiveCell.Address, "B") And ActiveSheet.Range("A1").value = "Notification Worksheet" Then
     makeFacTypesForm
 End If
 

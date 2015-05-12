@@ -59,7 +59,7 @@ For Each cont In AttFrame.Controls
 
 Next cont
 
-ActiveCell.Value = attStr
+ActiveCell.value = attStr
     
 Unload Me
 End Sub
@@ -93,7 +93,7 @@ Dim attArr() As String
 Dim eachAtt() As String
 Dim i As Integer
 
-attStr = ActiveCell.Value
+attStr = ActiveCell.value
 attArr = Split(attStr, "%")
 i = 0
 

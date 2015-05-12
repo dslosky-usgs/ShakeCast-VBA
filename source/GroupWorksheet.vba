@@ -78,7 +78,7 @@ End If
 ' run through all the group names
 For Each cell In colA.Cells
     
-    curGroup = cell.Value               ' get the group name for the current row
+    curGroup = cell.value               ' get the group name for the current row
 
     
     
@@ -151,8 +151,8 @@ For Each cell In colA.Cells
                 
                 
                 ChangeColors "Bad", Range("A" & (cell.row - 1), "M" & (cell.row - 1)), "Group"
-                mySheet.Range("N" & (cell.row - 1)).Value = "Bad"
-                mySheet.Range("P" & (cell.row - 1)).Value = "Blue"
+                mySheet.Range("N" & (cell.row - 1)).value = "Bad"
+                mySheet.Range("P" & (cell.row - 1)).value = "Blue"
                 
                 greyCells (cell.row - 1), (cell.row - 1)
                 
@@ -179,7 +179,7 @@ GoodRow:
                     
                 End With
                 
-                mySheet.Range("P" & (cell.row - 1)).Value = "Yellow"
+                mySheet.Range("P" & (cell.row - 1)).value = "Yellow"
             ' change the group color to green
             Else
             
@@ -194,10 +194,10 @@ GoodRow:
                 End With
                 
                 
-                mySheet.Range("P" & (cell.row - 1)).Value = "Red"
+                mySheet.Range("P" & (cell.row - 1)).value = "Red"
             End If
 
-                mySheet.Range("N" & (cell.row - 1)).Value = "Good"
+                mySheet.Range("N" & (cell.row - 1)).value = "Good"
                 
 
                 greyCells (cell.row - 1), (cell.row - 1)
@@ -247,7 +247,7 @@ GoodRow:
                 
                     ChangeColors "Bad", Range("A" & rowNum, "M" & rowNum), "Group"
                     
-                    mySheet.Range("N" & rowNum).Value = "Bad"
+                    mySheet.Range("N" & rowNum).value = "Bad"
                     
                     greyCells rowNum, (cell.row - num)
                     
@@ -273,7 +273,7 @@ GoodRow:
                 
                     ChangeColors "Bad", Range("A" & rowNum, "M" & rowNum), "Group"
                 
-                    mySheet.Range("N" & rowNum).Value = "Bad"
+                    mySheet.Range("N" & rowNum).value = "Bad"
                     greyCells rowNum, cell.row - num
                     
                     GoTo NextGroupItem
@@ -283,18 +283,18 @@ GoodRow:
                          .ColorIndex = 36
                     End With
                 
-                    mySheet.Range("P" & rowNum).Value = "Yellow"
+                    mySheet.Range("P" & rowNum).value = "Yellow"
                 Else
                     With cellRange.Interior
                          .Color = RGB(230, 166, 121)
                     End With
                     
-                    mySheet.Range("P" & rowNum).Value = "Red"
+                    mySheet.Range("P" & rowNum).value = "Red"
             
                 End If
                 
                 
-                mySheet.Range("N" & rowNum).Value = "Good"
+                mySheet.Range("N" & rowNum).value = "Good"
                 
                 ' mirror cells and black out unavailable parameters
                 greyCells rowNum, cell.row - num
@@ -381,8 +381,8 @@ If rowNum > startRow Then
     
         ' "C" is where the monitoring region lives, and we only want this defined once!
         If Mid(LetStr, letNum, 1) <> "C" Then
-            mySheet.Range(Mid(LetStr, letNum, 1) & rowNum).Value = _
-                mySheet.Range(Mid(LetStr, letNum, 1) & startRow).Value
+            mySheet.Range(Mid(LetStr, letNum, 1) & rowNum).value = _
+                mySheet.Range(Mid(LetStr, letNum, 1) & startRow).value
         Else
         
             ' makes all group items following the first
@@ -403,13 +403,13 @@ End If
 
 
 
-If mySheet.Range("D" & rowNum).Value = "NEW_EVENT" Then
+If mySheet.Range("D" & rowNum).value = "NEW_EVENT" Then
                 
     With mySheet.Range("E" & rowNum).Interior
         .ColorIndex = 16
     End With
             
-ElseIf mySheet.Range("D" & rowNum).Value = "DAMAGE" Then
+ElseIf mySheet.Range("D" & rowNum).value = "DAMAGE" Then
     
     With mySheet.Range("F" & rowNum).Interior
         .ColorIndex = 16
@@ -428,21 +428,21 @@ Set mySheet = Worksheets("Notification XML")
 If WorksheetFunction.CountBlank(Range("A" & rowNum, "D" & rowNum)) < 4 Then
 
 ' autofil the minimum magnitude and inspection priority if appropriate
-If mySheet.Range("D" & rowNum).Value = "NEW_EVENT" Then
+If mySheet.Range("D" & rowNum).value = "NEW_EVENT" Then
     
     mySheet.Range("E" & rowNum) = Empty
                 
-    If IsEmpty(mySheet.Range("F" & rowNum).Value) Then
-        mySheet.Range("F" & rowNum).Value = 3
+    If IsEmpty(mySheet.Range("F" & rowNum).value) Then
+        mySheet.Range("F" & rowNum).value = 3
     End If
             
-ElseIf mySheet.Range("D" & rowNum).Value = "DAMAGE" Then
+ElseIf mySheet.Range("D" & rowNum).value = "DAMAGE" Then
     
     mySheet.Range("F" & rowNum) = Empty
     
             
-    If IsEmpty(mySheet.Range("E" & rowNum).Value) Then
-        mySheet.Range("E" & rowNum).Value = "GREEN"
+    If IsEmpty(mySheet.Range("E" & rowNum).value) Then
+        mySheet.Range("E" & rowNum).value = "GREEN"
     End If
                 
 End If
@@ -451,7 +451,7 @@ End If
 If IsEmpty(mySheet.Range("G" & (rowNum))) Or _
         IsError(mySheet.Range("G" & (rowNum))) And Not _
         IsEmpty(mySheet.Range("A" & (rowNum))) Then
-    mySheet.Range("G" & (rowNum)).Value = "ACTUAL"
+    mySheet.Range("G" & (rowNum)).value = "ACTUAL"
 ElseIf IsEmpty(mySheet.Range("A" & (rowNum))) Then
     mySheet.Range("G" & (rowNum)) = Empty
 End If
@@ -459,14 +459,14 @@ End If
 If IsEmpty(mySheet.Range("H" & (rowNum))) Or _
         IsError(mySheet.Range("H" & (rowNum))) And Not _
         IsEmpty(mySheet.Range("A" & (rowNum))) Then
-    mySheet.Range("H" & (rowNum)).Value = "Rich Content"
+    mySheet.Range("H" & (rowNum)).value = "Rich Content"
 ElseIf IsEmpty(mySheet.Range("A" & (rowNum))) Then
     mySheet.Range("H" & (rowNum)) = Empty
 End If
 
 If IsEmpty(mySheet.Range("J" & (rowNum))) Or _
         IsError(mySheet.Range("J" & (rowNum))) Then
-    mySheet.Range("J" & (rowNum)).Value = Empty
+    mySheet.Range("J" & (rowNum)).value = Empty
 ElseIf IsEmpty(mySheet.Range("A" & (rowNum))) Then
     mySheet.Range("J" & (rowNum)) = Empty
 End If
@@ -477,14 +477,14 @@ End If
 '    mySheet.Range("K" & (rowNum)).Value = "PGA"
 'End If
 
-If mySheet.Range("D" & (rowNum)).Value = "DAMAGE" And IsEmpty(mySheet.Range("K" & (rowNum))) Then
-    mySheet.Range("K" & (rowNum)).Value = Empty
+If mySheet.Range("D" & (rowNum)).value = "DAMAGE" And IsEmpty(mySheet.Range("K" & (rowNum))) Then
+    mySheet.Range("K" & (rowNum)).value = Empty
 ElseIf IsEmpty(mySheet.Range("D" & (rowNum))) Then
     mySheet.Range("K" & (rowNum)) = Empty
 End If
 
-If mySheet.Range("D" & (rowNum)).Value = "NEW_EVENT" And IsEmpty(mySheet.Range("K" & (rowNum))) Then
-    mySheet.Range("K" & (rowNum)).Value = Empty
+If mySheet.Range("D" & (rowNum)).value = "NEW_EVENT" And IsEmpty(mySheet.Range("K" & (rowNum))) Then
+    mySheet.Range("K" & (rowNum)).value = Empty
 ElseIf IsEmpty(mySheet.Range("D" & (rowNum))) Then
     mySheet.Range("K" & (rowNum)) = Empty
 End If
@@ -492,7 +492,7 @@ End If
 If IsEmpty(mySheet.Range("L" & (rowNum))) Or _
         IsError(mySheet.Range("L" & (rowNum))) And Not _
         IsEmpty(mySheet.Range("A" & (rowNum))) Then
-    mySheet.Range("L" & (rowNum)).Value = 1
+    mySheet.Range("L" & (rowNum)).value = 1
 ElseIf IsEmpty(mySheet.Range("A" & (rowNum))) Then
     mySheet.Range("L" & (rowNum)) = Empty
 End If
@@ -500,7 +500,7 @@ End If
 If IsEmpty(mySheet.Range("M" & (rowNum))) Or _
         IsError(mySheet.Range("M" & (rowNum))) And Not _
         IsEmpty(mySheet.Range("A" & (rowNum))) Then
-    mySheet.Range("M" & (rowNum)).Value = "Default"
+    mySheet.Range("M" & (rowNum)).value = "Default"
 ElseIf IsEmpty(mySheet.Range("A" & (rowNum))) Then
     mySheet.Range("M" & (rowNum)) = Empty
 End If
@@ -541,7 +541,7 @@ InsPrios(3) = "RED"
 
 ' create an array for event type
 Dim EvTypes() As String
-If mySheet.Range("A2").Value = "Advanced User" Then
+If mySheet.Range("A2").value = "Advanced User" Then
     ReDim EvTypes(0 To 3)
     EvTypes(0) = "ACTUAL"
     EvTypes(1) = "SCENARIO"
@@ -654,7 +654,7 @@ If curGroup = "" Then
         ' if any of the non-autofilled columns are filled, we skip clearing the hidden rows
         If Not IsEmpty(cellTest) Then
             ChangeColors "Bad", mySheet.Range("A" & rowNum, "M" & rowNum), "Group"
-            mySheet.Range("P" & rowNum).Value = "Blue"
+            mySheet.Range("P" & rowNum).value = "Blue"
             GoTo TestDone
         End If
             
@@ -930,27 +930,27 @@ Do While row < endRow
             Dim SubfValue As String
             Dim HeadValue As String
             
-            FieldValue = Field.Value
-            SubfValue = Subf.Value
-            HeadValue = Head.Value
-            CellValue = CurCell.Value
+            FieldValue = Field.value
+            SubfValue = Subf.value
+            HeadValue = Head.value
+            CellValue = CurCell.value
             
             ' This will remove all numbers from the headers... but why am I doing it this way??
             For i = 0 To 9
 
-                    FieldValue = Replace(FieldValue, i, "")
+                    FieldValue = replace(FieldValue, i, "")
                 
-                    SubfValue = Replace(SubfValue, i, "")
+                    SubfValue = replace(SubfValue, i, "")
                     
-                    HeadValue = Replace(HeadValue, i, "")
+                    HeadValue = replace(HeadValue, i, "")
                 
              Next i
              
             ' replace XML and HTML reserved characters
-             CellValue = Replace(CellValue, "&", "&amp;")
-             CellValue = Replace(CellValue, "<", "&lt;")
-             CellValue = Replace(CellValue, ">", "&gt;")
-             CellValue = Replace(CellValue, "'", "&apos;")
+             CellValue = replace(CellValue, "&", "&amp;")
+             CellValue = replace(CellValue, "<", "&lt;")
+             CellValue = replace(CellValue, ">", "&gt;")
+             CellValue = replace(CellValue, "'", "&apos;")
              
              Dim cellArray As Variant
              Dim CurCellValue As String
@@ -985,7 +985,7 @@ Do While row < endRow
 '                      '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             
             
-            If Field.Value = Empty Then            ' There can be no subfield without a field, this piece of data
+            If Field.value = Empty Then            ' There can be no subfield without a field, this piece of data
                 indent = 2                         ' only has its GroupRow as a parent. We open no additional
                                                    ' XML tages for this data
                 
@@ -994,7 +994,7 @@ Do While row < endRow
                 printStr = printStr & vbTab & vbTab & "<" & HeadValue & _
                 ">" & CurCellValue & "</" & Head & ">"
         
-            ElseIf Field.Value <> Empty And Subf.Value = Empty Then
+            ElseIf Field.value <> Empty And Subf.value = Empty Then
                 indent = 2
                 
                                                    ' In this case, the data resides inside of a field, but no sub-
@@ -1002,7 +1002,7 @@ Do While row < endRow
                                                    ' already been opened
                 
                 ' Check if the field has already been opened
-                If Field.Value <> oldField Then
+                If Field.value <> oldField Then
                     
                     ' if the new field and old field are not the same, we need to open the tag in the XML for the
                     ' new field
@@ -1021,14 +1021,14 @@ Do While row < endRow
                 indent = 2                         ' check if either of them is open already
                 
                 ' check if the field has already been opened
-                If Field.Value <> oldField Then
+                If Field.value <> oldField Then
                     printStr = vbTab & vbTab & "<" & FieldValue & ">" & vbNewLine
                 End If
                 
                 indent = indent + 1
                 
                 ' check if the subfield has already been opened
-                If Subf.Value <> oldSubf Then
+                If Subf.value <> oldSubf Then
                     printStr = printStr & vbTab & vbTab & vbTab & "<" & SubfValue & ">" & vbNewLine
                 End If
                 
@@ -1043,7 +1043,7 @@ Do While row < endRow
             
             ' check if we should close the subfield
             Set NextSubf = XMLSheet.Cells(2, col + 1)
-            If Subf.Value <> NextSubf.Value And Subf.Value <> Empty Then
+            If Subf.value <> NextSubf.value And Subf.value <> Empty Then
             
                 printStr = printStr & vbNewLine & vbTab & vbTab & vbTab & "</" & SubfValue & ">"
                 
@@ -1051,7 +1051,7 @@ Do While row < endRow
             
             ' check if we should close the field
             Set NextField = XMLSheet.Cells(1, col + 1)
-            If Field.Value <> NextField.Value And Field.Value <> Empty Then
+            If Field.value <> NextField.value And Field.value <> Empty Then
 
                 printStr = printStr & vbNewLine & vbTab & vbTab & "</" & FieldValue & ">"
                 
@@ -1063,8 +1063,8 @@ Do While row < endRow
             Print #2, printStr
             
             ' Sets the Field and subfield we just used as the old fields
-            oldField = Field.Value
-            oldSubf = Subf.Value
+            oldField = Field.value
+            oldSubf = Subf.value
             
             ' Reset the print string for the next piece of data
             printStr = ""
@@ -1344,7 +1344,7 @@ Do While NotRow < endRow + 1
   
         'Set NotCell = NotSheet.Cells(NotRow, NotCol)
 
-        If notSheet.Range("N" & NotRow).Value = "Bad" And Not _
+        If notSheet.Range("N" & NotRow).value = "Bad" And Not _
                 IsEmpty(notSheet.Range("N" & NotRow)) Then
         
             ' Count the number of facilities that will be rejected
@@ -1384,22 +1384,22 @@ Do While NotRow < endRow + 1
         
         Dim NotCellValue As String
         
-        If NotCell.Value = "Rich Content" Then
+        If NotCell.value = "Rich Content" Then
         
             NotCellValue = "EMAIL_HTML"
             
-        ElseIf NotCell.Value = "Plain Text" Then
+        ElseIf NotCell.value = "Plain Text" Then
             
             NotCellValue = "EMAIL_TEXT"
         
         Else
         
-            NotCellValue = NotCell.Value
+            NotCellValue = NotCell.value
         End If
         
         
         
-        XMLcell.Value = NotCellValue
+        XMLcell.value = NotCellValue
             
         XMLcol = XMLcol + 1
         

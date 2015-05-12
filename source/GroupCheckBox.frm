@@ -24,7 +24,7 @@ Private Sub AllButton_Click()
 ' select all the group names
 For i = 0 To Me.GroupCount - 1
 
-    Me.Controls("CheckBox_" & i).Value = True
+    Me.Controls("CheckBox_" & i).value = True
     
 Next i
 
@@ -41,7 +41,7 @@ Private Sub ClearButton_Click()
 
 For i = 0 To Me.GroupCount - 1
 
-    Me.Controls("CheckBox_" & i).Value = False
+    Me.Controls("CheckBox_" & i).value = False
     
 Next i
 
@@ -54,7 +54,7 @@ Dim groupStr As String
 groupStr = ""
 
 For i = 0 To Me.GroupCount - 1
-    If Me.Controls("CheckBox_" & i).Value = True Then
+    If Me.Controls("CheckBox_" & i).value = True Then
         If groupStr = "" Then
             groupStr = Me.Controls("CheckBox_" & i).Caption
         Else
@@ -64,9 +64,9 @@ For i = 0 To Me.GroupCount - 1
 Next i
 
 If groupStr = "" Then
-    ActiveCell.Value = Empty
+    ActiveCell.value = Empty
 Else
-    ActiveCell.Value = groupStr
+    ActiveCell.value = groupStr
 End If
 
 Unload Me

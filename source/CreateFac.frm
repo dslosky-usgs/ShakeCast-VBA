@@ -33,8 +33,8 @@ Private Sub CreateButton_Click()
     lastRow = mySheet.Cells(Rows.count, "C").End(xlUp).row
     
     For i = startRow To lastRow
-        If mySheet.Range("C" & i).Value = FacName.Text Then
-            mySheet.Range("D" & i).Value = FacDesc.Text
+        If mySheet.Range("C" & i).value = FacName.Text Then
+            mySheet.Range("D" & i).value = FacDesc.Text
             
             MsgBox "You already defined this facility type, so we just updated the facility description!"
             
@@ -44,8 +44,8 @@ Private Sub CreateButton_Click()
         End If
     Next i
     
-    mySheet.Range("C" & lastRow + 1).Value = FacName.Text
-    mySheet.Range("D" & lastRow + 1).Value = FacDesc.Text
+    mySheet.Range("C" & lastRow + 1).value = FacName.Text
+    mySheet.Range("D" & lastRow + 1).value = FacDesc.Text
     
     MsgBox "Your new facility type """ & FacName.Text & """ has been created. Update your worksheet to see this facility type in drop down menus."
     

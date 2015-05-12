@@ -65,7 +65,7 @@ If checkRow < 4 Then GoTo TheEnd
         ' if row is incomplete, change color to bad
         ChangeColors "Bad", mySheet.Range("A" & checkRow, "J" & checkRow), "User"
         
-        mySheet.Range("K" & checkRow).Value = "Bad"
+        mySheet.Range("K" & checkRow).value = "Bad"
     
     Else
     
@@ -74,7 +74,7 @@ If checkRow < 4 Then GoTo TheEnd
         
             ChangeColors "Bad", mySheet.Range("A" & checkRow, "J" & checkRow), "User"
             
-            mySheet.Range("K" & checkRow).Value = "Bad"
+            mySheet.Range("K" & checkRow).value = "Bad"
             
             GoTo TheEnd
         End If
@@ -82,7 +82,7 @@ If checkRow < 4 Then GoTo TheEnd
         ' if row IS complete, change color to good!
         ChangeColors "Good", mySheet.Range("A" & checkRow, "J" & checkRow), "User"
 
-        mySheet.Range("K" & checkRow).Value = "Good"
+        mySheet.Range("K" & checkRow).value = "Good"
 End If
 
 TheEnd:
@@ -102,17 +102,17 @@ Set groupSheet = Worksheets("Notification XML")
 
 ' PAGER
 If IsEmpty(mySheet.Range("H" & checkRow)) Then
-    mySheet.Range("H" & checkRow).Value = mySheet.Range("E" & checkRow).Value
+    mySheet.Range("H" & checkRow).value = mySheet.Range("E" & checkRow).value
 End If
 
 ' EMAIL_HTML
 If IsEmpty(mySheet.Range("I" & checkRow)) Then
-    mySheet.Range("I" & checkRow).Value = mySheet.Range("E" & checkRow).Value
+    mySheet.Range("I" & checkRow).value = mySheet.Range("E" & checkRow).value
 End If
 
 'EMAIL_ TEXT
 If IsEmpty(mySheet.Range("J" & checkRow)) Then
-    mySheet.Range("J" & checkRow).Value = mySheet.Range("E" & checkRow).Value
+    mySheet.Range("J" & checkRow).value = mySheet.Range("E" & checkRow).value
 End If
 
 
@@ -146,18 +146,18 @@ For Each groupCell In allGroupCells
         GoTo NextGroupCell
     End If
     
-    curGroup = groupCell.Value
+    curGroup = groupCell.value
     
     If groupCell.row = 4 Then
     
-        If groupSheet.Range("N" & groupCell.row).Value = "Good" Then
+        If groupSheet.Range("N" & groupCell.row).value = "Good" Then
             ReDim Preserve GroupNames(0 To 0)
             GroupNames(0) = curGroup
         End If
         
     ElseIf curGroup <> oldGroup Then
         
-        If groupSheet.Range("N" & groupCell.row).Value = "Good" Then
+        If groupSheet.Range("N" & groupCell.row).value = "Good" Then
             GroupCount = GroupCount + 1
             ReDim Preserve GroupNames(0 To GroupCount)
         
@@ -195,7 +195,7 @@ End With
 Dim newGroupStr As String
 newGroupStr = ""
 
-For Each group In Split(GroupName.Value, ":")
+For Each group In Split(GroupName.value, ":")
     If InArray(GroupNames, group) Then
         If newGroupStr = "" Then
             newGroupStr = group
@@ -206,9 +206,9 @@ For Each group In Split(GroupName.Value, ":")
 Next group
 
 If newGroupStr <> "" Then
-    GroupName.Value = newGroupStr
+    GroupName.value = newGroupStr
 Else
-    GroupName.Value = Empty
+    GroupName.value = Empty
 End If
 
 End Sub
@@ -481,28 +481,28 @@ Do While row < endRow
             Dim SubfValue As String
             Dim HeadValue As String
             
-            FieldValue = Field.Value
-            SubfValue = Subf.Value
-            HeadValue = Head.Value
-            CellValue = CurCell.Value
+            FieldValue = Field.value
+            SubfValue = Subf.value
+            HeadValue = Head.value
+            CellValue = CurCell.value
             
             ' This will remove all numbers from the headers... but why am I doing it this way??
             For i = 0 To 9
-                    FieldValue = Replace(FieldValue, i, "")
+                    FieldValue = replace(FieldValue, i, "")
 
-                    SubfValue = Replace(SubfValue, i, "")
+                    SubfValue = replace(SubfValue, i, "")
                     
-                    HeadValue = Replace(HeadValue, i, "")
+                    HeadValue = replace(HeadValue, i, "")
             
                 
                 
              Next i
              
              ' replace XML and HTML reserved characters
-             CellValue = Replace(CellValue, "&", "&amp;")
-             CellValue = Replace(CellValue, "<", "&lt;")
-             CellValue = Replace(CellValue, ">", "&gt;")
-             CellValue = Replace(CellValue, "'", "&apos;")
+             CellValue = replace(CellValue, "&", "&amp;")
+             CellValue = replace(CellValue, "<", "&lt;")
+             CellValue = replace(CellValue, ">", "&gt;")
+             CellValue = replace(CellValue, "'", "&apos;")
              
              Dim cellArray As Variant
              Dim CurCellValue As String
@@ -531,13 +531,13 @@ Do While row < endRow
                 
             Else
             
-                CurCellValue = CurCell.Value
+                CurCellValue = CurCell.value
                 
             End If
 '                      '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             
             
-            If Field.Value = Empty Then            ' There can be no subfield without a field, this piece of data
+            If Field.value = Empty Then            ' There can be no subfield without a field, this piece of data
                 indent = 2                         ' only has its UserRow as a parent. We open no additional
                                                    ' XML tages for this data
                 
@@ -546,7 +546,7 @@ Do While row < endRow
                 printStr = printStr & vbTab & vbTab & "<" & HeadValue & _
                 ">" & CurCellValue & "</" & Head & ">"
         
-            ElseIf Field.Value <> Empty And Subf.Value = Empty Then
+            ElseIf Field.value <> Empty And Subf.value = Empty Then
                 indent = 2
                 
                                                    ' In this case, the data resides inside of a field, but no sub-
@@ -554,7 +554,7 @@ Do While row < endRow
                                                    ' already been opened
                 
                 ' Check if the field has already been opened
-                If Field.Value <> oldField Then
+                If Field.value <> oldField Then
                     
                     ' if the new field and old field are not the same, we need to open the tag in the XML for the
                     ' new field
@@ -573,14 +573,14 @@ Do While row < endRow
                 indent = 2                         ' check if either of them is open already
                 
                 ' check if the field has already been opened
-                If Field.Value <> oldField Then
+                If Field.value <> oldField Then
                     printStr = vbTab & vbTab & "<" & FieldValue & ">" & vbNewLine
                 End If
                 
                 indent = indent + 1
                 
                 ' check if the subfield has already been opened
-                If Subf.Value <> oldSubf Then
+                If Subf.value <> oldSubf Then
                     printStr = printStr & vbTab & vbTab & vbTab & "<" & SubfValue & ">" & vbNewLine
                 End If
                 
@@ -595,7 +595,7 @@ Do While row < endRow
             
             ' check if we should close the subfield
             Set NextSubf = XMLSheet.Cells(2, col + 1)
-            If Subf.Value <> NextSubf.Value And Subf.Value <> Empty Then
+            If Subf.value <> NextSubf.value And Subf.value <> Empty Then
             
                 printStr = printStr & vbNewLine & vbTab & vbTab & vbTab & "</" & SubfValue & ">"
                 
@@ -603,7 +603,7 @@ Do While row < endRow
             
             ' check if we should close the field
             Set NextField = XMLSheet.Cells(1, col + 1)
-            If Field.Value <> NextField.Value And Field.Value <> Empty Then
+            If Field.value <> NextField.value And Field.value <> Empty Then
 
                 printStr = printStr & vbNewLine & vbTab & vbTab & "</" & FieldValue & ">"
                 
@@ -615,8 +615,8 @@ Do While row < endRow
             Print #2, printStr
             
             ' Sets the Field and subfield we just used as the old fields
-            oldField = Field.Value
-            oldSubf = Subf.Value
+            oldField = Field.value
+            oldSubf = Subf.value
             
             ' Reset the print string for the next piece of data
             printStr = ""
@@ -901,7 +901,7 @@ Do While UserRow < endRow + 1
     ' gets rid of empty rows before we call them errors
     If IsEmpty(mySheet.Range("K" & UserRow)) Then GoTo ContinueLoop
     
-    If mySheet.Range("K" & UserRow).Value = "Bad" Then
+    If mySheet.Range("K" & UserRow).value = "Bad" Then
         
         CheckUsers UserRow
         
@@ -930,7 +930,7 @@ Do While UserRow < endRow + 1
             Set XMLcell = XMLSheet.Cells(XMLrow, XMLcol)
             Set UserCell = mySheet.Cells(UserRow, UserCol)
         
-            XMLcell.Value = UserCell.Value
+            XMLcell.value = UserCell.value
             
             XMLcol = XMLcol + 1
             
@@ -1086,18 +1086,18 @@ For Each groupCell In allGroupCells
         GoTo NextGroupCell
     End If
     
-    curGroup = groupCell.Value
+    curGroup = groupCell.value
     
     If groupCell.row = 4 Then
     
-        If groupSheet.Range("N" & groupCell.row).Value = "Good" Then
+        If groupSheet.Range("N" & groupCell.row).value = "Good" Then
             ReDim Preserve GroupNames(0 To 0)
             GroupNames(0) = curGroup
         End If
         
     ElseIf curGroup <> oldGroup Then
         
-        If groupSheet.Range("N" & groupCell.row).Value = "Good" Then
+        If groupSheet.Range("N" & groupCell.row).value = "Good" Then
             GroupCount = GroupCount + 1
             ReDim Preserve GroupNames(0 To GroupCount)
         
@@ -1119,11 +1119,11 @@ QuitGroupLoop:
 
 ' get the groups from the current cell
 Dim selGroups() As String
-If InStr(ActiveCell.Value, ":") Then
-    selGroups = Split(ActiveCell.Value, ":")
+If InStr(ActiveCell.value, ":") Then
+    selGroups = Split(ActiveCell.value, ":")
 Else
     ReDim selGroups(0 To 0) As String
-    selGroups(0) = ActiveCell.Value
+    selGroups(0) = ActiveCell.value
     
 End If
 
@@ -1153,7 +1153,7 @@ For i = 0 To UBound(GroupNames)
     
     ' select the right checkboxes
     If InArray(selGroups, GroupNames(i)) Then
-        chkBox.Value = True
+        chkBox.value = True
     End If
     
 NextOne:
