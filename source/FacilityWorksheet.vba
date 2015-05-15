@@ -1000,7 +1000,7 @@ Do While FacRow < endRow + 1
     ' copy data from Facility Sheet to the XML table
     XMLSheet.Range("A" & XMLrow, "B" & XMLrow).Value = FacSheet.Range("A" & FacRow, "B" & FacRow).Value
     XMLSheet.Range("C" & XMLrow, "H" & XMLrow).Value = FacSheet.Range("D" & FacRow, "I" & FacRow).Value
-    XMLSheet.Range("I" & XMLrow).Value = ManLatLong(FacSheet.Range("J4"), FacSheet.Range("K4"))
+    XMLSheet.Range("I" & XMLrow).Value = ManLatLong(FacSheet.Range("J" & FacRow), FacSheet.Range("K" & FacRow))
     XMLSheet.Range("J" & XMLrow, "K" & XMLrow).Value = FacSheet.Range("L" & FacRow, "M" & FacRow).Value
     XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).Value = FacSheet.Range("O" & FacRow, "AD" & FacRow).Value
             
