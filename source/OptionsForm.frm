@@ -140,7 +140,7 @@ ElseIf Me.OptionCombo.value = "Add multiple facility types" Then
 
 ElseIf Me.OptionCombo.value = "Import CSV" Then
 
-    csvImport.Show
+    importCSV
     
 ElseIf Me.OptionCombo.value = "Access General User Worksheet" Then
         

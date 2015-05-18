@@ -836,7 +836,7 @@ Set XMLSheet = Worksheets("UserXMLexport")
 
 ' Start with a fresh XML table
 Dim lastRow As Integer
-Dim LastCol As Integer
+Dim lastCol As Integer
 lastRow = mySheet.Cells(Rows.count, "F").End(xlUp).row
 
 
@@ -972,7 +972,7 @@ Set mySheet = Worksheets("User XML")
 
 ' Start with a fresh XML table
 Dim lastRow As Integer
-Dim LastCol As Integer
+Dim lastCol As Integer
 lastRow = mySheet.Cells(Rows.count, "F").End(xlUp).row
 
 

@@ -9,6 +9,33 @@ Sub DeleteFile(ByVal FileToDelete As String)
    End If
 End Sub
 
+Function rangeToArray(ByVal rangeAddress As String, _
+                        ByVal sheetName As String)
+                        
+    Set mySheet = Worksheets(sheetName)
+    
+    Set myRange = mySheet.Range(rangeAddress)
+    
+    Dim finalArray() As String
+    Dim colCount As Integer
+    
+    colCount = 0
+    
+    If myRange.Rows.count = 1 Then
+    
+        ReDim finalArray(0 To myRange.Columns.count - 1)
+        
+        For Each cell In myRange.Cells
+            finalArray(colCount) = cell.value
+            colCount = colCount + 1
+        Next cell
+                            
+    Else
+    End If
+    
+    rangeToArray = finalArray
+End Function
+
 Sub loadCSV()
     Dim fStr As String
 
@@ -53,14 +80,26 @@ Sub loadCSV()
 End Sub
 
 
-Private Sub importCSV(csvFile As String)
+Private Sub importCSV()
     Application.EnableEvents = False
     Application.ScreenUpdating = False
     On Error GoTo ExitHandler
     
-    Open csvFile For Input As #1
+    ' clear data worksheet
+    Set dataSheet = Worksheets("Data")
+    dataSheet.Activate
+    
+    clearSheet "Data"
+    
+    loadCSV
+    
+    Set dataSheet = Worksheets("Data")
+    'Open csvFile For Input As #1
     
     Dim count As Integer        ' Count how many lines we're importing
+    Dim lastRow As Integer      ' last line of data in the dataSheet
+    Dim lastCol As Integer      ' last column of the imported data
+    Dim startRow As Integer     ' where we start importing data
     Dim headCount As Integer    ' Counts the number of headers
     Dim sheetName As String     ' used to make sure we pipe information the right way
     Dim rowNum As Integer       ' keeps track of where we are in the worksheet
@@ -79,207 +118,223 @@ Private Sub importCSV(csvFile As String)
     Dim savedAtts() As String
     Dim attStr As String
     
+    lastRow = dataSheet.Cells(Rows.count, "A").End(xlUp).row
+    lastCol = dataSheet.Cells(1, Columns.count).End(xlUp).column
+    startRow = 1
     
     headCount = 0
     count = 0
     replace = "on"
     
-    Dim csvCount As Integer     ' count the number of lines in the CSV
-    csvCount = 0
-    Do Until EOF(1)
-        Line Input #1, csvLine
-        csvCount = csvCount + 1
-    Loop
+'    Dim csvCount As Integer     ' count the number of lines in the CSV
+'    csvCount = 0
+'    Do Until EOF(1)
+'        Line Input #1, csvLine
+'        csvCount = csvCount + 1
+'    Loop
+
+    For csvCount = startRow To lastRow
     
-    If csvCount = 1 Then
-        
-        Dim headStr As String
-        Dim dataStr As String
-        Dim splitInfo() As String
-        
-        splitInfo = Split(csvLine, """")
-        headStr = splitInfo(0)
-        dataStr = splitInfo(1)
-        
-    ElseIf csvCount > 1 Then
-        Do Until EOF(1)
-            Line Input #1, csvLine
+'        If csvCount = 1 Then
+'
+'            Dim headStr As String
+'            Dim dataStr As String
+'            Dim splitInfo() As String
+'
+'            splitInfo = Split(csvLine, """")
+'            headStr = splitInfo(0)
+'            dataStr = splitInfo(1)
+            
+'        ElseIf csvCount > 1 Then
+'            Do Until EOF(1)
+'                Line Input #1, csvLine
+                    
+                newStr = ""
+                ' replace comma delimeter to something more exotic
+'                For i = 1 To Len(csvLine)
+'
+'                    If Mid(csvLine, i, 1) = """" And replace = "on" Then
+'                        replace = "off"
+'                    ElseIf Mid(csvLine, i, 1) = """" And replace = "off" Then
+'                        replace = "on"
+'                    End If
+'
+'
+'                    If replace = "on" And Mid(csvLine, i, 1) = "," Then
+'                        newStr = newStr & ":*$*:"
+'                    Else
+'                        newStr = newStr & Mid(csvLine, i, 1)
+'                    End If
+'
+'                Next i
                 
-            newStr = ""
-            ' replace comma delimeter to something more exotic
-            For i = 1 To Len(csvLine)
-            
-                If Mid(csvLine, i, 1) = """" And replace = "on" Then
-                    replace = "off"
-                ElseIf Mid(csvLine, i, 1) = """" And replace = "off" Then
-                    replace = "on"
-                End If
-                
-                
-                If replace = "on" And Mid(csvLine, i, 1) = "," Then
-                    newStr = newStr & ":*$*:"
-                Else
-                    newStr = newStr & Mid(csvLine, i, 1)
-                End If
-            
-            Next i
-            
-            ' store CSV info in an array
-            lineArr = Split(newStr, ":*$*:")
-            
-                '''''''''''''''' Create column association with the first row '''''''''''''
-                
-            If count = 0 Then
-            
+                ' store CSV info in an array
+'                lineArr = Split(newStr, ":*$*:")
 
-            
-                ' save the head csv values to look at later
-                CSVHead = lineArr
+                lineArr = rangeToArray(dataSheet.Cells(csvCount, 1).Address & dataSheet.Cells(csvCount, lastCol).Address, "Data")
                 
-                ' determine which worksheet we're dealing with
+                    '''''''''''''''' Create column association with the first row '''''''''''''
+newHead:
+                If count = 0 Then
+                
+    
+                
+                    ' save the head csv values to look at later
+                    CSVHead = lineArr
+                    
+                    ' determine which worksheet we're dealing with
+                    If InArray(lineArr, "EXTERNAL_FACILITY_ID") Then
+                        sheetName = "Facility XML"
+                        fields = "EXTERNAL_FACILITY_ID,FACILITY_TYPE,space,COMPONENT_CLASS,COMPONENT,FACILITY_NAME,DESCRIPTION,SHORT_NAME,GEOM_TYPE,LAT,LON,GEOM:DESCRIPTION,HAZUS,space,space,space,space,space,space,space,space,space,space,space"
+                        
+                    ElseIf InArray(lineArr, "POLY") Then
+                        sheetName = "Notification XML"
+                        fields = "GROUP_NAME,FACILITY_TYPE,POLY,NOTIFICATION_TYPE,DAMAGE_LEVEL,LIMIT_VALUE,EVENT_TYPE,DELIVERY_METHOD,MESSAGE_FORMAT,PRODUCT_TYPE,METRIC,AGGREGATE,AGGREGATE_GROUP"
+                    
+                    ElseIf InArray(lineArr, "USERNAME") Then
+                        sheetName = "User XML"
+                        fields = "USERNAME,USER_TYPE,PASSWORD,FULL_NAME,EMAIL_ADDRESS,PHONE_NUMBER,GROUP,DELIVERY:EMAIL_HTML,DELIVERY:EMAIL_TEXT,DELIVERY:EMAIL_PAGER"
+                        
+                    Else
+                        MsgBox "ERROR: MISSING HEADERS"
+                        GoTo ExitHandler
+                    End If
+                    
+                    ' set up info for worksheet
+                    Set mySheet = Worksheets(sheetName)
+                    
+                    Dim sheetHeads() As String
+                    sheetHeads = Split(fields, ",")
+                    
+                    ' create an array to store the column numbers for each
+                    Dim colNums() As Variant
+                    
+                    ' get the start row for our input
+                    Dim lastRow As Integer
+                    lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row
+                    
+                    ' make an array of the column numbers associated with the fields in the csv
+                    headCount = 0
+                    For Each Head In lineArr
+                    
+                        ReDim Preserve colNums(0 To headCount)
+                        colNums(headCount) = ArrayIndex(sheetHeads, Head)
+                        
+                        headCount = headCount + 1
+                    Next Head
+                    
+                    GoTo NextLine
+                End If
+                
+                    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                ' update the row
+                rowNum = lastRow + count
+                
+                ' check to see if we're dealing with a new header
                 If InArray(lineArr, "EXTERNAL_FACILITY_ID") Then
-                    sheetName = "Facility XML"
-                    fields = "EXTERNAL_FACILITY_ID,FACILITY_TYPE,space,COMPONENT_CLASS,COMPONENT,FACILITY_NAME,DESCRIPTION,SHORT_NAME,GEOM_TYPE,LAT,LON,GEOM:DESCRIPTION,HAZUS,space,space,space,space,space,space,space,space,space,space,space"
-                    
+                    GoTo newHead
                 ElseIf InArray(lineArr, "POLY") Then
-                    sheetName = "Notification XML"
-                    fields = "GROUP_NAME,FACILITY_TYPE,POLY,NOTIFICATION_TYPE,DAMAGE_LEVEL,LIMIT_VALUE,EVENT_TYPE,DELIVERY_METHOD,MESSAGE_FORMAT,PRODUCT_TYPE,METRIC,AGGREGATE,AGGREGATE_GROUP"
-                
+                    GoTo newHead
                 ElseIf InArray(lineArr, "USERNAME") Then
-                    sheetName = "User XML"
-                    fields = "USERNAME,USER_TYPE,PASSWORD,FULL_NAME,EMAIL_ADDRESS,PHONE_NUMBER,GROUP,DELIVERY:EMAIL_HTML,DELIVERY:EMAIL_TEXT,DELIVERY:EMAIL_PAGER"
-                    
-                Else
-                    MsgBox "ERROR: MISSING HEADERS"
-                    GoTo ExitHandler
+                    GoTo newHead
                 End If
                 
-                ' set up info for worksheet
-                Set mySheet = Worksheets(sheetName)
+    
+                lineCount = 0
+                attStr = ""
                 
-                Dim sheetHeads() As String
-                sheetHeads = Split(fields, ",")
-                
-                ' create an array to store the column numbers for each
-                Dim colNums() As Variant
-                
-                ' get the start row for our input
-                Dim lastRow As Integer
-                lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row
-                
-                ' make an array of the column numbers associated with the fields in the csv
-                headCount = 0
-                For Each Head In lineArr
-                
-                    ReDim Preserve colNums(0 To headCount)
-                    colNums(headCount) = ArrayIndex(sheetHeads, Head)
+                For Each arrVal In lineArr
+                    If colNums(lineCount) <> -99 Then
+                        mySheet.Cells(rowNum, colNums(lineCount) + 1).value = arrVal
                     
-                    headCount = headCount + 1
-                Next Head
-                
-                GoTo NextLine
-            End If
-            
-                ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-            ' update the row
-            rowNum = lastRow + count
-            
-
-            lineCount = 0
-            attStr = ""
-            
-            For Each arrVal In lineArr
-                If colNums(lineCount) <> -99 Then
-                    mySheet.Cells(rowNum, colNums(lineCount) + 1).value = arrVal
-                
-                ' get info from metric columns
-                ElseIf sheetName = "Facility XML" Then
-                
-                    If InStr(CSVHead(lineCount), "METRIC:") And UBound(Split(CSVHead(lineCount), ":")) + 1 = 3 Then
+                    ' get info from metric columns
+                    ElseIf sheetName = "Facility XML" Then
                     
-                        mySheet.Cells(rowNum, 13).value = "USER_DEFINED"
-                    
-                        metricHead = Split(CSVHead(lineCount), ":")
+                        If InStr(CSVHead(lineCount), "METRIC:") And UBound(Split(CSVHead(lineCount), ":")) + 1 = 3 Then
                         
-                        If metricHead(2) = "GREEN" Then
+                            mySheet.Cells(rowNum, 13).value = "USER_DEFINED"
                         
-                            mySheet.Cells(rowNum, 15).value = metricHead(1)
-                            mySheet.Cells(rowNum, 16).value = arrVal
-                            mySheet.Cells(rowNum, 17).value = 0.64
+                            metricHead = Split(CSVHead(lineCount), ":")
                             
-                        ElseIf metricHead(2) = "YELLOW" Then
-                        
-                            mySheet.Cells(rowNum, 18).value = metricHead(1)
-                            mySheet.Cells(rowNum, 19).value = arrVal
-                            mySheet.Cells(rowNum, 20).value = 0.64
-                        
-                        ElseIf metricHead(2) = "ORANGE" Then
-                        
-                            mySheet.Cells(rowNum, 21).value = metricHead(1)
-                            mySheet.Cells(rowNum, 22).value = arrVal
-                            mySheet.Cells(rowNum, 23).value = 0.64
-                        
-                        ElseIf metricHead(2) = "RED" Then
-                        
-                            mySheet.Cells(rowNum, 24).value = metricHead(1)
-                            mySheet.Cells(rowNum, 25).value = arrVal
-                            mySheet.Cells(rowNum, 26).value = 0.64
-                        
-                        ElseIf metricHead(2) = "GREY" Then
-                        
-                            mySheet.Cells(rowNum, 27).value = metricHead(1)
-                            mySheet.Cells(rowNum, 28).value = arrVal
-                            mySheet.Cells(rowNum, 29).value = 0.64
-                        
-                        End If
-                        
-                    ' get facility attribute information
-                    ElseIf InStr(CSVHead(lineCount), "ATTR:") And arrVal <> "" Then
-                    
-                        attArr = Split(CSVHead(lineCount), ":")
-                    
-                        ' stick attributes in facility XML cell
-                        attStr = mySheet.Cells(rowNum, 30).value
-                        If attStr = "" Then
-                            mySheet.Cells(rowNum, 30).value = attArr(1) & ":" & arrVal
-                        Else
-                            mySheet.Cells(rowNum, 30).value = attStr & "%" & attArr(1) & ":" & arrVal
-                        End If
-                    
-                        ' add attribute to the attribute list
-                        
-                        Set ShakeSheet = Worksheets("ShakeCast Ref Lookup Values")
-                        
-                        If Not IsEmpty(ShakeSheet.Range("P2")) Then
-                            savedAtts = Split(ShakeSheet.Range("P2").value, "%")
+                            If metricHead(2) = "GREEN" Then
                             
-                            If Not InArray(savedAtts, attArr(1)) Then
-                                ShakeSheet.Range("P2").value = ShakeSheet.Range("P2").value & "%" & attArr(1)
+                                mySheet.Cells(rowNum, 15).value = metricHead(1)
+                                mySheet.Cells(rowNum, 16).value = arrVal
+                                mySheet.Cells(rowNum, 17).value = 0.64
+                                
+                            ElseIf metricHead(2) = "YELLOW" Then
+                            
+                                mySheet.Cells(rowNum, 18).value = metricHead(1)
+                                mySheet.Cells(rowNum, 19).value = arrVal
+                                mySheet.Cells(rowNum, 20).value = 0.64
+                            
+                            ElseIf metricHead(2) = "ORANGE" Then
+                            
+                                mySheet.Cells(rowNum, 21).value = metricHead(1)
+                                mySheet.Cells(rowNum, 22).value = arrVal
+                                mySheet.Cells(rowNum, 23).value = 0.64
+                            
+                            ElseIf metricHead(2) = "RED" Then
+                            
+                                mySheet.Cells(rowNum, 24).value = metricHead(1)
+                                mySheet.Cells(rowNum, 25).value = arrVal
+                                mySheet.Cells(rowNum, 26).value = 0.64
+                            
+                            ElseIf metricHead(2) = "GREY" Then
+                            
+                                mySheet.Cells(rowNum, 27).value = metricHead(1)
+                                mySheet.Cells(rowNum, 28).value = arrVal
+                                mySheet.Cells(rowNum, 29).value = 0.64
+                            
                             End If
-                        Else
-                            ShakeSheet.Range("P2").value = attArr(1)
+                            
+                        ' get facility attribute information
+                        ElseIf InStr(CSVHead(lineCount), "ATTR:") And arrVal <> "" Then
+                        
+                            attArr = Split(CSVHead(lineCount), ":")
+                        
+                            ' stick attributes in facility XML cell
+                            attStr = mySheet.Cells(rowNum, 30).value
+                            If attStr = "" Then
+                                mySheet.Cells(rowNum, 30).value = attArr(1) & ":" & arrVal
+                            Else
+                                mySheet.Cells(rowNum, 30).value = attStr & "%" & attArr(1) & ":" & arrVal
+                            End If
+                        
+                            ' add attribute to the attribute list
+                            
+                            Set ShakeSheet = Worksheets("ShakeCast Ref Lookup Values")
+                            
+                            If Not IsEmpty(ShakeSheet.Range("P2")) Then
+                                savedAtts = Split(ShakeSheet.Range("P2").value, "%")
+                                
+                                If Not InArray(savedAtts, attArr(1)) Then
+                                    ShakeSheet.Range("P2").value = ShakeSheet.Range("P2").value & "%" & attArr(1)
+                                End If
+                            Else
+                                ShakeSheet.Range("P2").value = attArr(1)
+                            End If
+                            
                         End If
                         
+                    ElseIf sheetName = "User XML" Then
+                    
+                        If InStr(CSVHead(lineCount), "GROUP:") And arrVal <> "" Then
+                            mySheet.Cells(rowNum, 7).value = arrVal
+                        End If
+                    
                     End If
                     
-                ElseIf sheetName = "User XML" Then
+                    lineCount = lineCount + 1
+                    
+                Next arrVal
                 
-                    If InStr(CSVHead(lineCount), "GROUP:") And arrVal <> "" Then
-                        mySheet.Cells(rowNum, 7).value = arrVal
-                    End If
                 
-                End If
                 
-                lineCount = lineCount + 1
-                
-            Next arrVal
-            
-            
-            
 NextLine:
-            count = count + 1
-        Loop
-    End If
+                count = count + 1
+            Loop
+        End If
     
     ' update the worksheet
     If sheetName = "Facility XML" Then
@@ -972,12 +1027,17 @@ Private Sub protectWorkbook()
 
 End Sub
 
-Private Sub clearSheet()
+Private Sub clearSheet(Optional sheetName As String)
 
 Dim startRow As Integer
 Dim endRow As Long
 
-startRow = 5
+If sheetName = "Data" Then
+    startRow = 1
+Else
+    startRow = 5
+End If
+
 endRow = 5
 ' A AF N K are the letters where each row is defined and evaluated for all worksheets
 For Each letter In Split("A,AE,N,K", ",")
@@ -1004,7 +1064,7 @@ End If
 
 ActiveSheet.Range("A4").Activate
 
-If Err Then
+If Err And sheetName <> "Data" Then
 MsgBox "We couldn't find any rows!"
 End If
 

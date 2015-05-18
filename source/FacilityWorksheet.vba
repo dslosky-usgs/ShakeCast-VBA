@@ -887,7 +887,7 @@ Set XMLSheet = Worksheets("FacilityXMLexport")
 
 ' Start with a fresh XML table
 Dim lastRow As Long
-Dim LastCol As Integer
+Dim lastCol As Integer
 lastRow = FacSheet.Cells(Rows.count, "F").End(xlUp).row
 
 

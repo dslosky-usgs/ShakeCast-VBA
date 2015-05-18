@@ -1277,7 +1277,7 @@ Set XMLSheet = Worksheets("GroupXMLexport")
 
 ' Start with a fresh XML table
 Dim lastRow As Integer
-Dim LastCol As Integer
+Dim lastCol As Integer
 lastRow = notSheet.Cells(Rows.count, "A").End(xlUp).row
 
 
