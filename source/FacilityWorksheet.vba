@@ -58,13 +58,13 @@ lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row ' where we stop!
 
         ChangeColors "Bad", mySheet.Range("A" & checkRow, "AD" & checkRow), "Facility"
         
-        mySheet.Range("AE" & checkRow).Value = "Bad"
+        mySheet.Range("AE" & checkRow).value = "Bad"
         
     ' otherwise the row is good!
     Else
         ' all the required fields are filled
         ChangeColors "Good", mySheet.Range("A" & checkRow, "AE" & checkRow), "Facility"
-        mySheet.Range("AE" & checkRow).Value = "Good"
+        mySheet.Range("AE" & checkRow).value = "Good"
     End If
 
 
@@ -114,25 +114,25 @@ checkRow = target.row
 Set mySheet = Worksheets("Facility XML")
 
 ' Fill info that user will not edit
-mySheet.Range("C" & checkRow).Value = FillFacility(mySheet.Range("B" & checkRow), mySheet.Range("C" & checkRow))
+mySheet.Range("C" & checkRow).value = FillFacility(mySheet.Range("B" & checkRow), mySheet.Range("C" & checkRow))
 ' mySheet.Range("J" & checkRow).Value = ManLatLong(mySheet.Range("K" & checkRow), mySheet.Range("L" & checkRow))
 ' mySheet.Range("I" & checkRow).Value = GeomType(mySheet.Range("J" & checkRow))
-mySheet.Range("I" & checkRow).Value = GeomType(ManLatLong(mySheet.Range("J" & checkRow), mySheet.Range("K" & checkRow)))
+mySheet.Range("I" & checkRow).value = GeomType(ManLatLong(mySheet.Range("J" & checkRow), mySheet.Range("K" & checkRow)))
 
 mySheet.Range("J" & checkRow).HorizontalAlignment = xlCenter
 mySheet.Range("K" & checkRow).HorizontalAlignment = xlCenter
 
 ' fill component and component class if left empty
 If IsEmpty(mySheet.Range("D" & checkRow)) And Not IsEmpty(mySheet.Range("A" & checkRow)) Then
-    mySheet.Range("D" & checkRow).Value = FillSystem(mySheet.Range("A1"))
+    mySheet.Range("D" & checkRow).value = FillSystem(mySheet.Range("A1"))
 ElseIf IsEmpty(mySheet.Range("A" & checkRow)) Then
-    mySheet.Range("D" & checkRow).Value = Empty
+    mySheet.Range("D" & checkRow).value = Empty
 End If
 
 If IsEmpty(mySheet.Range("E" & checkRow)) And Not IsEmpty(mySheet.Range("A" & checkRow)) Then
-    mySheet.Range("E" & checkRow).Value = FillSystem(mySheet.Range("A1"))
+    mySheet.Range("E" & checkRow).value = FillSystem(mySheet.Range("A1"))
 ElseIf IsEmpty(mySheet.Range("A" & checkRow)) Then
-    mySheet.Range("E" & checkRow).Value = Empty
+    mySheet.Range("E" & checkRow).value = Empty
 End If
 
 
@@ -161,9 +161,9 @@ checkRow = target.row
     
     For Each hazMod In hazSheet.Range("A1:A" & lastHazRow)
     
-        If target.Value = hazMod.Value Then
-            mySheet.Range("N" & checkRow).Value = hazSheet.Range("B" & hazMod.row).Value
-            mySheet.Range("O" & checkRow, "AC" & checkRow).Value = hazSheet.Range("F" & hazMod.row, "T" & hazMod.row).Value
+        If target.value = hazMod.value Then
+            mySheet.Range("N" & checkRow).value = hazSheet.Range("B" & hazMod.row).value
+            mySheet.Range("O" & checkRow, "AC" & checkRow).value = hazSheet.Range("F" & hazMod.row, "T" & hazMod.row).value
         
             ' mySheet.Range("O" & checkRow).HorizontalAlignment = xlCenter
             mySheet.Range("N" & checkRow, "AC" & checkRow).HorizontalAlignment = xlCenter
@@ -489,7 +489,7 @@ Do While row < endRow
 
     Set TestCell = XMLSheet.Cells(row, 1) ' This is the first XML cell, which should be filled for any valid entry
     
-    If TestCell.Value = Empty Then         ' If it IS empty, then we just skip this row
+    If TestCell.value = Empty Then         ' If it IS empty, then we just skip this row
         GoTo ContinueLoop
         
     Else
@@ -507,7 +507,7 @@ Do While row < endRow
             Set CurCell = XMLSheet.Cells(row, col)
             
             
-            If Field.Value = "END" Then GoTo NextColumn
+            If Field.value = "END" Then GoTo NextColumn
 
             
 '                    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -520,41 +520,41 @@ Do While row < endRow
             Dim HeadValue As String
             Dim CellValue As String
             
-            FieldValue = Field.Value
-            SubfValue = Subf.Value
-            HeadValue = Head.Value
-            CellValue = CurCell.Value
+            FieldValue = Field.value
+            SubfValue = Subf.value
+            HeadValue = Head.value
+            CellValue = CurCell.value
             
             ' check if we should close the field
             Set NextField = XMLSheet.Cells(1, col + 1)
             Set NextCell = XMLSheet.Cells(row, col + 1)
             
-            If IsEmpty(CurCell.Value) Then GoTo NextColumn
+            If IsEmpty(CurCell.value) Then GoTo NextColumn
             
             ' get all the numbers out of the repeated headers. stupid excel puts them in
             For i = 0 To 9
 
-                FieldValue = Replace(FieldValue, i, "")
+                FieldValue = replace(FieldValue, i, "")
 
-                SubfValue = Replace(SubfValue, i, "")
+                SubfValue = replace(SubfValue, i, "")
 
-                HeadValue = Replace(HeadValue, i, "")
+                HeadValue = replace(HeadValue, i, "")
 
                 
              Next i
              
              ' replace XML and HTML reserved characters
-             CellValue = Replace(CellValue, "&", "&amp;")
-             CellValue = Replace(CellValue, "<", "&lt;")
-             CellValue = Replace(CellValue, ">", "&gt;")
-             CellValue = Replace(CellValue, "'", "&apos;")
+             CellValue = replace(CellValue, "&", "&amp;")
+             CellValue = replace(CellValue, "<", "&lt;")
+             CellValue = replace(CellValue, ">", "&gt;")
+             CellValue = replace(CellValue, "'", "&apos;")
              
              
             
 '                      '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
             
             
-            If Field.Value = Empty Then            ' There can be no subfield without a field, this piece of data
+            If Field.value = Empty Then            ' There can be no subfield without a field, this piece of data
                 indent = 2                         ' only has its FacilityRow as a parent. We open no additional
                                                    ' XML tages for this data
                 
@@ -563,7 +563,7 @@ Do While row < endRow
                 printStr = printStr & vbTab & vbTab & "<" & HeadValue & _
                 ">" & CellValue & "</" & Head & ">"
         
-            ElseIf Field.Value <> Empty And Subf.Value = Empty Then
+            ElseIf Field.value <> Empty And Subf.value = Empty Then
                 indent = 2
                 
                                                    ' In this case, the data resides inside of a field, but no sub-
@@ -571,7 +571,7 @@ Do While row < endRow
                                                    ' already been opened
                 
                 ' Check if the field has already been opened
-                If Field.Value <> oldField Then
+                If Field.value <> oldField Then
                     
                     ' if the new field and old field are not the same, we need to open the tag in the XML for the
                     ' new field
@@ -613,7 +613,7 @@ Do While row < endRow
                 indent = 2                         ' check if either of them is open already
                 
                 ' check if the field has already been opened
-                If Field.Value <> oldField Then
+                If Field.value <> oldField Then
                     printStr = vbTab & vbTab & "<" & FieldValue & ">" & vbNewLine
                     
                     endField = "Yes"
@@ -622,7 +622,7 @@ Do While row < endRow
                 indent = indent + 1
                 
                 ' check if the subfield has already been opened
-                If Subf.Value <> oldSubf Then
+                If Subf.value <> oldSubf Then
                     printStr = printStr & vbTab & vbTab & vbTab & "<" & SubfValue & ">" & vbNewLine
                 End If
                 
@@ -637,14 +637,14 @@ Do While row < endRow
             
             ' check if we should close the subfield
             Set NextSubf = XMLSheet.Cells(2, col + 1)
-            If Subf.Value <> NextSubf.Value And Subf.Value <> Empty Then
+            If Subf.value <> NextSubf.value And Subf.value <> Empty Then
             
                 printStr = printStr & vbNewLine & vbTab & vbTab & vbTab & "</" & SubfValue & ">"
                 
             End If
             
 
-            If Field.Value <> NextField.Value And Field.Value <> Empty Then
+            If Field.value <> NextField.value And Field.value <> Empty Then
 
                 printStr = printStr & vbNewLine & vbTab & vbTab & "</" & FieldValue & ">"
                 
@@ -656,14 +656,14 @@ Do While row < endRow
             Print #2, printStr
             
             ' Sets the Field and subfield we just used as the old fields
-            oldField = Field.Value
-            oldSubf = Subf.Value
+            oldField = Field.value
+            oldSubf = Subf.value
             
             ' Reset the print string for the next piece of data
             printStr = ""
             
 NextColumn:
-            If CellValue = "" And (Field.Value <> NextField.Value And Field.Value <> Empty) And NextField <> "END" And endField = "Yes" Then
+            If CellValue = "" And (Field.value <> NextField.value And Field.value <> Empty) And NextField <> "END" And endField = "Yes" Then
 
                 printStr = printStr & vbTab & vbTab & "</" & FieldValue & ">" & vbNewLine
                 
@@ -887,7 +887,7 @@ Set XMLSheet = Worksheets("FacilityXMLexport")
 
 ' Start with a fresh XML table
 Dim lastRow As Long
-Dim LastCol As Integer
+Dim lastCol As Integer
 lastRow = FacSheet.Cells(Rows.count, "F").End(xlUp).row
 
 
@@ -973,8 +973,8 @@ Do While FacRow < endRow + 1
             ' Count the number of facilities that will be rejected
             xmlNums(1) = xmlNums(1) + 1
             
-            If FacSheet.Range("AE" & FacRow).Value <> "bad" Then
-                FacSheet.Range("AE" & FacRow).Value = "bad"
+            If FacSheet.Range("AE" & FacRow).value <> "bad" Then
+                FacSheet.Range("AE" & FacRow).value = "bad"
                 ChangeColors "Bad", Range(RowRange1, RowRange2), "Facility"
             End If
             
@@ -998,11 +998,11 @@ Do While FacRow < endRow + 1
     
 
     ' copy data from Facility Sheet to the XML table
-    XMLSheet.Range("A" & XMLrow, "B" & XMLrow).Value = FacSheet.Range("A" & FacRow, "B" & FacRow).Value
-    XMLSheet.Range("C" & XMLrow, "H" & XMLrow).Value = FacSheet.Range("D" & FacRow, "I" & FacRow).Value
-    XMLSheet.Range("I" & XMLrow).Value = ManLatLong(FacSheet.Range("J" & FacRow), FacSheet.Range("K" & FacRow))
-    XMLSheet.Range("J" & XMLrow, "K" & XMLrow).Value = FacSheet.Range("L" & FacRow, "M" & FacRow).Value
-    XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).Value = FacSheet.Range("O" & FacRow, "AD" & FacRow).Value
+    XMLSheet.Range("A" & XMLrow, "B" & XMLrow).value = FacSheet.Range("A" & FacRow, "B" & FacRow).value
+    XMLSheet.Range("C" & XMLrow, "H" & XMLrow).value = FacSheet.Range("D" & FacRow, "I" & FacRow).value
+    XMLSheet.Range("I" & XMLrow).value = ManLatLong(FacSheet.Range("J4"), FacSheet.Range("K4"))
+    XMLSheet.Range("J" & XMLrow, "K" & XMLrow).value = FacSheet.Range("L" & FacRow, "M" & FacRow).value
+    XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).value = FacSheet.Range("O" & FacRow, "AD" & FacRow).value
             
     
     XMLrow = XMLrow + 1
@@ -1043,7 +1043,7 @@ End Function
                         cell As Range) As String
                         
 
-If Model.Value = Empty Then
+If Model.value = Empty Then
     
     FillFacility = ""
     Exit Function
@@ -1053,7 +1053,7 @@ End If
 
 
 
-ModVal = Model.Value
+ModVal = Model.value
     
 Dim col As Integer
 col = cell.column
@@ -1068,7 +1068,7 @@ ElseIf col = 3 Then
 
     Lookup = col - 1
     
-    FillFacility = Application.WorksheetFunction.VLookup(Model.Value, Sheet5.Range("$C:$D"), Lookup, False)
+    FillFacility = Application.WorksheetFunction.VLookup(Model.value, Sheet5.Range("$C:$D"), Lookup, False)
     
     cell.HorizontalAlignment = xlLeft
     Exit Function
@@ -1078,7 +1078,7 @@ ElseIf col >= 16 Then
     
 End If
     
-FillFacility = Application.WorksheetFunction.VLookup(Model.Value, Sheet4.Range("$A:$T"), Lookup, False)
+FillFacility = Application.WorksheetFunction.VLookup(Model.value, Sheet4.Range("$A:$T"), Lookup, False)
 
 
 cell.HorizontalAlignment = xlCenter
@@ -1088,7 +1088,7 @@ End Function
 
 Function FillSystem(cell As Range)
 
-If cell.Value = Empty Then
+If cell.value = Empty Then
     FillSystem = ""
 Else
     FillSystem = "SYSTEM"
@@ -1209,14 +1209,14 @@ If CurCell.column = 32 Then
 
     For Each ref In RefCell
         
-        If ref.Value = Empty Then
+        If ref.value = Empty Then
             
             CopyIf = ""
             Exit Function
         End If
     Next ref
         
-ElseIf RefCell.Value = Empty Then
+ElseIf RefCell.value = Empty Then
     
     CopyIf = ""
     Exit Function
@@ -1224,7 +1224,7 @@ ElseIf RefCell.Value = Empty Then
 End If
 
 
-If cell.Value = Empty Then
+If cell.value = Empty Then
     CopyIf = ""
     Exit Function
 End If
@@ -1242,9 +1242,9 @@ CellRange2 = "AD" & cellRow
 sumEmpty = Application.WorksheetFunction.CountBlank(Range(CellRange1, CellRange2))
 
 
-If sumEmpty = 0 And InStr(cell.Value, Chr(10)) <> 0 Then
+If sumEmpty = 0 And InStr(cell.value, Chr(10)) <> 0 Then
     Dim strArr As Variant
-    strArr = Split(cell.Value, Chr(10))
+    strArr = Split(cell.value, Chr(10))
     
     Dim printStr As String
     Dim i As Integer
@@ -1263,7 +1263,7 @@ If sumEmpty = 0 And InStr(cell.Value, Chr(10)) <> 0 Then
     CopyIf = printStr
 ElseIf sumEmpty = 0 Then
     
-    CopyIf = cell.Value
+    CopyIf = cell.value
     
 Else
     CopyIf = ""
@@ -1297,23 +1297,23 @@ If IsEmpty(LatCell) Or IsEmpty(LongCell) Or IsError(LatCell) Or IsError(LongCell
     Exit Function
     
 ' Get Row lengths for latitude
-ElseIf InStr(LatCell.Value, ";") = 0 Then
+ElseIf InStr(LatCell.value, ";") = 0 Then
     LatRows = 1
     
 Else
     ' lets also check if the row number the user provided is not too big.
-    LatArray = Split(LatCell.Value, ";")
+    LatArray = Split(LatCell.value, ";")
     LatRows = UBound(LatArray) + 1
 End If
 
 
 ' Get Row lengths for longitude
-If InStr(LongCell.Value, ";") = 0 Then
+If InStr(LongCell.value, ";") = 0 Then
     LongRows = 1
 
 Else
     ' lets also check if the row number the user provided is not too big.
-    LongArray = Split(LongCell.Value, ";")
+    LongArray = Split(LongCell.value, ";")
     LongRows = UBound(LongArray) + 1
     
 End If
@@ -1327,7 +1327,7 @@ If LatRows > LongRows Or LatRows < LongRows Then
     Exit Function
     
 ElseIf LatRows = 1 And LongRows = 1 Then
-    printStr = printStr & LongCell.Value & "," & LatCell.Value & ",0"
+    printStr = printStr & LongCell.value & "," & LatCell.value & ",0"
 Else
     printStr = ""
     
@@ -1665,7 +1665,7 @@ Private Sub FacSheetInfo()
 Set mySheet = Worksheets("Facility XML")
 
 
-If mySheet.Range("A2").Value = "General User" Then
+If mySheet.Range("A2").value = "General User" Then
 
     Application.Run "FacGenInfo"
 

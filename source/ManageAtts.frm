@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ManageAtts 
    Caption         =   "Manage Attributes"
    ClientHeight    =   5220
-   ClientLeft      =   45
-   ClientTop       =   375
+   ClientLeft      =   40
+   ClientTop       =   -1920
    ClientWidth     =   6240
    OleObjectBlob   =   "ManageAtts.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 
 
 
@@ -43,7 +45,7 @@ Dim attCount As Integer
 attCount = 0
 For Each Control In Me.AttFrame.Controls
     If TypeOf Control Is MSForms.CheckBox Then
-        If Control.Value = True Then
+        If Control.value = True Then
             ReDim Preserve deleteAtt(0 To attCount)
             deleteAtt(attCount) = Control.Caption
             attCount = attCount + 1
@@ -58,7 +60,7 @@ Dim attStr As String
 Dim newAttStr As String
 Dim attArr() As String
 Dim eachAtt() As String
-attStr = mySheet.Range("P2").Value
+attStr = mySheet.Range("P2").value
 newAttStr = ""
 
 attArr = Split(attStr, "%")
@@ -77,7 +79,7 @@ For Each entry In attArr
 Next entry
 
 
-mySheet.Range("P2").Value = newAttStr
+mySheet.Range("P2").value = newAttStr
 
 
 ' delete in text box
@@ -93,7 +95,7 @@ Set attCell = mySheet.Range("P2")
 
 Dim attList() As String
 
-attList = Split(attCell.Value, "%")
+attList = Split(attCell.value, "%")
 
 'For Each attCell In attCells
 '
@@ -165,7 +167,7 @@ Set attCell = mySheet.Range("P2")
 Dim attList() As String
 Dim attCount As Integer
 
-attList = Split(attCell.Value, "%")
+attList = Split(attCell.value, "%")
 
 'For Each attCell In attCells
 '

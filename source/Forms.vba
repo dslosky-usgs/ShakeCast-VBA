@@ -7,7 +7,7 @@ Set attCell = mySheet.Range("P2")
 Dim attList() As String
 Dim attCount As Integer
 
-attList = Split(attCell.Value, "%")
+attList = Split(attCell.value, "%")
 
 
 ' get list of attributes associated with this facility
@@ -16,7 +16,7 @@ Dim attArr() As String
 Dim justAttStr As String
 Dim eachAtt() As String
 
-attStr = ActiveCell.Value
+attStr = ActiveCell.value
 attArr = Split(attStr, "%")
 justAttStr = ""
 
@@ -49,7 +49,7 @@ For i = 0 To UBound(attList)
     
     ' select the right checkboxes
     If InStr(justAttStr, "%" & attList(i) & "%") Then
-        chkBox.Value = True
+        chkBox.value = True
     End If
     
 Next i
@@ -96,7 +96,7 @@ lastFac = mySheet.Cells(Rows.count, "C").End(xlUp).row
 Set FacTypeCells = Worksheets("ShakeCast Ref Lookup Values").Range("C1:C" & lastFac)
 
 Dim facList As Variant
-facList = FacTypeCells.Value
+facList = FacTypeCells.value
 
 
 ' turn list into check boxes
@@ -114,8 +114,8 @@ For i = 1 To UBound(facList)
     chkBox.Height = 22
     
     ' select the right checkboxes
-    If InStr(ActiveCell.Value, facList(i, 1)) Then
-        chkBox.Value = True
+    If InStr(ActiveCell.value, facList(i, 1)) Then
+        chkBox.value = True
     End If
     
 Next i

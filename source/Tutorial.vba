@@ -179,18 +179,18 @@ ElseIf tutNum = "1" And tutDec = "1" Then
     
     If tutInfo = 0 Then
     
-        If copySheet.Range("A99").Value = "no" Then
+        If copySheet.Range("A99").value = "no" Then
             copyRow = 100
             
-            copySheet.Range("A" & copyRow & ":" & "AF" & copyRow).Value = _
-                mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).Value
+            copySheet.Range("A" & copyRow & ":" & "AF" & copyRow).value = _
+                mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).value
         
             mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).Clear
             mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).Locked = False
             
             Application.Run "CheckFacilities", mySheet.Range("A" & tutRow)
             
-            copySheet.Range("A99").Value = "yes"
+            copySheet.Range("A99").value = "yes"
         End If
         
             mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).Clear
@@ -233,7 +233,7 @@ ElseIf tutNum = "1" And tutDec = "1" Then
     
 
     
-        mySheet.Range("A" & tutRow).Value = 1
+        mySheet.Range("A" & tutRow).value = 1
         
         
         TutForm.DialogueBox.Text = "Check that out! We entered a Facility ID, and the whole facility row changed colors!" & vbNewLine & vbNewLine & _
@@ -246,7 +246,7 @@ ElseIf tutNum = "1" And tutDec = "1" Then
     ElseIf tutInfo = 3 Then
         
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
+        mySheet.Range("A" & tutRow).value = 1
         
         mySheet.Range("B" & tutRow, "AF" & tutRow).Clear
         mySheet.Range("B" & tutRow, "AF" & tutRow).Locked = False
@@ -264,9 +264,9 @@ ElseIf tutNum = "1" And tutDec = "1" Then
     ElseIf tutInfo = 4 Then
     
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
+        mySheet.Range("A" & tutRow).value = 1
     
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
         
         TutForm.DialogueBox.Text = "Column ""C"" automatically populated when we completed the Facility Type section. There are actually " & _
             "a few other fields that have populated automatically as well, but you can only see those from the advanced user spreadsheet!" & vbNewLine & vbNewLine & _
@@ -277,8 +277,8 @@ ElseIf tutNum = "1" And tutDec = "1" Then
     ElseIf tutInfo = 5 Then
     
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
     
         mySheet.Range("F" & tutRow, "AF" & tutRow).Clear
         mySheet.Range("F" & tutRow, "AF" & tutRow).Locked = False
@@ -295,10 +295,10 @@ ElseIf tutNum = "1" And tutDec = "1" Then
         mySheet.Range("G" & tutRow, "AF" & tutRow).Locked = False
         
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
     
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
         
         mySheet.Range("G" & tutRow, "H" & tutRow).Select
         
@@ -314,12 +314,12 @@ ElseIf tutNum = "1" And tutDec = "1" Then
         mySheet.Range("K" & tutRow, "AD" & tutRow).Locked = False
         
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
     
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
         
         mySheet.Range("K" & tutRow, "L" & tutRow).Select
         
@@ -335,14 +335,14 @@ ElseIf tutNum = "1" And tutDec = "1" Then
         mySheet.Range("M" & tutRow, "AF" & tutRow).Locked = False
         
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
     
-        mySheet.Range("K" & tutRow).Value = "37.819929"
-        mySheet.Range("L" & tutRow).Value = "-122.478255"
+        mySheet.Range("K" & tutRow).value = "37.819929"
+        mySheet.Range("L" & tutRow).value = "-122.478255"
         
         mySheet.Range("M" & tutRow).Select
         
@@ -354,13 +354,13 @@ ElseIf tutNum = "1" And tutDec = "1" Then
     ElseIf tutInfo = 9 Then
     
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
-        mySheet.Range("K" & tutRow).Value = "37.819929"
-        mySheet.Range("L" & tutRow).Value = "-122.478255"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
+        mySheet.Range("K" & tutRow).value = "37.819929"
+        mySheet.Range("L" & tutRow).value = "-122.478255"
     
         TutForm.DialogueBox.Text = "The HTML Snippet gives ShakeCast some information to display on the map. This HTML information can also be included in the " & _
             "facility specific custom shaking report. For this case, I will just put in a simple title."
@@ -371,15 +371,15 @@ ElseIf tutNum = "1" And tutDec = "1" Then
         mySheet.Range("N" & tutRow, "AF" & tutRow).Locked = False
         
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
-        mySheet.Range("K" & tutRow).Value = "37.819929"
-        mySheet.Range("L" & tutRow).Value = "-122.478255"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
+        mySheet.Range("K" & tutRow).value = "37.819929"
+        mySheet.Range("L" & tutRow).value = "-122.478255"
         
-        mySheet.Range("M" & tutRow).Value = "<h1>The Golden Gate Bridge</h1>"
+        mySheet.Range("M" & tutRow).value = "<h1>The Golden Gate Bridge</h1>"
     
         mySheet.Range("N" & tutRow).Select
         
@@ -400,16 +400,16 @@ ElseIf tutNum = "1" And tutDec = "1" Then
         mySheet.Range("O" & tutRow, "AF" & tutRow).Locked = False
         
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
-        mySheet.Range("K" & tutRow).Value = "37.819929"
-        mySheet.Range("L" & tutRow).Value = "-122.478255"
-        mySheet.Range("M" & tutRow).Value = "<h1>The Golden Gate Bridge</h1>"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
+        mySheet.Range("K" & tutRow).value = "37.819929"
+        mySheet.Range("L" & tutRow).value = "-122.478255"
+        mySheet.Range("M" & tutRow).value = "<h1>The Golden Gate Bridge</h1>"
     
-        mySheet.Range("N" & tutRow).Value = "GENERIC"
+        mySheet.Range("N" & tutRow).value = "GENERIC"
         
         TutForm.DialogueBox.Text = "As you can see, the fragility information automatically populates as soon as the model name is chosen. That's it! We've " & _
             "completed the entire facility row! Now I'd like to go back and talk about a couple different kinds of geometry definitions you can use for your " & _
@@ -426,15 +426,15 @@ ElseIf tutNum = "1" And tutDec = "2" Then
         mySheet.Range("K" & tutRow, "L" & tutRow).Select
         
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
-        mySheet.Range("K" & tutRow).Value = "37.819929"
-        mySheet.Range("L" & tutRow).Value = "-122.478255"
-        mySheet.Range("M" & tutRow).Value = "<h1>The Golden Gate Bridge</h1>"
-        mySheet.Range("N" & tutRow).Value = "GENERIC"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
+        mySheet.Range("K" & tutRow).value = "37.819929"
+        mySheet.Range("L" & tutRow).value = "-122.478255"
+        mySheet.Range("M" & tutRow).value = "<h1>The Golden Gate Bridge</h1>"
+        mySheet.Range("N" & tutRow).value = "GENERIC"
     
         TutForm.DialogueBox.Text = "What would it look like if we wanted to use multiple points " & _
             "to describe this facility? As it turns out, the Golden Gate Bridge is actually around 9000 feet long, so it makes sense to use multiple " & _
@@ -453,16 +453,16 @@ ElseIf tutNum = "1" And tutDec = "2" Then
     ElseIf tutInfo = 1 Then
     
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
-        mySheet.Range("M" & tutRow).Value = "<h1>The Golden Gate Bridge</h1>"
-        mySheet.Range("N" & tutRow).Value = "GENERIC"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
+        mySheet.Range("M" & tutRow).value = "<h1>The Golden Gate Bridge</h1>"
+        mySheet.Range("N" & tutRow).value = "GENERIC"
         
-        mySheet.Range("K" & tutRow).Value = "37.825777;37.810284"
-        mySheet.Range("L" & tutRow).Value = "-122.479199;-122.477568"
+        mySheet.Range("K" & tutRow).value = "37.825777;37.810284"
+        mySheet.Range("L" & tutRow).value = "-122.479199;-122.477568"
         
         TutForm.DialogueBox.Text = "Nice! Now the Golden Gate Bridge has what we call a ""Polyline"" geometry, which we define as more than one " & _
             "point that is not an enclosed shape. If we were to add another point and then the first point again, we would have a ""Polygon"" geometry." & vbNewLine & vbNewLine & _
@@ -475,15 +475,15 @@ ElseIf tutNum = "1" And tutDec = "3" Then
     If tutInfo = 0 Then
     
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
-        mySheet.Range("M" & tutRow).Value = "<h1>The Golden Gate Bridge</h1>"
-        mySheet.Range("N" & tutRow).Value = "GENERIC"
-        mySheet.Range("K" & tutRow).Value = "37.825777;37.810284"
-        mySheet.Range("L" & tutRow).Value = "-122.479199;-122.477568"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
+        mySheet.Range("M" & tutRow).value = "<h1>The Golden Gate Bridge</h1>"
+        mySheet.Range("N" & tutRow).value = "GENERIC"
+        mySheet.Range("K" & tutRow).value = "37.825777;37.810284"
+        mySheet.Range("L" & tutRow).value = "-122.479199;-122.477568"
     
         TutForm.DialogueBox.Text = "Although the Golden Gate Bridge is best described as a Polyline, I'd like to do an example of the " & _
             "Polygon geometry." & vbNewLine & vbNewLine & _
@@ -502,16 +502,16 @@ ElseIf tutNum = "1" And tutDec = "3" Then
     ElseIf tutInfo = 1 Then
     
         ' already present values
-        mySheet.Range("A" & tutRow).Value = 1
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("F" & tutRow).Value = "Golden Gate Bridge"
-        mySheet.Range("G" & tutRow).Value = "a bridge in San Francisco"
-        mySheet.Range("H" & tutRow).Value = "GGB"
-        mySheet.Range("M" & tutRow).Value = "<h1>The Golden Gate Bridge</h1>"
-        mySheet.Range("N" & tutRow).Value = "GENERIC"
+        mySheet.Range("A" & tutRow).value = 1
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("F" & tutRow).value = "Golden Gate Bridge"
+        mySheet.Range("G" & tutRow).value = "a bridge in San Francisco"
+        mySheet.Range("H" & tutRow).value = "GGB"
+        mySheet.Range("M" & tutRow).value = "<h1>The Golden Gate Bridge</h1>"
+        mySheet.Range("N" & tutRow).value = "GENERIC"
     
-        mySheet.Range("K" & tutRow).Value = "37.832316;37.832229;37.807294;37.807044;37.832316"
-        mySheet.Range("L" & tutRow).Value = "-122.480710;-122.480855;-122.475324;-122.475662;-122.480710"
+        mySheet.Range("K" & tutRow).value = "37.832316;37.832229;37.807294;37.807044;37.832316"
+        mySheet.Range("L" & tutRow).value = "-122.480710;-122.480855;-122.475324;-122.475662;-122.480710"
         
     ElseIf tutInfo = 2 Then
         TutForm.DialogueBox.Text = "That's it for the facility worksheet! If you've questions while you are filling out the worksheet " & _
@@ -538,17 +538,17 @@ ElseIf tutNum = "2" And tutDec = "0" Then
 ElseIf tutNum = "2" And tutDec = "1" Then
     
     If tutInfo = 0 Then
-        If copySheet.Range("A199").Value = "no" Then
+        If copySheet.Range("A199").value = "no" Then
             copyRow = 200
 
-            copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 9).Value = _
-                mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Value
+            copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 9).value = _
+                mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).value
 
             mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Clear
             mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Locked = False
 
 
-            copySheet.Range("A199").Value = "yes"
+            copySheet.Range("A199").value = "yes"
         End If
         
         mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Clear
@@ -567,7 +567,7 @@ ElseIf tutNum = "2" And tutDec = "1" Then
         mySheet.Range("A" & tutRow + 1 & ":" & "Q" & tutRow + 9).Clear
         mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Locked = False
         
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
     
         mySheet.Range("B" & tutRow).Select
         
@@ -585,10 +585,10 @@ ElseIf tutNum = "2" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
         Application.EnableEvents = True
         
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
     
         mySheet.Range("C" & tutRow).Select
         
@@ -611,11 +611,11 @@ ElseIf tutNum = "2" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
         Application.EnableEvents = True
         
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
     
         mySheet.Range("D" & tutRow).Select
         
@@ -633,12 +633,12 @@ ElseIf tutNum = "2" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
         Application.EnableEvents = True
         
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
     
         mySheet.Range("E" & tutRow).Select
         
@@ -658,13 +658,13 @@ ElseIf tutNum = "2" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
         Application.EnableEvents = True
         
-        mySheet.Range("F" & tutRow).Value = "3"
+        mySheet.Range("F" & tutRow).value = "3"
     
         mySheet.Range("G" & tutRow).Select
     
@@ -723,13 +723,13 @@ ElseIf tutNum = "2" And tutDec = "1" Then
 
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
         Application.EnableEvents = True
     
         mySheet.Range("A" & tutRow + 1).Select
@@ -746,16 +746,16 @@ ElseIf tutNum = "2" And tutDec = "1" Then
     
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
         Application.EnableEvents = True
     
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
         
         TutForm.DialogueBox.Text = "Look at that! We've created a second notification row for this group and already there are more grey cells than we saw " & _
             "in the first row. This is because there is some information that we only want defined one time. For instance, we only want the monitoring region " & _
@@ -773,17 +773,17 @@ ElseIf tutNum = "2" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
         Application.EnableEvents = True
     
-        mySheet.Range("D" & tutRow + 1).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 1).value = "DAMAGE"
         mySheet.Range("D" & tutRow + 1).Select
         
         TutForm.DialogueBox.Text = "Notice that the next column otimatically populated ""Green""! These colors represent the possible severity of the damage to your facility. " & _
@@ -801,35 +801,35 @@ ElseIf tutNum = "2" And tutDec = "1" Then
         Application.EnableEvents = False
         Application.ScreenUpdating = False
         
-        mySheet.Range("A" & tutRow + 2).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 3).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 4).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 2).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 3).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 4).value = "CAL_BRIDGES"
     
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 3).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 4).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 3).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 4).value = "DAMAGE"
         
-        mySheet.Range("E" & tutRow + 2).Value = "YELLOW"
-        mySheet.Range("E" & tutRow + 3).Value = "ORANGE"
+        mySheet.Range("E" & tutRow + 2).value = "YELLOW"
+        mySheet.Range("E" & tutRow + 3).value = "ORANGE"
         
         
         Application.ScreenUpdating = True
         Application.EnableEvents = True
         
-        mySheet.Range("E" & tutRow + 4).Value = "RED"
+        mySheet.Range("E" & tutRow + 4).value = "RED"
         mySheet.Range("E" & tutRow + 4).Select
         
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
-        mySheet.Range("D" & tutRow + 1).Value = "DAMAGE"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
+        mySheet.Range("D" & tutRow + 1).value = "DAMAGE"
         Application.EnableEvents = True
     
         
@@ -847,29 +847,29 @@ ElseIf tutNum = "2" And tutDec = "1" Then
     
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
-        mySheet.Range("D" & tutRow + 1).Value = "DAMAGE"
-        mySheet.Range("A" & tutRow + 2).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 3).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 4).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
+        mySheet.Range("D" & tutRow + 1).value = "DAMAGE"
+        mySheet.Range("A" & tutRow + 2).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 3).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 4).value = "CAL_BRIDGES"
     
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 3).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 4).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 3).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 4).value = "DAMAGE"
         
-        mySheet.Range("E" & tutRow + 2).Value = "YELLOW"
-        mySheet.Range("E" & tutRow + 3).Value = "ORANGE"
-        mySheet.Range("E" & tutRow + 4).Value = "RED"
+        mySheet.Range("E" & tutRow + 2).value = "YELLOW"
+        mySheet.Range("E" & tutRow + 3).value = "ORANGE"
+        mySheet.Range("E" & tutRow + 4).value = "RED"
         Application.EnableEvents = True
     
-        mySheet.Range("D" & tutRow + 2).Value = Empty
+        mySheet.Range("D" & tutRow + 2).value = Empty
         mySheet.Range("D" & tutRow + 2).Select
         
         TutForm.DialogueBox.Text = "You can see that only the single notification row is invalidated. All the rest of the notification specifications will still be " & _
@@ -882,29 +882,29 @@ ElseIf tutNum = "2" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 2).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 3).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 4).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 2).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 3).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 4).value = "CAL_BRIDGES"
         
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 3).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 4).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 3).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 4).value = "DAMAGE"
         
-        mySheet.Range("E" & tutRow + 2).Value = "YELLOW"
-        mySheet.Range("E" & tutRow + 3).Value = "ORANGE"
-        mySheet.Range("E" & tutRow + 4).Value = "RED"
+        mySheet.Range("E" & tutRow + 2).value = "YELLOW"
+        mySheet.Range("E" & tutRow + 3).value = "ORANGE"
+        mySheet.Range("E" & tutRow + 4).value = "RED"
         Application.EnableEvents = True
         
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow).Value = Empty
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow).value = Empty
         mySheet.Range("D" & tutRow).Select
         
         TutForm.DialogueBox.Text = "Now you can see that the entire notification group is invalid! This happens because the first row in a notification group defines " & _
@@ -921,30 +921,30 @@ ElseIf tutNum = "2" And tutDec = "2" Then
     
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 2).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 3).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 4).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 2).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 3).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 4).value = "CAL_BRIDGES"
         
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 3).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 4).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 3).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 4).value = "DAMAGE"
         
-        mySheet.Range("E" & tutRow + 2).Value = "YELLOW"
-        mySheet.Range("E" & tutRow + 3).Value = "ORANGE"
-        mySheet.Range("E" & tutRow + 4).Value = "RED"
+        mySheet.Range("E" & tutRow + 2).value = "YELLOW"
+        mySheet.Range("E" & tutRow + 3).value = "ORANGE"
+        mySheet.Range("E" & tutRow + 4).value = "RED"
         
-        mySheet.Range("D" & tutRow + 1).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 1).value = "DAMAGE"
         Application.EnableEvents = True
     
         mySheet.Range("D" & tutRow).Activate
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
     
         TutForm.DialogueBox.Text = "Some of you may find it useful to run scenarios. If you are planning to run scenarios, it's a good idea to make a notification group that exclusively gets " & _
             "scenario alerts. This way, you can be sure that none of your emergency responders are going to get a scenario alert and think that it's the real deal. Let's create a second group, " & _
@@ -959,30 +959,30 @@ ElseIf tutNum = "2" And tutDec = "2" Then
     
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 2).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 3).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 4).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 2).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 3).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 4).value = "CAL_BRIDGES"
         
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 3).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 4).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 3).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 4).value = "DAMAGE"
         
-        mySheet.Range("E" & tutRow + 2).Value = "YELLOW"
-        mySheet.Range("E" & tutRow + 3).Value = "ORANGE"
-        mySheet.Range("E" & tutRow + 4).Value = "RED"
+        mySheet.Range("E" & tutRow + 2).value = "YELLOW"
+        mySheet.Range("E" & tutRow + 3).value = "ORANGE"
+        mySheet.Range("E" & tutRow + 4).value = "RED"
         
-        mySheet.Range("D" & tutRow + 1).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 1).value = "DAMAGE"
         Application.EnableEvents = True
     
-        mySheet.Range("A" & tutRow + 5 & ":" & "Q" & tutRow + 9).Value = mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 4).Value
+        mySheet.Range("A" & tutRow + 5 & ":" & "Q" & tutRow + 9).value = mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 4).value
         
         TutForm.DialogueBox.Text = "Now we should change the name of the group which we want to get scenario notifications to CAL_BRIDGES_SCENARIO. This way, it becomes obvious which users will get " & _
             "notifications when a scenario is run."
@@ -992,37 +992,37 @@ ElseIf tutNum = "2" And tutDec = "2" Then
     
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 2).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 3).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 4).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 2).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 3).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 4).value = "CAL_BRIDGES"
         
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 3).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 4).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 3).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 4).value = "DAMAGE"
         
-        mySheet.Range("E" & tutRow + 2).Value = "YELLOW"
-        mySheet.Range("E" & tutRow + 3).Value = "ORANGE"
-        mySheet.Range("E" & tutRow + 4).Value = "RED"
+        mySheet.Range("E" & tutRow + 2).value = "YELLOW"
+        mySheet.Range("E" & tutRow + 3).value = "ORANGE"
+        mySheet.Range("E" & tutRow + 4).value = "RED"
         
-        mySheet.Range("D" & tutRow + 1).Value = "DAMAGE"
-        mySheet.Range("A" & tutRow + 5 & ":" & "Q" & tutRow + 9).Value = mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 4).Value
+        mySheet.Range("D" & tutRow + 1).value = "DAMAGE"
+        mySheet.Range("A" & tutRow + 5 & ":" & "Q" & tutRow + 9).value = mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 4).value
         Application.EnableEvents = True
 
         
-        mySheet.Range("C" & tutRow + 5).Value = Empty
-        mySheet.Range("A" & tutRow + 5).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 6).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 7).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 8).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 9).Value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("C" & tutRow + 5).value = Empty
+        mySheet.Range("A" & tutRow + 5).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 6).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 7).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 8).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 9).value = "CAL_BRIDGES_SCENARIO"
         
         
         mySheet.Range("A" & tutRow + 5 & ":" & "A" & tutRow + 9).Activate
@@ -1033,36 +1033,36 @@ ElseIf tutNum = "2" And tutDec = "2" Then
     
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 2).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 3).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 4).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 2).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 3).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 4).value = "CAL_BRIDGES"
         
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 3).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 4).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 3).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 4).value = "DAMAGE"
         
-        mySheet.Range("E" & tutRow + 2).Value = "YELLOW"
-        mySheet.Range("E" & tutRow + 3).Value = "ORANGE"
-        mySheet.Range("E" & tutRow + 4).Value = "RED"
+        mySheet.Range("E" & tutRow + 2).value = "YELLOW"
+        mySheet.Range("E" & tutRow + 3).value = "ORANGE"
+        mySheet.Range("E" & tutRow + 4).value = "RED"
         
-        mySheet.Range("D" & tutRow + 1).Value = "DAMAGE"
-        mySheet.Range("A" & tutRow + 5 & ":" & "Q" & tutRow + 9).Value = mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 4).Value
-        mySheet.Range("A" & tutRow + 5).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 6).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 7).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 8).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 9).Value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("D" & tutRow + 1).value = "DAMAGE"
+        mySheet.Range("A" & tutRow + 5 & ":" & "Q" & tutRow + 9).value = mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 4).value
+        mySheet.Range("A" & tutRow + 5).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 6).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 7).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 8).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 9).value = "CAL_BRIDGES_SCENARIO"
         Application.EnableEvents = True
     
-        mySheet.Range("C" & tutRow + 5).Value = mySheet.Range("C" & tutRow).Value
+        mySheet.Range("C" & tutRow + 5).value = mySheet.Range("C" & tutRow).value
     
         mySheet.Range("C" & tutRow + 5).Select
     
@@ -1074,41 +1074,41 @@ ElseIf tutNum = "2" And tutDec = "2" Then
     
         Application.EnableEvents = False
         ' already present values
-        mySheet.Range("A" & tutRow).Value = "CAL_BRIDGES"
-        mySheet.Range("B" & tutRow).Value = "BRIDGE"
-        mySheet.Range("C" & tutRow).Value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
-        mySheet.Range("D" & tutRow).Value = "NEW_EVENT"
-        mySheet.Range("F" & tutRow).Value = "3"
-        mySheet.Range("G" & tutRow).Value = "ACTUAL"
-        mySheet.Range("H" & tutRow).Value = "Rich Content"
-        mySheet.Range("A" & tutRow + 1).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 2).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 3).Value = "CAL_BRIDGES"
-        mySheet.Range("A" & tutRow + 4).Value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow).value = "CAL_BRIDGES"
+        mySheet.Range("B" & tutRow).value = "BRIDGE"
+        mySheet.Range("C" & tutRow).value = "43 -126;39 -126;34 -123;31 -118;31 -113;36 -113;39 -118;43 -118;43 -126"
+        mySheet.Range("D" & tutRow).value = "NEW_EVENT"
+        mySheet.Range("F" & tutRow).value = "3"
+        mySheet.Range("G" & tutRow).value = "ACTUAL"
+        mySheet.Range("H" & tutRow).value = "Rich Content"
+        mySheet.Range("A" & tutRow + 1).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 2).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 3).value = "CAL_BRIDGES"
+        mySheet.Range("A" & tutRow + 4).value = "CAL_BRIDGES"
         
-        mySheet.Range("D" & tutRow + 2).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 3).Value = "DAMAGE"
-        mySheet.Range("D" & tutRow + 4).Value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 2).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 3).value = "DAMAGE"
+        mySheet.Range("D" & tutRow + 4).value = "DAMAGE"
         
-        mySheet.Range("E" & tutRow + 2).Value = "YELLOW"
-        mySheet.Range("E" & tutRow + 3).Value = "ORANGE"
-        mySheet.Range("E" & tutRow + 4).Value = "RED"
+        mySheet.Range("E" & tutRow + 2).value = "YELLOW"
+        mySheet.Range("E" & tutRow + 3).value = "ORANGE"
+        mySheet.Range("E" & tutRow + 4).value = "RED"
         
-        mySheet.Range("D" & tutRow + 1).Value = "DAMAGE"
-        mySheet.Range("A" & tutRow + 5 & ":" & "Q" & tutRow + 9).Value = mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 4).Value
-        mySheet.Range("A" & tutRow + 5).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 6).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 7).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 8).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("A" & tutRow + 9).Value = "CAL_BRIDGES_SCENARIO"
-        mySheet.Range("C" & tutRow + 5).Value = mySheet.Range("C" & tutRow).Value
+        mySheet.Range("D" & tutRow + 1).value = "DAMAGE"
+        mySheet.Range("A" & tutRow + 5 & ":" & "Q" & tutRow + 9).value = mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 4).value
+        mySheet.Range("A" & tutRow + 5).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 6).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 7).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 8).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("A" & tutRow + 9).value = "CAL_BRIDGES_SCENARIO"
+        mySheet.Range("C" & tutRow + 5).value = mySheet.Range("C" & tutRow).value
         Application.EnableEvents = True
     
-        mySheet.Range("G" & tutRow + 5).Value = "SCENARIO"
-        mySheet.Range("G" & tutRow + 6).Value = "SCENARIO"
-        mySheet.Range("G" & tutRow + 7).Value = "SCENARIO"
-        mySheet.Range("G" & tutRow + 8).Value = "SCENARIO"
-        mySheet.Range("G" & tutRow + 9).Value = "SCENARIO"
+        mySheet.Range("G" & tutRow + 5).value = "SCENARIO"
+        mySheet.Range("G" & tutRow + 6).value = "SCENARIO"
+        mySheet.Range("G" & tutRow + 7).value = "SCENARIO"
+        mySheet.Range("G" & tutRow + 8).value = "SCENARIO"
+        mySheet.Range("G" & tutRow + 9).value = "SCENARIO"
         
         mySheet.Range("G" & tutRow + 5 & ":" & "G" & tutRow + 9).Select
         
@@ -1134,17 +1134,17 @@ ElseIf tutNum = "3" And tutDec = "1" Then
     
     If tutInfo = 0 Then
 
-        If copySheet.Range("A299").Value = "no" Then
+        If copySheet.Range("A299").value = "no" Then
             copyRow = 300
 
-            copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 1).Value = _
-                mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Value
+            copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 1).value = _
+                mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).value
 
             mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Clear
             mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Locked = False
 
 
-            copySheet.Range("A299").Value = "yes"
+            copySheet.Range("A299").value = "yes"
             
         Else
             mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Clear
@@ -1155,7 +1155,7 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         mySheet.Range("A" & tutRow).Activate
         
-        Application.GoTo mySheet.Range("A1"), True
+        Application.Goto mySheet.Range("A1"), True
         
         
         TutForm.DialogueBox.Text = "Alright, we've cleared some space so let's define a general user. The first field we will fill out is the username. A username can consist of numbers and letters " & _
@@ -1167,7 +1167,7 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Locked = False
         
-        mySheet.Range("A" & tutRow).Value = "SCuser"
+        mySheet.Range("A" & tutRow).value = "SCuser"
         
         mySheet.Range("B" & tutRow).Activate
     
@@ -1182,10 +1182,10 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
+        mySheet.Range("A" & tutRow).value = "SCuser"
         Application.EnableEvents = True
         
-        mySheet.Range("B" & tutRow).Value = "USER"
+        mySheet.Range("B" & tutRow).value = "USER"
         
         mySheet.Range("C" & tutRow & ":" & "D" & tutRow).Select
         
@@ -1200,12 +1200,12 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
-        mySheet.Range("B" & tutRow).Value = "USER"
+        mySheet.Range("A" & tutRow).value = "SCuser"
+        mySheet.Range("B" & tutRow).value = "USER"
         Application.EnableEvents = True
         
-        mySheet.Range("C" & tutRow).Value = "pass"
-        mySheet.Range("D" & tutRow).Value = "John Smith"
+        mySheet.Range("C" & tutRow).value = "pass"
+        mySheet.Range("D" & tutRow).value = "John Smith"
         
         mySheet.Range("E" & tutRow).Activate
         
@@ -1222,13 +1222,13 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
-        mySheet.Range("B" & tutRow).Value = "USER"
-        mySheet.Range("C" & tutRow).Value = "pass"
-        mySheet.Range("D" & tutRow).Value = "John Smith"
+        mySheet.Range("A" & tutRow).value = "SCuser"
+        mySheet.Range("B" & tutRow).value = "USER"
+        mySheet.Range("C" & tutRow).value = "pass"
+        mySheet.Range("D" & tutRow).value = "John Smith"
         Application.EnableEvents = True
         
-        mySheet.Range("E" & tutRow).Value = "jsmith@gmail.com"
+        mySheet.Range("E" & tutRow).value = "jsmith@gmail.com"
         
         
         TutForm.DialogueBox.Text = "Another user form will pop up when you hit continue. This happens any time you select a cell in the Notification Group Column. " & _
@@ -1245,11 +1245,11 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
-        mySheet.Range("B" & tutRow).Value = "USER"
-        mySheet.Range("C" & tutRow).Value = "pass"
-        mySheet.Range("D" & tutRow).Value = "John Smith"
-        mySheet.Range("E" & tutRow).Value = "jsmith@gmail.com"
+        mySheet.Range("A" & tutRow).value = "SCuser"
+        mySheet.Range("B" & tutRow).value = "USER"
+        mySheet.Range("C" & tutRow).value = "pass"
+        mySheet.Range("D" & tutRow).value = "John Smith"
+        mySheet.Range("E" & tutRow).value = "jsmith@gmail.com"
         Application.EnableEvents = True
         
         TutForm.DialogueBox.Text = "Now you can select which groups you would like this user to be a part of! When you are finished, go ahead and hit continue."
@@ -1263,17 +1263,17 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Locked = False
         
-        Application.GoTo mySheet.Range("G1"), True
+        Application.Goto mySheet.Range("G1"), True
         
         mySheet.Range("H" & tutRow & ":" & "J" & tutRow).Select
         
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
-        mySheet.Range("B" & tutRow).Value = "USER"
-        mySheet.Range("C" & tutRow).Value = "pass"
-        mySheet.Range("D" & tutRow).Value = "John Smith"
-        mySheet.Range("E" & tutRow).Value = "jsmith@gmail.com"
+        mySheet.Range("A" & tutRow).value = "SCuser"
+        mySheet.Range("B" & tutRow).value = "USER"
+        mySheet.Range("C" & tutRow).value = "pass"
+        mySheet.Range("D" & tutRow).value = "John Smith"
+        mySheet.Range("E" & tutRow).value = "jsmith@gmail.com"
         Application.EnableEvents = True
         
         TutForm.DialogueBox.Text = "Nice! Now we have to enter more email addresses for this user. We have already defined the one that the ShakeCast team will use to " & _
@@ -1289,16 +1289,16 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
-        mySheet.Range("B" & tutRow).Value = "USER"
-        mySheet.Range("C" & tutRow).Value = "pass"
-        mySheet.Range("D" & tutRow).Value = "John Smith"
-        mySheet.Range("E" & tutRow).Value = "jsmith@gmail.com"
+        mySheet.Range("A" & tutRow).value = "SCuser"
+        mySheet.Range("B" & tutRow).value = "USER"
+        mySheet.Range("C" & tutRow).value = "pass"
+        mySheet.Range("D" & tutRow).value = "John Smith"
+        mySheet.Range("E" & tutRow).value = "jsmith@gmail.com"
         Application.EnableEvents = True
         
-        mySheet.Range("H" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("I" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("J" & tutRow).Value = "jsmith@gmail.com"
+        mySheet.Range("H" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("I" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("J" & tutRow).value = "jsmith@gmail.com"
         
         
         
@@ -1312,33 +1312,33 @@ ElseIf tutNum = "3" And tutDec = "2" Then
     
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
-        mySheet.Range("B" & tutRow).Value = "USER"
-        mySheet.Range("C" & tutRow).Value = "pass"
-        mySheet.Range("D" & tutRow).Value = "John Smith"
-        mySheet.Range("E" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("H" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("I" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("J" & tutRow).Value = "jsmith@gmail.com"
+        mySheet.Range("A" & tutRow).value = "SCuser"
+        mySheet.Range("B" & tutRow).value = "USER"
+        mySheet.Range("C" & tutRow).value = "pass"
+        mySheet.Range("D" & tutRow).value = "John Smith"
+        mySheet.Range("E" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("H" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("I" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("J" & tutRow).value = "jsmith@gmail.com"
         Application.EnableEvents = True
         
-        Application.GoTo mySheet.Range("A1"), True
+        Application.Goto mySheet.Range("A1"), True
         mySheet.Range("B" & tutRow).Select
         TutForm.DialogueBox.Text = "The first thing we have to do is change his User Type to ADMIN."
     ElseIf tutInfo = 1 Then
     
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
-        mySheet.Range("C" & tutRow).Value = "pass"
-        mySheet.Range("D" & tutRow).Value = "John Smith"
-        mySheet.Range("E" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("H" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("I" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("J" & tutRow).Value = "jsmith@gmail.com"
+        mySheet.Range("A" & tutRow).value = "SCuser"
+        mySheet.Range("C" & tutRow).value = "pass"
+        mySheet.Range("D" & tutRow).value = "John Smith"
+        mySheet.Range("E" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("H" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("I" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("J" & tutRow).value = "jsmith@gmail.com"
         Application.EnableEvents = True
         
-        mySheet.Range("B" & tutRow).Value = "ADMIN"
+        mySheet.Range("B" & tutRow).value = "ADMIN"
     
         TutForm.DialogueBox.Text = "As you can see, the user row is no longer complete! We have to enter a phone number in order " & _
             "to upload an ADMIN user to ShakeCast. We actually have a user form that pops up when you click on the Phone Number column." & _
@@ -1349,14 +1349,14 @@ ElseIf tutNum = "3" And tutDec = "2" Then
     
         Application.EnableEvents = False
         ' already defined values
-        mySheet.Range("A" & tutRow).Value = "SCuser"
-        mySheet.Range("C" & tutRow).Value = "pass"
-        mySheet.Range("D" & tutRow).Value = "John Smith"
-        mySheet.Range("E" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("H" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("I" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("J" & tutRow).Value = "jsmith@gmail.com"
-        mySheet.Range("B" & tutRow).Value = "ADMIN"
+        mySheet.Range("A" & tutRow).value = "SCuser"
+        mySheet.Range("C" & tutRow).value = "pass"
+        mySheet.Range("D" & tutRow).value = "John Smith"
+        mySheet.Range("E" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("H" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("I" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("J" & tutRow).value = "jsmith@gmail.com"
+        mySheet.Range("B" & tutRow).value = "ADMIN"
         Application.EnableEvents = True
 
 
@@ -1449,57 +1449,57 @@ Set copySheet = Worksheets("ShakeCast Ref Lookup Values")
 Dim copyRow As Integer
 Dim tutRow As Integer
 
-If copySheet.Range("A99").Value = "no" Then
+If copySheet.Range("A99").value = "no" Then
 
     Set mySheet = Worksheets("Facility XML")
 
     copyRow = 100
     tutRow = 4
     
-    copySheet.Range("A" & copyRow & ":" & "AF" & copyRow).Value = _
-        mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).Value
+    copySheet.Range("A" & copyRow & ":" & "AF" & copyRow).value = _
+        mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).value
 
     mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).Clear
     mySheet.Range("A" & tutRow & ":" & "AF" & tutRow).Locked = False
     
     Application.Run "CheckFacilities", mySheet.Range("A" & tutRow)
     
-    copySheet.Range("A99").Value = "yes"
+    copySheet.Range("A99").value = "yes"
     
 End If
 
-If copySheet.Range("A199").Value = "no" Then
+If copySheet.Range("A199").value = "no" Then
 
     Set mySheet = Worksheets("Notification XML")
 
     copyRow = 200
     tutRow = 4
 
-    copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 9).Value = _
-        mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Value
+    copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 9).value = _
+        mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).value
 
     mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Clear
     mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 9).Locked = False
 
 
-    copySheet.Range("A199").Value = "yes"
+    copySheet.Range("A199").value = "yes"
     
 End If
 
-If copySheet.Range("A299").Value = "no" Then
+If copySheet.Range("A299").value = "no" Then
 
     Set mySheet = Worksheets("User XML")
 
     copyRow = 300
     tutRow = 4
-    copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 1).Value = _
-        mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Value
+    copySheet.Range("A" & copyRow & ":" & "Q" & copyRow + 1).value = _
+        mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).value
 
     mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Clear
     mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Locked = False
 
 
-    copySheet.Range("A299").Value = "yes"
+    copySheet.Range("A299").value = "yes"
     
 End If
 End Sub

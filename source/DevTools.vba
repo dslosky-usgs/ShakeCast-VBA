@@ -1,22 +1,25 @@
 Attribute VB_Name = "DevTools"
-Sub SaveCodeModules(dir As String)
+Sub SaveCodeModules(dirStr As String)
 
 'This code Exports all VBA modules
-Dim i%, sName$
+Dim moduleName As String
 Dim vbaType As Integer
 
 With ThisWorkbook.VBProject
-    For i% = 1 To .VBComponents.count
-        If .VBComponents(i%).CodeModule.CountOfLines > 0 Then
-            sName$ = .VBComponents(i%).CodeModule.Name
-            vbaType = .VBComponents(i%).Type
+    For i = 1 To .VBComponents.count
+        If .VBComponents(i).CodeModule.CountOfLines > 0 Then
+            moduleName = .VBComponents(i).CodeModule.Name
+            vbaType = .VBComponents(i).Type
             
             If vbaType = 1 Then
-                .VBComponents(i%).Export dir & sName$ & ".vba"
+
+                .VBComponents(i).Export dirStr & moduleName & ".vba"
             ElseIf vbaType = 3 Then
-                .VBComponents(i%).Export dir & sName$ & ".frm"
+
+                .VBComponents(i).Export dirStr & moduleName & ".frm"
             ElseIf vbaType = 100 Then
-                .VBComponents(i%).Export dir & sName$ & ".cls"
+
+                .VBComponents(i).Export dirStr & moduleName & ".cls"
             End If
             
         End If
@@ -25,7 +28,7 @@ End With
 
 End Sub
 
-Sub ImportCodeModules(dir As String)
+Sub ImportCodeModules(dirStr As String)
 
 Dim modList(0 To 0) As String
 Dim vbaType As Integer
@@ -53,21 +56,24 @@ With ThisWorkbook.VBProject
 End With
 
 ' make a list of files in the target directory
-Set FSO = CreateObject("Scripting.FileSystemObject")
-Set dirContents = FSO.getfolder(dir)
+
+Dim varDir As Variant
+varDir = dir(dirStr, vbNormal)
+
 
 With ThisWorkbook.VBProject
-    For Each moduleName In dirContents.Files
-
-        If moduleName.Name <> "DevTools.vba" Then
-            If Right(moduleName.Name, 4) = ".vba" Or _
-                Right(moduleName.Name, 4) = ".frm" Then
-                .VBComponents.Import dir & moduleName.Name
+    'For Each moduleName In dirContents.Files
+    
+    While (varDir <> "")
+        If varDir <> "DevTools.vba" Then
+            If Right(varDir, 4) = ".vba" Or _
+                Right(varDir, 4) = ".frm" Then
+                .VBComponents.Import dirStr & varDir
                 
-            ElseIf Right(moduleName.Name, 4) = ".cls" Then
+            ElseIf Right(varDir, 4) = ".cls" Then
                 Dim r As Integer
                 Dim fullmoduleString As String
-                Open moduleName.Path For Input As #1
+                Open dirStr & varDir For Input As #1
                 
                 r = 0
                 fullmoduleString = ""
@@ -82,23 +88,26 @@ With ThisWorkbook.VBProject
                     End If
                     r = r + 1
                 Loop
-                .VBComponents(Replace(moduleName.Name, ".cls", "")).CodeModule.InsertLines .VBComponents(Replace(moduleName.Name, ".cls", "")).CodeModule.CountOfLines + 1, fullmoduleString
+                .VBComponents(replace(varDir, ".cls", "")).CodeModule.InsertLines .VBComponents(replace(varDir, ".cls", "")).CodeModule.CountOfLines + 1, fullmoduleString
                         
                 Close #1
                 
             End If
         End If
         
-    Next moduleName
+        varDir = dir
+        
+    Wend
+    ' Next moduleName
 End With
 
 End Sub
 
 Sub SaveCodeModulesWork()
-    SaveCodeModules "C:\Users\dslosky\Documents\stuff\Jobs\Worksheet Optimization\ShakeCast-VBA\source\"
+    SaveCodeModules "Macintosh HD:Users:dslosky:Documents:stuff:Jobs:Worksheet Optimization:ShakeCast-VBA:source:"
 End Sub
 
 Sub ImportCodeModulesWork()
-    ImportCodeModules "C:\Users\dslosky\Documents\stuff\Jobs\Worksheet Optimization\ShakeCast-VBA\source\"
+    ImportCodeModules "Macintosh HD:Users:dslosky:Documents:stuff:Jobs:Worksheet Optimization:ShakeCast-VBA:source:"
 End Sub
 

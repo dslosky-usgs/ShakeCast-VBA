@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ProgressForm 
    Caption         =   "Progress"
-   ClientHeight    =   1725
-   ClientLeft      =   45
-   ClientTop       =   375
-   ClientWidth     =   5670
+   ClientHeight    =   1720
+   ClientLeft      =   40
+   ClientTop       =   -2380
+   ClientWidth     =   5680
    OleObjectBlob   =   "ProgressForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 
 
 
@@ -38,7 +40,7 @@ Private Sub UserForm_Activate()
     Set processCell = Worksheets("ShakeCast Ref Lookup Values").Range("Q2")
 
     Dim process As String
-    process = processCell.Value
+    process = processCell.value
 
     If process = "FacilityXML" Then
     
@@ -66,10 +68,14 @@ Private Sub UserForm_Activate()
     ElseIf process = "UserUpdate" Then
         ProgressForm.ProcessName.Caption = "Updating Worksheet"
         Application.Run "UpdateGroupsButton"
+
+    ElseIf process = "ImportCSV" Then
+        ProgressForm.ProcessName.Caption = "Importing CSV"
+        Application.Run "importCSV"
         
     End If
 
-    processCell.Value = Empty
+    processCell.value = Empty
 
 End Sub
 

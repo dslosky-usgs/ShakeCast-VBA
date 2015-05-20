@@ -175,15 +175,13 @@ Private Sub Worksheet_Change(ByVal target As Range)
             progressCount = progressCount + 1
         
         Next row
-        
-        
-     Unload ProgressForm
      
      End If
      
 
      
 ExitHandler:
+    Unload ProgressForm
     Me.Protect AllowFormattingCells:=True, AllowDeletingRows:=True, AllowInsertingRows:=True, UserInterfaceOnly:=True
     Application.ScreenUpdating = True
     Application.EnableEvents = True
@@ -212,6 +210,10 @@ ExitHandler:
     Application.EnableEvents = True
     
 End Sub
+
+
+
+
 
 
 

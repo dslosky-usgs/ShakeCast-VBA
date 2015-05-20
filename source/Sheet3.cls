@@ -105,7 +105,7 @@ ExitHandler:
 End Sub
 
 Private Sub Worksheet_SelectionChange(ByVal target As Range)
-    On Error GoTo ExitHandler
+    ' On Error GoTo ExitHandler
     If Intersect(target, Me.Range("G:G")) Is Nothing Then GoTo checkPhone
         If target.row < 4 Then Exit Sub
         If target.count > 1 Then Exit Sub
@@ -116,16 +116,42 @@ Private Sub Worksheet_SelectionChange(ByVal target As Range)
         'ActiveCell.Offset(0, 1).Select
         
 checkPhone:
-    If Intersect(target, Me.Range("F:F")) Is Nothing Then GoTo ExitHandler
+    If Intersect(target, Me.Range("F:F")) Is Nothing Then GoTo UserDropdown
     
     PhoneForm.Show
     
+UserDropdown:
+    If Intersect(target, Me.Range("B:B")) Is Nothing Then GoTo ExitHandler
+    
+    ' create a string array with the user types
+    Dim UserTypes(0 To 1) As String
+    UserTypes(0) = "USER"
+    UserTypes(1) = "ADMIN"
+    
+'    create user/admin drop down
+'    With ActiveCell.Validation
+'        .Delete
+'        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+'        Operator:=xlBetween, Formula1:="hi"
+'        .IgnoreBlank = True
+'        .InCellDropdown = True
+'        .InputTitle = "User Type"
+'        .ErrorTitle = ""
+'        .InputMessage = "Please select a user type type from the drop-down list"
+'        .ErrorMessage = ""
+'        .ShowInput = True
+'        .ShowError = True
+'    End With
     
 ExitHandler:
     Worksheets("User XML").ScrollArea = ""
     Application.EnableEvents = True
 
 End Sub
+
+
+
+
 
 
 

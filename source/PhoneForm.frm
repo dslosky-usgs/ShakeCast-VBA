@@ -2,9 +2,9 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PhoneForm 
    Caption         =   "Enter a Phone Number"
    ClientHeight    =   2160
-   ClientLeft      =   45
-   ClientTop       =   375
-   ClientWidth     =   5865
+   ClientLeft      =   40
+   ClientTop       =   -1920
+   ClientWidth     =   5880
    OleObjectBlob   =   "PhoneForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 
 
 
@@ -93,14 +95,14 @@ End Sub
 Private Sub OkayButton_Click()
 
     If Me.ACText.Text = "" And Me.bDash.Text = "" And Me.aDash.Text = "" Then
-        ActiveCell.Value = Empty
+        ActiveCell.value = Empty
         Unload Me
     ElseIf Me.ACText.Text = "" Or Me.bDash.Text = "" Or Me.aDash.Text = "" Then
         MsgBox "Invalid Phone Number"
         
     Else
     
-        ActiveCell.Value = "(" & Me.ACText.Text & ")" & " " & Me.bDash.Text & "-" & Me.aDash.Text
+        ActiveCell.value = "(" & Me.ACText.Text & ")" & " " & Me.bDash.Text & "-" & Me.aDash.Text
         Unload Me
     End If
     

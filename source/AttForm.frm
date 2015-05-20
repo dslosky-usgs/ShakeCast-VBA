@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AttForm 
    Caption         =   "Facility Attributes"
-   ClientHeight    =   5130
-   ClientLeft      =   45
-   ClientTop       =   375
-   ClientWidth     =   8025
+   ClientHeight    =   5120
+   ClientLeft      =   40
+   ClientTop       =   -1920
+   ClientWidth     =   8040
    OleObjectBlob   =   "AttForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 
 
 
@@ -59,7 +61,7 @@ For Each cont In AttFrame.Controls
 
 Next cont
 
-ActiveCell.Value = attStr
+ActiveCell.value = attStr
     
 Unload Me
 End Sub
@@ -93,7 +95,7 @@ Dim attArr() As String
 Dim eachAtt() As String
 Dim i As Integer
 
-attStr = ActiveCell.Value
+attStr = ActiveCell.value
 attArr = Split(attStr, "%")
 i = 0
 

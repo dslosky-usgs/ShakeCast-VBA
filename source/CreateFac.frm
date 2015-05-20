@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} CreateFac 
    Caption         =   "Create a Facility Type"
-   ClientHeight    =   2310
-   ClientLeft      =   45
-   ClientTop       =   375
-   ClientWidth     =   6735
+   ClientHeight    =   2300
+   ClientLeft      =   40
+   ClientTop       =   -1920
+   ClientWidth     =   6740
    OleObjectBlob   =   "CreateFac.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 
 
 
@@ -33,8 +35,8 @@ Private Sub CreateButton_Click()
     lastRow = mySheet.Cells(Rows.count, "C").End(xlUp).row
     
     For i = startRow To lastRow
-        If mySheet.Range("C" & i).Value = FacName.Text Then
-            mySheet.Range("D" & i).Value = FacDesc.Text
+        If mySheet.Range("C" & i).value = FacName.Text Then
+            mySheet.Range("D" & i).value = FacDesc.Text
             
             MsgBox "You already defined this facility type, so we just updated the facility description!"
             
@@ -44,8 +46,8 @@ Private Sub CreateButton_Click()
         End If
     Next i
     
-    mySheet.Range("C" & lastRow + 1).Value = FacName.Text
-    mySheet.Range("D" & lastRow + 1).Value = FacDesc.Text
+    mySheet.Range("C" & lastRow + 1).value = FacName.Text
+    mySheet.Range("D" & lastRow + 1).value = FacDesc.Text
     
     MsgBox "Your new facility type """ & FacName.Text & """ has been created. Update your worksheet to see this facility type in drop down menus."
     

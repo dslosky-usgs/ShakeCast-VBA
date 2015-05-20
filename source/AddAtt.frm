@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AddAtt 
    Caption         =   "Add an Attribute"
-   ClientHeight    =   2085
-   ClientLeft      =   45
-   ClientTop       =   375
-   ClientWidth     =   5535
+   ClientHeight    =   2080
+   ClientLeft      =   40
+   ClientTop       =   -1920
+   ClientWidth     =   5540
    OleObjectBlob   =   "AddAtt.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -13,6 +13,8 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
+
 
 
 
@@ -32,7 +34,7 @@ If Me.Caption = "Add an Attribute" Then
     Set mySheet = Worksheets("ShakeCast Ref Lookup Values")
     ' get attribute string
     Dim attStr As String
-    attStr = mySheet.Range("P2").Value
+    attStr = mySheet.Range("P2").value
     ' add value to it
     Dim newAttStr As String
     
@@ -49,7 +51,7 @@ If Me.Caption = "Add an Attribute" Then
         End If
     End If
     
-    mySheet.Range("P2").Value = newAttStr
+    mySheet.Range("P2").value = newAttStr
     
     ' refresh the ManageAtts form
     
@@ -66,7 +68,7 @@ If Me.Caption = "Add an Attribute" Then
     
     Dim attList() As String
     
-    attList = Split(attCell.Value, "%")
+    attList = Split(attCell.value, "%")
     
     'For Each attCell In attCells
     '
@@ -132,7 +134,7 @@ ElseIf Me.Caption = "Create a Facility Type" Then
 
     lastRow = mySheet.Cells(Rows.count, "C").End(xlUp).row + 1
     
-    mySheet.Range("C" & lastRow).Value = AttName.Text
+    mySheet.Range("C" & lastRow).value = AttName.Text
 End If
 
 Unload Me
