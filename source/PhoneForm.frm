@@ -3,7 +3,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} PhoneForm
    Caption         =   "Enter a Phone Number"
    ClientHeight    =   2160
    ClientLeft      =   40
-   ClientTop       =   -1920
+   ClientTop       =   -2840
    ClientWidth     =   5880
    OleObjectBlob   =   "PhoneForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 

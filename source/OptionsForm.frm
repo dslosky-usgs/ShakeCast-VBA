@@ -3,7 +3,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} OptionsForm
    Caption         =   "Spreadsheet Options"
    ClientHeight    =   1580
    ClientLeft      =   40
-   ClientTop       =   -2840
+   ClientTop       =   -4680
    ClientWidth     =   8060
    OleObjectBlob   =   "OptionsForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 
@@ -62,18 +63,18 @@ ElseIf Me.OptionCombo.value = "Export XML" Then
         
         Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "FacilityXML"
     
-        ProgressForm.Show
+        ProgressForm.Show vbModeless
         
     ElseIf ActiveSheet.Name = "Notification XML" Then
         Worksheets("Notification XML").Unprotect
         
         Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "GroupXML"
-        ProgressForm.Show
+        ProgressForm.Show vbModeless
     ElseIf ActiveSheet.Name = "User XML" Then
         Worksheets("User XML").Unprotect
         
         Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "UserXML"
-        ProgressForm.Show
+        ProgressForm.Show vbModeless
     End If
     
 ElseIf Me.OptionCombo.value = "Export Master XML" Then
@@ -83,7 +84,7 @@ ElseIf Me.OptionCombo.value = "Export Master XML" Then
     Worksheets("User XML").Unprotect
     
     Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "MasterXML"
-    ProgressForm.Show
+    ProgressForm.Show vbModeless
     
 ElseIf Me.OptionCombo.value = "Update Worksheet" Then
 
@@ -91,7 +92,7 @@ ElseIf Me.OptionCombo.value = "Update Worksheet" Then
         Worksheets("Facility XML").Unprotect
         
         Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "FacUpdate"
-        ProgressForm.Show
+        ProgressForm.Show vbModeless
         
         'Application.Run "UpdateFacButton"
     ElseIf ActiveSheet.Name = "Notification XML" Then
@@ -101,7 +102,7 @@ ElseIf Me.OptionCombo.value = "Update Worksheet" Then
         Worksheets("User XML").Unprotect
         
         Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "UserUpdate"
-        ProgressForm.Show
+        ProgressForm.Show vbModeless
     End If
     
 ElseIf Me.OptionCombo.value = "Unlock Data" Then
@@ -143,7 +144,7 @@ ElseIf Me.OptionCombo.value = "Add multiple facility types" Then
 ElseIf Me.OptionCombo.value = "Import CSV" Then
 
         Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "ImportCSV"
-        ProgressForm.Show
+        ProgressForm.Show vbModeless
     
 ElseIf Me.OptionCombo.value = "Access General User Worksheet" Then
         

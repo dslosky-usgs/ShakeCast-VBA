@@ -289,7 +289,6 @@ Sub FacilityXML(master As String, _
                     Optional ByVal docMax As Integer = 15000, _
                     Optional ByVal docStr As String = "")
                                         
-                    
 'On Error GoTo XMLFinish
 'On Error Resume Next
 
@@ -318,11 +317,6 @@ Dim xmlInfo() As Variant
 xmlInfo = Application.Run("FacXMLTable")                            ' This function populates the XML table in the HIDDEN
                                                                     ' spreadsheet FacilityXMLexport
 
-ProgressForm.ProcessName.Caption = "Exporting XML"
-ProgressForm.ProgressLabel.Width = 0
-ProgressForm.ProgressFrame.Caption = "0" & "%"
-
-DoEvents
 
 '                          ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '                 OPEN XML FILE FOR WRITING, AND DETERMINE THE START AND END CELLS TO BE EXAMINED
@@ -351,15 +345,18 @@ Else
     Next i
 End If
 
-
-
-
-
-
 ExportXML.FileDest.Text = dir
 ExportXML.FileName = docStr
-ExportXML.Show
 
+DoEvents
+ExportXML.Show
+DoEvents
+
+ProgressForm.ProcessName.Caption = "Exporting XML"
+ProgressForm.ProgressLabel.Width = 0
+ProgressForm.ProgressFrame.Caption = "0" & "%"
+
+DoEvents
 
 docArr = Split(ExportXML.FileName, ",")
 overFlowCount = 0
@@ -1000,7 +997,7 @@ Do While FacRow < endRow + 1
     ' copy data from Facility Sheet to the XML table
     XMLSheet.Range("A" & XMLrow, "B" & XMLrow).value = FacSheet.Range("A" & FacRow, "B" & FacRow).value
     XMLSheet.Range("C" & XMLrow, "H" & XMLrow).value = FacSheet.Range("D" & FacRow, "I" & FacRow).value
-    XMLSheet.Range("I" & XMLrow).value = ManLatLong(FacSheet.Range("J4"), FacSheet.Range("K4"))
+    XMLSheet.Range("I" & XMLrow).value = ManLatLong(FacSheet.Range("J" & FacRow), FacSheet.Range("K" & FacRow))
     XMLSheet.Range("J" & XMLrow, "K" & XMLrow).value = FacSheet.Range("L" & FacRow, "M" & FacRow).value
     XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).value = FacSheet.Range("O" & FacRow, "AD" & FacRow).value
             

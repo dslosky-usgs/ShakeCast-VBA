@@ -3,7 +3,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ProgressForm
    Caption         =   "Progress"
    ClientHeight    =   1720
    ClientLeft      =   40
-   ClientTop       =   -2380
+   ClientTop       =   -4680
    ClientWidth     =   5680
    OleObjectBlob   =   "ProgressForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -21,11 +21,16 @@ Attribute VB_Exposed = False
 
 
 
+
 Private Sub Frame1_Click()
 
 End Sub
 
 Private Sub ProcessName_Click()
+
+End Sub
+
+Private Sub ProgressFrame_Click()
 
 End Sub
 
@@ -35,12 +40,17 @@ End Sub
 
 Private Sub UserForm_Activate()
     
+    Me.ProgressFrame.Font.Size = 12
+    
     ProgressForm.ProgressLabel.Width = 0
         
     Set processCell = Worksheets("ShakeCast Ref Lookup Values").Range("Q2")
 
     Dim process As String
     process = processCell.value
+
+    processCell.value = Empty
+    Worksheets("ShakeCast Ref Lookup Values").Range("Q2") = ""
 
     If process = "FacilityXML" Then
     
@@ -75,7 +85,6 @@ Private Sub UserForm_Activate()
         
     End If
 
-    processCell.value = Empty
 
 End Sub
 
