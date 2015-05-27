@@ -2,7 +2,7 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FacSheetForm 
    Caption         =   "Facility Worksheet Information"
    ClientHeight    =   8280.001
-   ClientLeft      =   40
+   ClientLeft      =   -40
    ClientTop       =   -2840
    ClientWidth     =   10360
    OleObjectBlob   =   "FacSheetForm.frx":0000

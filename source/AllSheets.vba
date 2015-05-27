@@ -9,6 +9,21 @@ Sub DeleteFile(ByVal FileToDelete As String)
    End If
 End Sub
 
+Function removeWhite(ByVal inputStr As String)
+
+    ' check that all whitespace is gone
+    While Left(inputStr, 1) = " " Or Left(inputStr, 1) = vbTab Or Left(inputStr, 1) = vbNewLine
+        inputStr = Mid(inputStr, 2, Len(inputStr) - 1)
+    Wend
+    
+    While Right(inputStr, 1) = " " Or Right(inputStr, 1) = vbTab Or Right(inputStr, 1) = vbNewLine
+        inputStr = Mid(inputStr, 1, Len(inputStr) - 1)
+    Wend
+    
+    removeWhite = inputStr
+
+End Function
+
 Function rangeToArray(ByVal rangeAddress As String, _
                         ByVal sheetName As String)
                         
@@ -52,7 +67,7 @@ Dim sMacScript As String
             sPath = " alias """ & sPath & """"
         End If
         sMacScript = "set sFile to (choose file of type ({" & _
-            """public.comma-separated-values-text"", ""public.text"", ""public.csv""," & _
+            """public.comma-separated-values-text"", ""public.item"",""public.text"", ""public.csv"", ""public.config""," & _
             """org.openxmlformats.spreadsheetml.sheet.macroenabled""}) with prompt " & _
             """Select a file to import"" default location " & sPath & ") as string" _
             & vbLf & _
@@ -174,7 +189,7 @@ Private Sub importCSV()
 
     
     lastRow = dataSheet.Cells(Rows.count, "A").End(xlUp).row
-    lastCol = dataSheet.Cells(1, Columns.count).End(xlToLeft).column
+    lastCol = dataSheet.Cells(1, Columns.count).End(xlToLeft).Column
     startRow = 1
     
     ' set up progress bar
@@ -206,7 +221,7 @@ Private Sub importCSV()
         End If
 
                 
-        lastCol = dataSheet.Cells(csvCount, Columns.count).End(xlToLeft).column
+        lastCol = dataSheet.Cells(csvCount, Columns.count).End(xlToLeft).Column
         lineArr = rangeToArray(dataSheet.Cells(csvCount, 1).Address & ":" & dataSheet.Cells(csvCount, lastCol).Address, "Data")
         
             '''''''''''''''' Create column association with the first row '''''''''''''
@@ -228,6 +243,8 @@ NewHead:
                 sheetName = "Notification XML"
                 fields = "GROUP_NAME,FACILITY_TYPE,POLY,NOTIFICATION_TYPE,DAMAGE_LEVEL,LIMIT_VALUE,EVENT_TYPE,DELIVERY_METHOD,MESSAGE_FORMAT,PRODUCT_TYPE,METRIC,AGGREGATE,AGGREGATE_GROUP"
             
+                MsgBox "Try using a configuration file to import group notification information! If you are not trying to import groups, check to make sure your CSV headers are correct."
+                GoTo ExitHandler
             ElseIf InArray(lineArr, "USERNAME") Then
                 sheetName = "User XML"
                 fields = "USERNAME,USER_TYPE,PASSWORD,FULL_NAME,EMAIL_ADDRESS,PHONE_NUMBER,GROUP,DELIVERY:EMAIL_HTML,DELIVERY:EMAIL_TEXT,DELIVERY:EMAIL_PAGER"
@@ -249,6 +266,10 @@ NewHead:
             ' get the start row for our input
             Dim lastInputRow As Integer
             lastInputRow = mySheet.Cells(Rows.count, "A").End(xlUp).row
+            
+            If IsEmpty(mySheet.Range("A" & lastInputRow)) Then
+                lastInputRow = lastInputRow - 1
+            End If
             
             ' make an array of the column numbers associated with the fields in the csv
             headCount = 0
@@ -437,6 +458,174 @@ ExitHandler:
     Application.EnableEvents = True
     Application.ScreenUpdating = True
     Close #1
+End Sub
+
+Sub importConf()
+
+    Application.EnableEvents = False
+    Application.ScreenUpdating = False
+    
+    On Error GoTo ExitHandler
+    
+    Close #1
+
+    Dim fileStr As String
+    fileStr = openFilePicker
+    
+    If fileStr = "" Then
+        MsgBox "No file chosen!"
+        GoTo ExitHandler
+    End If
+    
+    Open fileStr For Input As #1
+    
+    ' keep track of where we are in the notification worksheet
+    Dim startRow As Integer
+    Dim rowNum As Integer
+    
+    Set mySheet = Worksheets("Notification XML")
+    startRow = mySheet.Cells(Rows.count, "A").End(xlUp).row
+    
+    ' create some variables we'll need
+    Dim sameLine As Boolean     ' determine if the current line is the same as the last line
+    Dim tagName As String         ' the kind of data we're looking at
+    Dim val As String
+    Dim confSplit() As String
+    Dim groupName As String              ' the name of the group we're looking at
+    Dim notiCount As Integer      ' the number of notification rows in the group
+    
+    Dim fields As String
+    
+    fields = "GROUP_NAME,FACILITY_TYPE,POLY,NOTIFICATION_TYPE,DAMAGE_LEVEL,LIMIT_VALUE,EVENT_TYPE,DELIVERY_METHOD,MESSAGE_FORMAT,PRODUCT_TYPE,METRIC,AGGREGATE,AGGREGATE_GROUP"
+    
+    Dim sheetHeads() As String
+    sheetHeads = Split(fields, ",")
+    
+    If IsEmpty(mySheet.Range("A" & startRow)) Then
+        rowNum = startRow
+    Else
+        rowNum = startRow + 1
+    End If
+        
+    
+    While Not EOF(1)
+
+        Line Input #1, confLine
+        
+        confLine = Trim(confLine)
+        confLine = removeWhite(confLine)
+        
+        If Left(confLine, 1) = "#" Or confLine = "" Then GoTo NextInfo
+        
+        ' get rid of comments if there are any on the same line
+        If InStr(confLine, "#") Then
+            confLine = Split(confLine, "#")(0)
+            confLine = removeWhite(confLine)
+        End If
+        
+        ' if this is the same line: don't look for anything, just put the value check the existing tag
+        If Not sameLine Then
+            ' check for notification, or new group
+            If InStr(confLine, "<") <> 0 And InStr(confLine, ">") <> 0 And InStr(confLine, "NOTIFICATION") = 0 And InStr(confLine, "Notification") = 0 And InStr(confLine, "notification") = 0 Then
+                ' new group name
+                groupName = Mid(confLine, 2, Len(confLine) - 2)
+                
+                ' rowNum = rowNum + 1
+                
+            ElseIf InStr(confLine, "<") <> 0 And InStr(confLine, ">") <> 0 And InStr(confLine, "/NOTIFICATION") = 0 Then
+                ' new row
+                'rowNum = rowNum + 1
+                
+                ' new notification group row
+                mySheet.Range("A" & rowNum).value = groupName
+                
+            ElseIf InStr(confLine, "<") <> 0 And InStr(confLine, ">") <> 0 And InStr(confLine, "/NOTIFICATION") <> 0 Then
+            
+                ' close notification group
+                 rowNum = rowNum + 1
+                
+            Else
+            
+                ' get header
+                If InStr(confLine, vbTab) Then
+                    confSplit = Split(confLine, vbTab)
+                ElseIf InStr(confLine, " ") Then
+                    confSplit = Split(confLine, " ")
+                End If
+            
+                tagName = confSplit(0)
+                
+                ' create one value from the rest of the array in case there are other spaces or tabs
+                confSplit(0) = ""
+                
+                val = Join(confSplit, "")
+                
+                tagName = removeWhite(tagName)
+                val = removeWhite(val)
+                
+                If Right(val, 1) = "\" Then
+                    val = Mid(val, 1, Len(val) - 1)
+                    
+                    val = removeWhite(val)
+                    
+                    sameLine = True
+                End If
+                
+                If InArray(sheetHeads, tagName) Then
+                
+                    If val = "EMAIL_HTML" Then
+                        val = "Rich Content"
+                    ElseIf val = "EMAIL_TEXT" Then
+                        val = "Plain Text"
+                    End If
+                    
+                    mySheet.Cells(rowNum, ArrayIndex(sheetHeads, tagName) + 1).value = val
+                End If
+                
+        ' if this is NOT the same line as the last line. Meaning the last line did not end with \
+            ' find new group row: check if < & > are in line without "NOTIFICATION"
+        
+            ' find notification info: if notification = true (Means that we've seen <NOTIFICATION> and not </NOTIFICATION>)
+        
+            ' get other info if not notification: if notification = false
+            
+            End If
+        Else
+            ' this is the same line!! But the next one might not be!
+            sameLine = False
+            
+            val = confLine
+            val = removeWhite(val)
+                
+            If Right(val, 1) = "\" Then
+                val = Mid(val, 1, Len(val) - 1)
+                
+                val = removeWhite(val)
+                
+                sameLine = True
+            End If
+            
+            If InArray(sheetHeads, tagName) Then
+                mySheet.Cells(rowNum, ArrayIndex(sheetHeads, tagName) + 1).value = mySheet.Cells(rowNum, ArrayIndex(sheetHeads, tagName) + 1).value & ";" & val
+            End If
+            
+        End If
+        
+NextInfo:
+        ' check if the next line will be the same as this one
+        
+    Wend
+    
+ExitHandler:
+    Close #1
+    
+    Application.Run "CheckGroups"
+    
+    Application.EnableEvents = True
+    Application.ScreenUpdating = True
+    
+    
+
 End Sub
 
 '' masterXMLexport

@@ -2,7 +2,7 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} GroupCheckBox 
    Caption         =   "Group Selection"
    ClientHeight    =   5880
-   ClientLeft      =   40
+   ClientLeft      =   -40
    ClientTop       =   -2840
    ClientWidth     =   4720
    OleObjectBlob   =   "GroupCheckBox.frx":0000

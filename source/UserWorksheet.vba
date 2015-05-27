@@ -118,7 +118,7 @@ End If
 
 ' create User Type and Group drop down menus
 Set UserType = mySheet.Range("B" & checkRow)
-Set GroupName = mySheet.Range("G" & checkRow)
+Set groupName = mySheet.Range("G" & checkRow)
 
 ' create a string array with the user types
 Dim UserTypes(0 To 1) As String
@@ -195,7 +195,7 @@ QuitGroupLoop:
 Dim newGroupStr As String
 newGroupStr = ""
 
-For Each group In Split(GroupName.value, ":")
+For Each group In Split(groupName.value, ":")
     If InArray(GroupNames, group) Then
         If newGroupStr = "" Then
             newGroupStr = group
@@ -206,9 +206,9 @@ For Each group In Split(GroupName.value, ":")
 Next group
 
 If newGroupStr <> "" Then
-    GroupName.value = newGroupStr
+    groupName.value = newGroupStr
 Else
-    GroupName.value = Empty
+    groupName.value = Empty
 End If
 
 End Sub

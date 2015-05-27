@@ -69,12 +69,12 @@ lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row ' where we stop!
 
 
     ' change HAZUS info when column 14 is altered
-    If target.column = 13 Then
+    If target.Column = 13 Then
         Application.Run "fillHazus", target
     End If
     
     ' make drop down data validation when the facility ID is completed, but not above row 5000 to avoid breaking software
-    If target.column = 1 Then
+    If target.Column = 1 Then
         Application.Run "facDropDowns", target
     End If
     
@@ -207,7 +207,7 @@ lastHaz = hazSheet.Cells(Rows.count, "A").End(xlUp).row
 
 Set ModTypeCells = hazSheet.Range("A2:A" & lastHaz)
 
-If target.column = 1 Then
+If target.Column = 1 Then
     With FacType.Validation
         .Delete
         .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
@@ -223,7 +223,7 @@ If target.column = 1 Then
     End With
 End If
 
-If target.column = 1 Then
+If target.Column = 1 Then
     With ModType.Validation
         .Delete
         .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
@@ -399,7 +399,7 @@ startRow = 4                                 ' The First Row with XML info
 
 
 ' The last column we will look at
-endCol = XMLSheet.Cells(1, Columns.count).End(xlToLeft).column
+endCol = XMLSheet.Cells(1, Columns.count).End(xlToLeft).Column
 'EndCol = 30
 
 ' This will pull cells with formulas and no values, but we can filter those out!
@@ -1053,7 +1053,7 @@ End If
 ModVal = Model.value
     
 Dim col As Integer
-col = cell.column
+col = cell.Column
 
 Dim Lookup As Integer
 If col = 15 Then
@@ -1197,12 +1197,12 @@ Function CopyIf(cell As Range, _
 ' Let's see where we are... for debugging
 Dim col As Integer
 Dim ro As Integer
-col = CurCell.column
+col = CurCell.Column
 ro = CurCell.row
 
 
 ' Column 32 is used as a reference for the XML cells. If it is changed, the other cells change too. This saves some computing power
-If CurCell.column = 32 Then
+If CurCell.Column = 32 Then
 
     For Each ref In RefCell
         
@@ -1422,7 +1422,7 @@ For i = startRow To endRow
         
         For Each cell In row.Cells
             
-            If (cell.column = 4 Or cell.column = 5) And (IsError(cell) _
+            If (cell.Column = 4 Or cell.Column = 5) And (IsError(cell) _
                 Or IsEmpty(cell)) Then
                 
                 cell.Formula = "=FillSystem(B" & cell.row & ")"
@@ -1438,7 +1438,7 @@ For i = startRow To endRow
                     
                 rowCheck = rowCheck + 1
                     
-            ElseIf cell.column = 9 And (IsError(cell) _
+            ElseIf cell.Column = 9 And (IsError(cell) _
                 Or IsEmpty(cell)) Then
                 
                 cell.Formula = "=GeomType(J" & cell.row & ")"
@@ -1452,7 +1452,7 @@ For i = startRow To endRow
                 
                 rowCheck = rowCheck + 1
                 
-            ElseIf cell.column = 10 And (IsError(cell) _
+            ElseIf cell.Column = 10 And (IsError(cell) _
                 Or IsEmpty(cell)) Then
                 
                 cell.Formula = "=ManLatLong(K" & cell.row & ", L" & cell.row & ")"
@@ -1468,7 +1468,7 @@ For i = startRow To endRow
                 rowCheck = rowCheck + 1
                 
                 
-            ElseIf cell.column > 14 And (IsError(cell) _
+            ElseIf cell.Column > 14 And (IsError(cell) _
                 Or IsEmpty(cell)) Then
                 
                 cell.Formula = "=FillFacility($N" & cell.row & "," & cell.Address(False, False) & ")"
@@ -1486,7 +1486,7 @@ For i = startRow To endRow
                 
                 
                 
-            ElseIf cell.column = 3 And (IsError(cell) _
+            ElseIf cell.Column = 3 And (IsError(cell) _
                 Or IsEmpty(cell)) Then
                 
                 cell.Formula = "=FillFacility($B" & cell.row & "," & cell.Address(False, False) & ")"

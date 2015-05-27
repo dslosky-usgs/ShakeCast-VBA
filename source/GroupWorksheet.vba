@@ -111,7 +111,7 @@ For Each cell In colA.Cells
                     IsEmpty(mySheet.Range("H" & cell.row - 1)) Then
                 
                 
-                If WorksheetFunction.CountBlank(Range("A" & rowNum, "D" & rowNum)) > 3 Then
+                If WorksheetFunction.CountBlank(Range("A" & (cell.row - 1), "D" & (cell.row - 1))) > 3 Then
                 
                     mySheet.Range("A" & (cell.row - 1), "P" & (cell.row - 1)).Clear
                     mySheet.Range("A" & (cell.row - 1), "P" & (cell.row - 1)).Locked = False
@@ -216,8 +216,8 @@ GoodRow:
 
                 Set cellRange = Range("A" & rowNum, "M" & rowNum)
                 
-                If ActiveCell.column = 4 Or _
-                    ActiveCell.column = 5 Then
+                If ActiveCell.Column = 4 Or _
+                    ActiveCell.Column = 5 Then
                     
                     FillGroup (rowNum)
                     
@@ -243,7 +243,7 @@ GoodRow:
                     IsEmpty(mySheet.Range("B" & rowNum)) Or _
                     IsEmpty(mySheet.Range("C" & rowNum)) Or _
                     IsEmpty(mySheet.Range("D" & rowNum)) Or _
-                    IsEmpty(mySheet.Range("M" & rowNum))) Then
+                    IsEmpty(mySheet.Range("H" & rowNum))) Then
                 
                     ChangeColors "Bad", Range("A" & rowNum, "M" & rowNum), "Group"
                     
@@ -262,7 +262,7 @@ GoodRow:
                     IsEmpty(mySheet.Range("D" & rowNum)) Or _
                     (IsEmpty(mySheet.Range("G" & rowNum)) And _
                     IsEmpty(mySheet.Range("D" & rowNum))) Or _
-                    IsEmpty(mySheet.Range("M" & rowNum)) Or _
+                    IsEmpty(mySheet.Range("H" & rowNum)) Or _
                     IsEmpty(mySheet.Range("A" & cell.row - num)) Or _
                     IsEmpty(mySheet.Range("B" & cell.row - num)) Or _
                     IsEmpty(mySheet.Range("C" & cell.row - num)) Or _
@@ -823,7 +823,7 @@ startRow = 4                                 ' The First Row with XML info
 
 
 ' The last column we will look at
-endCol = XMLSheet.Cells(3, Columns.count).End(xlToLeft).column
+endCol = XMLSheet.Cells(3, Columns.count).End(xlToLeft).Column
 
 ' This will pull cells with formulas and no values, but we can filter those out!
 endRow = XMLSheet.Cells(Rows.count, "B").End(xlUp).row + 1
@@ -1241,6 +1241,7 @@ Application.EnableEvents = True
 MasterSkip3:
 
 End Sub
+
 
 
 '' GroupXMLTable

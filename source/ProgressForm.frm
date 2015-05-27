@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ProgressForm 
    Caption         =   "Progress"
    ClientHeight    =   1720
-   ClientLeft      =   40
-   ClientTop       =   -4680
+   ClientLeft      =   -40
+   ClientTop       =   -5140
    ClientWidth     =   5680
    OleObjectBlob   =   "ProgressForm.frx":0000
    StartUpPosition =   1  'CenterOwner

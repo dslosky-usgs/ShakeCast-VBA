@@ -30,11 +30,11 @@ Private Sub Worksheet_Change(ByVal target As Range)
         
         ' skip over grey cells
         If Me.Range("A" & target.row).value = Me.Range("A" & target.row - 1).value Then
-            If target.column = 1 Then
+            If target.Column = 1 Then
                 Me.Range("D" & target.row).Activate
-            ElseIf target.column = 4 And target.value = "NEW_EVENT" Then
+            ElseIf target.Column = 4 And target.value = "NEW_EVENT" Then
                 Me.Range("F" & target.row).Activate
-            ElseIf target.column = 5 And target.value = "DAMAGE" Then
+            ElseIf target.Column = 5 And target.value = "DAMAGE" Then
                 Me.Range("G" & target.row).Activate
             End If
         End If
@@ -49,7 +49,7 @@ End Sub
 Private Sub Worksheet_SelectionChange(ByVal target As Range)
     On Error GoTo ExitHandler
     Application.EnableEvents = False
-    If target.column <> 2 Or Me.Range("A2").value <> "Advanced User" Then GoTo ExitHandler
+    If target.Column <> 2 Or Me.Range("A2").value <> "Advanced User" Then GoTo ExitHandler
     
     Application.Run "makeFacTypeChecklist"
     

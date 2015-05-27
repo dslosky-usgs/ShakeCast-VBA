@@ -124,7 +124,7 @@ End If
 
 tutWindow
 
-TutForm.Show
+TutForm.Show vbModeless
 
 End Sub
 
@@ -1155,7 +1155,7 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         mySheet.Range("A" & tutRow).Activate
         
-        Application.GoTo mySheet.Range("A1"), True
+        Application.Goto mySheet.Range("A1"), True
         
         
         TutForm.DialogueBox.Text = "Alright, we've cleared some space so let's define a general user. The first field we will fill out is the username. A username can consist of numbers and letters " & _
@@ -1263,7 +1263,7 @@ ElseIf tutNum = "3" And tutDec = "1" Then
         
         mySheet.Range("A" & tutRow & ":" & "Q" & tutRow + 1).Locked = False
         
-        Application.GoTo mySheet.Range("G1"), True
+        Application.Goto mySheet.Range("G1"), True
         
         mySheet.Range("H" & tutRow & ":" & "J" & tutRow).Select
         
@@ -1322,7 +1322,7 @@ ElseIf tutNum = "3" And tutDec = "2" Then
         mySheet.Range("J" & tutRow).value = "jsmith@gmail.com"
         Application.EnableEvents = True
         
-        Application.GoTo mySheet.Range("A1"), True
+        Application.Goto mySheet.Range("A1"), True
         mySheet.Range("B" & tutRow).Select
         TutForm.DialogueBox.Text = "The first thing we have to do is change his User Type to ADMIN."
     ElseIf tutInfo = 1 Then

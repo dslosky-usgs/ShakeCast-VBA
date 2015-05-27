@@ -2,7 +2,7 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AttForm 
    Caption         =   "Facility Attributes"
    ClientHeight    =   5120
-   ClientLeft      =   40
+   ClientLeft      =   -40
    ClientTop       =   -2840
    ClientWidth     =   8040
    OleObjectBlob   =   "AttForm.frx":0000
