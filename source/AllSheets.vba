@@ -55,6 +55,26 @@ Function rangeToArray(ByVal rangeAddress As String, _
     rangeToArray = finalArray
 End Function
 
+Function lineCount(txtFile As String)
+    
+    On Error GoTo ExitHandler
+
+    lineCount = 0
+    Open txtFile For Input As #5
+
+    While Not EOF(5)
+    
+        Line Input #5, Line
+        
+        lineCount = lineCount + 1
+    
+    Wend
+    
+ExitHandler:
+    Close #5
+
+End Function
+
 ' Allows us to use a file picker to get files on Mac and Windows
 Function openFilePicker(Optional sPath As String) As String
 Dim sFile As String
@@ -477,7 +497,6 @@ Sub importConf()
         GoTo ExitHandler
     End If
     
-    Open fileStr For Input As #1
     
     ' keep track of where we are in the notification worksheet
     Dim startRow As Integer
@@ -507,10 +526,34 @@ Sub importConf()
         rowNum = startRow + 1
     End If
         
+    lastRow = lineCount(fileStr)
+        
+    progressCount = 0
+    progressWhen = lastRow * 0.01
+    pcntDone = 0
+    ProgressForm.ProcessName.Caption = "Importing Conf"
+    
+    Dim count As Integer
+    count = 0
+    
+    Open fileStr For Input As #1
     
     While Not EOF(1)
 
         Line Input #1, confLine
+        
+
+        If progressCount > progressWhen Then
+            
+            pcntDone = ((count) / (lastRow))
+            
+            ProgressForm.ProgressLabel.Width = pcntDone * ProgressForm.MaxWidth.Caption
+            ProgressForm.ProgressFrame.Caption = Round(pcntDone * 100, 0) & "%"
+            
+            DoEvents
+            progressCount = 0
+            
+        End If
         
         confLine = Trim(confLine)
         confLine = removeWhite(confLine)
@@ -614,10 +657,18 @@ Sub importConf()
 NextInfo:
         ' check if the next line will be the same as this one
         
+        progressCount = progressCount + 1
+        count = count + 1
+        
     Wend
+
+    ProgressForm.ProgressLabel.Width = ProgressForm.MaxWidth.Caption
+    ProgressForm.ProgressFrame.Caption = "100" & "%"
     
 ExitHandler:
     Close #1
+    
+    Unload ProgressForm
     
     Application.Run "CheckGroups"
     

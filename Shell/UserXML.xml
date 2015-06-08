@@ -1,46 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><UserTable>
-	<UserRow>		<USERNAME>Ex1</USERNAME>
-		<USER_TYPE>USER</USER_TYPE>
-		<PASSWORD>pass</PASSWORD>
-		<FULL_NAME>Test User1</FULL_NAME>
-		<EMAIL_ADDRESS>example@example.com</EMAIL_ADDRESS>
-		<PHONE_NUMBER></PHONE_NUMBER>
-		<GROUP></GROUP>
-		<DELIVERY>			<EMAIL_HTML>example@example.com</EMAIL_HTML>
-			<EMAIL_TEXT>example@example.com</EMAIL_TEXT>
-			<PAGER>example@example.com</PAGER>		</DELIVERY>
-	</UserRow>
-	<UserRow>		<USERNAME>Ex2</USERNAME>
-		<USER_TYPE>USER</USER_TYPE>
-		<PASSWORD>pass</PASSWORD>
-		<FULL_NAME>Test User2</FULL_NAME>
-		<EMAIL_ADDRESS>example@example.com</EMAIL_ADDRESS>
-		<PHONE_NUMBER></PHONE_NUMBER>
-		<GROUP>CAL_BRIDGES</GROUP>
-		<DELIVERY>			<EMAIL_HTML>example@example.com</EMAIL_HTML>
-			<EMAIL_TEXT>example@example.com</EMAIL_TEXT>
-			<PAGER>example@example.com</PAGER>		</DELIVERY>
-	</UserRow>
-	<UserRow>		<USERNAME>Ex3</USERNAME>
-		<USER_TYPE>ADMIN</USER_TYPE>
-		<PASSWORD>pass</PASSWORD>
-		<FULL_NAME>Test User3</FULL_NAME>
-		<EMAIL_ADDRESS>example@example.com</EMAIL_ADDRESS>
-		<PHONE_NUMBER>(555) 555-5555</PHONE_NUMBER>
-		<GROUP>CAL_BRIDGES:DU:CAL_BRIDGES_SCENARIO</GROUP>
-		<DELIVERY>			<EMAIL_HTML>example@example.com</EMAIL_HTML>
-			<EMAIL_TEXT>example@example.com</EMAIL_TEXT>
-			<PAGER>example@example.com</PAGER>		</DELIVERY>
-	</UserRow>
-	<UserRow>		<USERNAME>Dan</USERNAME>
-		<USER_TYPE>ADMIN</USER_TYPE>
-		<PASSWORD>pass</PASSWORD>
-		<FULL_NAME>Daniel Slosky</FULL_NAME>
-		<EMAIL_ADDRESS>dslosky@usgs.gov</EMAIL_ADDRESS>
-		<PHONE_NUMBER>(480) 206-0834</PHONE_NUMBER>
-		<GROUP>Global</GROUP>
-		<DELIVERY>			<EMAIL_HTML>dslosky@usgs.gov</EMAIL_HTML>
-			<EMAIL_TEXT>dslosky@usgs.gov</EMAIL_TEXT>
-			<PAGER>dslosky@usgs.gov</PAGER>		</DELIVERY>
-	</UserRow>
-</UserTable>

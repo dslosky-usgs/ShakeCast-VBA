@@ -75,7 +75,7 @@ lastRow = mySheet.Cells(Rows.count, "A").End(xlUp).row ' where we stop!
     
     ' make drop down data validation when the facility ID is completed, but not above row 5000 to avoid breaking software
     If target.Column = 1 Then
-        Application.Run "facDropDowns", target
+'        Application.Run "facDropDowns", target
     End If
     
     ' if ANY user input, supply autodata

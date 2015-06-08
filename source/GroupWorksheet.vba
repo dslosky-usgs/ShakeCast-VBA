@@ -136,7 +136,7 @@ For Each cell In colA.Cells
 '                         mySheet.Range("H" & cell.row - 1).Validation.Formula1 = "" Then
 '
 'MakeDropDownsS:
-                    GroupDropDowns (cell.row - 1)
+                    'GroupDropDowns (cell.row - 1)
                         
                         
                     Err.Clear
@@ -202,7 +202,7 @@ GoodRow:
 
                 greyCells (cell.row - 1), (cell.row - 1)
                 FillGroup (cell.row - 1)
-                GroupDropDowns (cell.row - 1)
+                'groupdropdowns (cell.row - 1)
             
     
         
@@ -227,12 +227,12 @@ GoodRow:
                         Application.WorksheetFunction.CountBlank(mySheet.Range("A" & rowNum, "H" & rowNum)) > 1 Then
                     
                     FillGroup (rowNum)
-                    GroupDropDowns (rowNum)
+                    'groupdropdowns (rowNum)
           
                 ElseIf Application.WorksheetFunction.CountBlank(mySheet.Range("A" & rowNum, "H" & rowNum)) > 2 Then
                
                     FillGroup (rowNum)
-                    GroupDropDowns (rowNum)
+                    'groupdropdowns (rowNum)
 
                 End If
                
@@ -373,7 +373,7 @@ Set mySheet = Worksheets("Notification XML")
 
 ' string with the letters of the columns we want to
 Dim LetStr As String
-LetStr = "BCHIJL"
+LetStr = "BCHI"
 
 If rowNum > startRow Then
 

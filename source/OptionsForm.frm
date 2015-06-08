@@ -13,15 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
-
 Private Sub ComboBox1_Change()
 
 End Sub
@@ -144,6 +135,11 @@ ElseIf Me.OptionCombo.value = "Add multiple facility types" Then
 ElseIf Me.OptionCombo.value = "Import CSV" Then
 
         Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "ImportCSV"
+        ProgressForm.Show vbModeless
+        
+ElseIf Me.OptionCombo.value = "Import Conf" Then
+
+        Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "ImportConf"
         ProgressForm.Show vbModeless
     
 ElseIf Me.OptionCombo.value = "Access General User Worksheet" Then
@@ -381,7 +377,7 @@ ElseIf ActiveSheet.Name = "Notification XML" Then
         Me.OptionCombo.AddItem "Update Worksheet"
         Me.OptionCombo.AddItem "Unlock Data"
         Me.OptionCombo.AddItem "Clear All Data"
-        Me.OptionCombo.AddItem "Import CSV"
+        Me.OptionCombo.AddItem "Import Conf"
         Me.OptionCombo.AddItem "Access General User Worksheet"
     Else
         Me.OptionCombo.AddItem "Export XML"
@@ -389,7 +385,7 @@ ElseIf ActiveSheet.Name = "Notification XML" Then
         Me.OptionCombo.AddItem "Update Worksheet"
         Me.OptionCombo.AddItem "Unlock Data"
         Me.OptionCombo.AddItem "Clear All Data"
-        Me.OptionCombo.AddItem "Import CSV"
+        Me.OptionCombo.AddItem "Import Conf"
         Me.OptionCombo.AddItem "Access Advanced User Worksheet"
     End If
     

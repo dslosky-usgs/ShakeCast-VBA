@@ -123,29 +123,32 @@ checkPhone:
 UserDropdown:
     If Intersect(target, Me.Range("B:B")) Is Nothing Then GoTo ExitHandler
     
+    Me.Unprotect
+    
     ' create a string array with the user types
     Dim UserTypes(0 To 1) As String
     UserTypes(0) = "USER"
     UserTypes(1) = "ADMIN"
     
-'    create user/admin drop down
-'    With ActiveCell.Validation
-'        .Delete
-'        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
-'        Operator:=xlBetween, Formula1:="hi"
-'        .IgnoreBlank = True
-'        .InCellDropdown = True
-'        .InputTitle = "User Type"
-'        .ErrorTitle = ""
-'        .InputMessage = "Please select a user type type from the drop-down list"
-'        .ErrorMessage = ""
-'        .ShowInput = True
-'        .ShowError = True
-'    End With
+    ' create user/admin drop down
+    With Me.Range("B" & target.row).Validation
+        .Delete
+        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+        Operator:=xlBetween, Formula1:=Join(UserTypes, ",")
+        .IgnoreBlank = True
+        .InCellDropdown = True
+        .InputTitle = "User Type"
+        .ErrorTitle = ""
+        .InputMessage = "Please select a user type type from the drop-down list"
+        .ErrorMessage = ""
+        .ShowInput = True
+        .ShowError = True
+    End With
     
 ExitHandler:
     Worksheets("User XML").ScrollArea = ""
     Application.EnableEvents = True
+    Application.Run "ProtectWorkbook"
 
 End Sub
 

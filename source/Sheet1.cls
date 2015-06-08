@@ -193,21 +193,82 @@ Private Sub Worksheet_PivotTableBeforeCommitChanges(ByVal TargetPivotTable As Pi
 End Sub
 
 Private Sub Worksheet_SelectionChange(ByVal target As Range)
-    If Intersect(target, Me.Range("AD:AD")) Is Nothing Then Exit Sub
     If target.Cells.CountLarge > 1 Then Exit Sub
-    If ActiveCell.row < 4 Then Exit Sub
+    If target.row < 4 Then Exit Sub
     Application.EnableEvents = False 'to prevent endless loop
-
+    
+    Me.Unprotect
+    
     On Error GoTo ExitHandler
 
-    AttForm.Show
-    'ActiveCell.Offset(0, -1).Select
-
-ExitHandler:
-
+    Dim rowNum As Integer
+    Dim colNum As Integer
     
+    rowNum = target.row
+    colNum = target.Column
+    
+    Set LookUpSheet = Worksheets("ShakeCast Ref Lookup Values")
+
+    If colNum <> 30 Then GoTo FacDrop
+    
+        AttForm.Show
+
+FacDrop:
+    If colNum <> 2 Then GoTo ModDrop
+    
+        Set FacType = Me.Range("B" & rowNum)
+        
+        Dim FacTypes() As String
+        
+        lastFac = LookUpSheet.Cells(Rows.count, "C").End(xlUp).row
+        Set FacTypeCells = Worksheets("ShakeCast Ref Lookup Values").Range("C1:C" & lastFac)
+
+        With FacType.Validation
+            .Delete
+            .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+            Operator:=xlBetween, Formula1:="='" & LookUpSheet.Name & "'!" & FacTypeCells.Address
+            .IgnoreBlank = True
+            .InCellDropdown = True
+            .InputTitle = "Facility Type"
+            .ErrorTitle = ""
+            .InputMessage = "Please select a facility type from the drop-down list"
+            .ErrorMessage = ""
+            .ShowInput = True
+            .ShowError = True
+        End With
+    
+ModDrop:
+    If colNum <> 13 Then GoTo ExitHandler
+    
+        Set ModType = Me.Range("M" & rowNum)
+        
+        Dim ModTypes() As String
+    
+        Set hazSheet = Worksheets("Hazus Facility Model Data")
+        Dim lastHaz As Long
+        
+        lastHaz = hazSheet.Cells(Rows.count, "A").End(xlUp).row
+        
+        Set ModTypeCells = hazSheet.Range("A2:A" & lastHaz)
+        
+        With ModType.Validation
+            .Delete
+            .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+            Operator:=xlBetween, Formula1:="='" & hazSheet.Name & "'!" & ModTypeCells.Address
+            .IgnoreBlank = True
+            .InCellDropdown = True
+            .InputTitle = "HAZUS Model Type"
+            .ErrorTitle = ""
+            .InputMessage = "Please select a model type from the drop-down list"
+            .ErrorMessage = ""
+            .ShowInput = True
+            .ShowError = True
+        End With
+    
+ExitHandler:
     Me.ScrollArea = ""
     Application.EnableEvents = True
+    Application.Run "ProtectWorkbook"
     
 End Sub
 

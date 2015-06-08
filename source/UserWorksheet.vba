@@ -101,17 +101,17 @@ Set mySheet = Worksheets("User XML")
 Set groupSheet = Worksheets("Notification XML")
 
 ' PAGER
-If IsEmpty(mySheet.Range("H" & checkRow)) Then
+If IsEmpty(mySheet.Range("H" & checkRow)) Or mySheet.Range("H" & checkRow).value = "example@example.com" Then
     mySheet.Range("H" & checkRow).value = mySheet.Range("E" & checkRow).value
 End If
 
 ' EMAIL_HTML
-If IsEmpty(mySheet.Range("I" & checkRow)) Then
+If IsEmpty(mySheet.Range("I" & checkRow)) Or mySheet.Range("I" & checkRow).value = "example@example.com" Then
     mySheet.Range("I" & checkRow).value = mySheet.Range("E" & checkRow).value
 End If
 
 'EMAIL_ TEXT
-If IsEmpty(mySheet.Range("J" & checkRow)) Then
+If IsEmpty(mySheet.Range("J" & checkRow)) Or mySheet.Range("J" & checkRow).value = "example@example.com" Then
     mySheet.Range("J" & checkRow).value = mySheet.Range("E" & checkRow).value
 End If
 

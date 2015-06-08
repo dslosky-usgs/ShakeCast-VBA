@@ -3,7 +3,7 @@ Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ProgressForm
    Caption         =   "Progress"
    ClientHeight    =   1720
    ClientLeft      =   -40
-   ClientTop       =   -5140
+   ClientTop       =   -6980
    ClientWidth     =   5680
    OleObjectBlob   =   "ProgressForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -82,6 +82,10 @@ Private Sub UserForm_Activate()
     ElseIf process = "ImportCSV" Then
         ProgressForm.ProcessName.Caption = "Importing CSV"
         Application.Run "importCSV"
+        
+    ElseIf process = "ImportConf" Then
+        ProgressForm.ProcessName.Caption = "Importing Conf"
+        Application.Run "importConf"
         
     End If
 
