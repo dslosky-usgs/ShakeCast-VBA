@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AttForm 
    Caption         =   "Facility Attributes"
    ClientHeight    =   5120
-   ClientLeft      =   -40
-   ClientTop       =   -2840
+   ClientLeft      =   -1240
+   ClientTop       =   -9740.001
    ClientWidth     =   8040
    OleObjectBlob   =   "AttForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 
@@ -58,6 +59,13 @@ For Each cont In AttFrame.Controls
         attStr = attStr & "%" & cont.Caption
     Else
         attStr = attStr & ":" & cont.Text
+        
+        If InStr(cont.Text, "%") Then
+            MsgBox "Sorry: ""&"" is an invalid character"
+            cont.Text = ""
+            Exit Sub
+        End If
+        
     End If
 
 Next cont
@@ -105,15 +113,20 @@ For Each att In attArr
 
     eachAtt = Split(att, ":")
     
-    Set lab = myFrame.Controls.Add("Forms.Label.1", "CheckBox_" & i)
-    lab.Caption = eachAtt(0)
+    att_name = eachAtt(0)
+    eachAtt(0) = ""
+    att_val = Join(eachAtt, ":")
+    att_val = Right(att_val, Len(att_val) - 1)
+    
+    Set lab = myFrame.Controls.add("Forms.Label.1", "CheckBox_" & i)
+    lab.Caption = att_name
     lab.Left = 5
     lab.Top = 5 + (i * 28)
     lab.Font.Size = 12
     lab.Height = 22
             
-    Set txtbox = myFrame.Controls.Add("Forms.TextBox.1", eachAtt(0))
-    txtbox.Text = eachAtt(1)
+    Set txtbox = myFrame.Controls.add("Forms.TextBox.1", att_name)
+    txtbox.Text = att_val
     txtbox.Left = 150
     txtbox.Top = 5 + (i * 28)
     txtbox.Font.Size = 12

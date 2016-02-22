@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AttCheckBox 
    Caption         =   "Select Facility Attributes"
    ClientHeight    =   5880
-   ClientLeft      =   -40
-   ClientTop       =   -2840
+   ClientLeft      =   -200
+   ClientTop       =   -3760
    ClientWidth     =   4680
    OleObjectBlob   =   "AttCheckBox.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,16 +13,6 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-
-
-
-
-
-
-
-
 Private Sub AllButton_Click()
 
 For Each cont In Me.AttFrame.Controls
@@ -64,7 +54,9 @@ If Me.Caption = "Select Facility Attributes" Then
     For Each cont In myFrame.Controls
         If TypeOf cont Is MSForms.Label Or TypeOf cont Is MSForms.TextBox Then
         'Cont.Delete
-            myFrame.Controls(cont.Name).Name = cont.Name & "DELETE"
+            'If cont.Name <> "" Then
+                cont.Name = cont.Name & "DELETE"
+            'End If
         End If
     Next cont
     
@@ -82,35 +74,35 @@ If Me.Caption = "Select Facility Attributes" Then
     i = 0
     
     
-    For Each Control In Me.AttFrame.Controls
-        If TypeOf Control Is MSForms.CheckBox Then
-            If Control.value = True Then
+    For Each cont In Me.AttFrame.Controls
+        If TypeOf cont Is MSForms.CheckBox Then
+            If cont.value = True Then
                 
-                Set lab = myFrame.Controls.Add("Forms.Label.1", "CheckBox_" & i)
-                lab.Caption = Control.Caption
+                Set lab = myFrame.Controls.add("Forms.Label.1", "CheckBox_" & i)
+                lab.Caption = cont.Caption
                 lab.Left = 5
                 lab.Top = 5 + (i * 28)
                 lab.Font.Size = 12
                 lab.Height = 23
                 
-                Set txtbox = myFrame.Controls.Add("Forms.TextBox.1", Control.Caption)
+                Set txtbox = myFrame.Controls.add("Forms.TextBox.1", cont.Caption)
                 txtbox.Left = 150
                 txtbox.Top = 5 + (i * 28)
                 txtbox.Font.Size = 12
                 txtbox.Height = 23
                 i = i + 1
                 
-                For Each cont In myFrame.Controls
-                    If TypeOf cont Is MSForms.TextBox Then
-                        If Control.Caption & "DELETE" = cont.Name Then
-                            txtbox.Text = myFrame.Controls(cont.Name).Text
+                For Each cont_check In myFrame.Controls
+                    If TypeOf cont_check Is MSForms.TextBox Then
+                        If cont.Caption & "DELETE" = cont_check.Name Then
+                            txtbox.Text = myFrame.Controls(cont_check.Name).Text
                         End If
                     End If
-                Next cont
+                Next cont_check
             
             End If
         End If
-    Next Control
+    Next cont
     
     For Each cont In myFrame.Controls
         If (TypeOf cont Is MSForms.Label Or TypeOf cont Is MSForms.TextBox) And _
@@ -172,7 +164,7 @@ Private Sub UserForm_Initialize()
 ' get rid of any checkboxes that currently exist
 For Each Control In Me.AttFrame.Controls
     If TypeOf Control Is MSForms.CheckBox Then
-    Control.Delete
+    Control.delete
     End If
 Next Control
 

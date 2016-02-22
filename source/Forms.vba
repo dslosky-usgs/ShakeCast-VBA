@@ -40,7 +40,7 @@ Dim i           As Long
 Dim chkBox      As MSForms.CheckBox
 
 For i = 0 To UBound(attList)
-    Set chkBox = AttCheckBox.AttFrame.Add("Forms.CheckBox.1", "CheckBox_" & i)
+    Set chkBox = AttCheckBox.AttFrame.add("Forms.CheckBox.1", "CheckBox_" & i)
     chkBox.Caption = attList(i)
     chkBox.Left = 5
     chkBox.Top = 5 + (i * 28)
@@ -70,7 +70,7 @@ Next cont
 If totalHeight > AttCheckBox.AttFrame.Height Then
     AttCheckBox.AttFrame.ScrollHeight = totalHeight
 ElseIf totalHeight = 5 Then
-    Set txtbox = AttCheckBox.AttFrame.Add("Forms.TextBox.1", "TextBox_1")
+    Set txtbox = AttCheckBox.AttFrame.add("Forms.TextBox.1", "TextBox_1")
     txtbox.Left = 5
     txtbox.Top = 5
     txtbox.Font.Size = 12
@@ -106,7 +106,7 @@ Dim i           As Long
 Dim chkBox      As MSForms.CheckBox
 
 For i = 1 To UBound(facList)
-    Set chkBox = AttCheckBox.AttFrame.Add("Forms.CheckBox.1", "CheckBox_" & i)
+    Set chkBox = AttCheckBox.AttFrame.add("Forms.CheckBox.1", "CheckBox_" & i)
     chkBox.Caption = facList(i, 1)
     chkBox.Left = 5
     chkBox.Top = 5 + ((i - 1) * 28)

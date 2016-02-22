@@ -96,6 +96,12 @@ End If
 
 
 ExitHandler:
+    Unload ProgressForm
+    Me.Cells.Locked = False
+    Me.Rows(1).Locked = True
+    Me.Rows(2).Locked = True
+    Me.Rows(3).Locked = True
+    Me.Protect AllowFormattingCells:=True, AllowDeletingRows:=True, AllowInsertingRows:=True, UserInterfaceOnly:=True
     Me.Protect AllowFormattingCells:=True, AllowDeletingRows:=True, AllowInsertingRows:=True, UserInterfaceOnly:=True
     Application.ScreenUpdating = False
     Application.EnableEvents = True
@@ -132,8 +138,8 @@ UserDropdown:
     
     ' create user/admin drop down
     With Me.Range("B" & target.row).Validation
-        .Delete
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+        .delete
+        .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
         Operator:=xlBetween, Formula1:=Join(UserTypes, ",")
         .IgnoreBlank = True
         .InCellDropdown = True
@@ -151,6 +157,8 @@ ExitHandler:
     Application.Run "ProtectWorkbook"
 
 End Sub
+
+
 
 
 

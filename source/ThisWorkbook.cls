@@ -52,15 +52,16 @@ Private Sub Workbook_Open()
 '
 '    welcomeSheet.Range("Z35").Activate
     
-    For Each Sheet In Application.ThisWorkbook.Sheets
-        Sheet.Unprotect
-    Next Sheet
+    For Each sheet In Application.ThisWorkbook.Sheets
+        sheet.Unprotect
+    Next sheet
     
     Application.Run "protectWorkbook"
     
     Application.EnableEvents = True
     
 End Sub
+
 
 
 

@@ -182,6 +182,10 @@ Private Sub Worksheet_Change(ByVal target As Range)
      
 ExitHandler:
     Unload ProgressForm
+    Me.Cells.Locked = False
+    Me.Rows(1).Locked = True
+    Me.Rows(2).Locked = True
+    Me.Rows(3).Locked = True
     Me.Protect AllowFormattingCells:=True, AllowDeletingRows:=True, AllowInsertingRows:=True, UserInterfaceOnly:=True
     Application.ScreenUpdating = True
     Application.EnableEvents = True
@@ -224,8 +228,8 @@ FacDrop:
         Set FacTypeCells = Worksheets("ShakeCast Ref Lookup Values").Range("C1:C" & lastFac)
 
         With FacType.Validation
-            .Delete
-            .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+            .delete
+            .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
             Operator:=xlBetween, Formula1:="='" & LookUpSheet.Name & "'!" & FacTypeCells.Address
             .IgnoreBlank = True
             .InCellDropdown = True
@@ -252,8 +256,8 @@ ModDrop:
         Set ModTypeCells = hazSheet.Range("A2:A" & lastHaz)
         
         With ModType.Validation
-            .Delete
-            .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+            .delete
+            .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
             Operator:=xlBetween, Formula1:="='" & hazSheet.Name & "'!" & ModTypeCells.Address
             .IgnoreBlank = True
             .InCellDropdown = True
@@ -271,6 +275,8 @@ ExitHandler:
     Application.Run "ProtectWorkbook"
     
 End Sub
+
+
 
 
 

@@ -103,11 +103,11 @@ End With
 
 End Sub
 
-Sub SaveCodeModulesWork()
+Sub SaveCode()
     SaveCodeModules "Macintosh HD:Users:dslosky:Documents:stuff:Jobs:Worksheet Optimization:ShakeCast-VBA:source:"
 End Sub
 
-Sub ImportCodeModulesWork()
+Sub ImportCode()
     ImportCodeModules "Macintosh HD:Users:dslosky:Documents:stuff:Jobs:Worksheet Optimization:ShakeCast-VBA:source:"
 End Sub
 

@@ -119,7 +119,7 @@ Dim sMacScript As String
     
     End Function
 
-Sub loadCSV()
+Function loadCSV()
     Dim fStr As String
 
     fStr = openFilePicker
@@ -133,42 +133,51 @@ Sub loadCSV()
 '        'fStr is the file path and name of the file you selected.
 '        fStr = .SelectedItems(1)
 '    End With
-
-    With ThisWorkbook.Sheets("Data").QueryTables.Add(Connection:= _
-    "TEXT;" & fStr, Destination:=Range("$A$1"))
-        .Name = "CAPTURE"
-        .FieldNames = True
-        .RowNumbers = False
-        .FillAdjacentFormulas = False
-'        .PreserveFormatting = True
-        .RefreshOnFileOpen = False
-        .RefreshStyle = xlInsertDeleteCells
-        .SavePassword = False
-        .SaveData = True
-        .AdjustColumnWidth = True
-'        .RefreshPeriod = 0
-        .TextFilePromptOnRefresh = False
-'        .TextFilePlatform = 437
-        .TextFileStartRow = 1
-        .TextFileParseType = xlDelimited
-        .TextFileTextQualifier = xlTextQualifierDoubleQuote
-        .TextFileConsecutiveDelimiter = False
-        .TextFileTabDelimiter = True
-        .TextFileSemicolonDelimiter = False
-        .TextFileCommaDelimiter = True
-        .TextFileSpaceDelimiter = False
-        .TextFileColumnDataTypes = Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-'        .TextFileTrailingMinusNumbers = True
-        .Refresh BackgroundQuery:=False
-
-    End With
-End Sub
+    If fStr <> "" Then
+        With ThisWorkbook.Sheets("Data").QueryTables.add(Connection:= _
+        "TEXT;" & fStr, Destination:=Range("$A$1"))
+            .Name = "CAPTURE"
+            .FieldNames = True
+            .RowNumbers = False
+            .FillAdjacentFormulas = False
+    '        .PreserveFormatting = True
+            .RefreshOnFileOpen = False
+            .RefreshStyle = xlInsertDeleteCells
+            .SavePassword = False
+            .SaveData = True
+            .AdjustColumnWidth = True
+    '        .RefreshPeriod = 0
+            .TextFilePromptOnRefresh = False
+    '        .TextFilePlatform = 437
+            .TextFileStartRow = 1
+            .TextFileParseType = xlDelimited
+            .TextFileTextQualifier = xlTextQualifierDoubleQuote
+            .TextFileConsecutiveDelimiter = False
+            .TextFileTabDelimiter = True
+            .TextFileSemicolonDelimiter = False
+            .TextFileCommaDelimiter = True
+            .TextFileSpaceDelimiter = False
+            .TextFileColumnDataTypes = Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+    '        .TextFileTrailingMinusNumbers = True
+            .Refresh BackgroundQuery:=False
+    
+        End With
+        
+        loadCSV = True
+    Else
+        loadCSV = False
+    End If
+End Function
 
 
 Private Sub importCSV()
     Application.EnableEvents = False
     Application.ScreenUpdating = False
     'On Error GoTo ExitHandler
+    
+    
+    Dim sheetName As String     ' used to make sure we pipe information the right way
+    sheetName = ActiveSheet.Name
     
     ' clear data worksheet
     Set dataSheet = Worksheets("Data")
@@ -177,18 +186,21 @@ Private Sub importCSV()
     
     clearSheet "Data"
     
-    loadCSV
+    Dim loaded As Boolean
+    loaded = loadCSV
+    If loaded <> True Then
+        GoTo ExitHandler
+    End If
     
     Set dataSheet = Worksheets("Data")
     'Open csvFile For Input As #1
     
-    Dim count As Integer            ' Count how many lines we're importing
-    Dim lastRow As Integer         ' last line of data in the dataSheet
+    Dim count As Long            ' Count how many lines we're importing
+    Dim lastRow As Long         ' last line of data in the dataSheet
     Dim lastCol As Integer          ' last column of the imported data
     Dim startRow As Integer       ' where we start importing data
     Dim headCount As Integer    ' Counts the number of headers
-    Dim sheetName As String     ' used to make sure we pipe information the right way
-    Dim rowNum As Integer        ' keeps track of where we are in the worksheet
+    Dim rowNum As Long        ' keeps track of where we are in the worksheet
     Dim fields As String              ' this is where we will store the fields for each worksheet
     Dim lineArr() As String          ' used to read the csv one line at a time
     Dim replace As String           ' used to replace the comma delimeter
@@ -475,6 +487,10 @@ NextLine:
     End If
     
 ExitHandler:
+
+    Unload ProgressForm
+    Worksheets(sheetName).Select
+
     Application.EnableEvents = True
     Application.ScreenUpdating = True
     Close #1
@@ -493,7 +509,6 @@ Sub importConf()
     fileStr = openFilePicker
     
     If fileStr = "" Then
-        MsgBox "No file chosen!"
         GoTo ExitHandler
     End If
     
@@ -956,16 +971,15 @@ End If
 ' If the row is no good for our XML, we change it to a tourquiosey color to make it stand out
 If GoodBad = "Bad" Then
 
-    With RowCells.Interior
-        .Color = RGB(146, 205, 220)
-    End With
+    If RowCells.Interior.Color <> 14470546 Then
+        RowCells.Interior.Color = 14470546
+    End If
     
 ElseIf GoodBad = "Advanced" Then
 
-    RowCells.Select
-    With Selection.Interior
-        .Color = RGB(192, 80, 77)
-    End With
+    If RowCells.Interior.Color <> 5066944 Then
+        RowCells.Interior.Color = 5066944
+    End If
     
 ElseIf GoodBad = "Good" And whichSheet = "Facility" Then
 
@@ -979,51 +993,41 @@ ElseIf GoodBad = "Good" And whichSheet = "Facility" Then
     
     Dim ColorCells As Range
     
-    Set ColorCells = mySheet.Range("A" & rowNum, "H" & rowNum)
-    With ColorCells.Interior
-         .Color = RGB(218, 238, 243)
-    End With
-            
-    Set ColorCells = mySheet.Range("I" & rowNum, "L" & rowNum)
-    With ColorCells.Interior
-        .Color = RGB(235, 241, 222)
-    End With
-        
-    Set ColorCells = mySheet.Range("M" & rowNum, "N" & rowNum)
-    With ColorCells.Interior
-        .Color = RGB(191, 191, 191)
-    End With
+    If mySheet.Range("A" & rowNum, "H" & rowNum).Interior.Color <> 15986394 Then
+        mySheet.Range("A" & rowNum, "H" & rowNum).Interior.Color = 15986394
+    End If
     
-    Set ColorCells = mySheet.Range("O" & rowNum, "Q" & rowNum)
-    With ColorCells.Interior
-        .Color = RGB(0, 176, 80)
-    End With
+    If mySheet.Range("I" & rowNum, "L" & rowNum).Interior.Color <> 14610923 Then
+        mySheet.Range("I" & rowNum, "L" & rowNum).Interior.Color = 14610923
+    End If
     
-    Set ColorCells = mySheet.Range("R" & rowNum, "T" & rowNum)
-    With ColorCells.Interior
-        .Color = RGB(255, 255, 0)
-    End With
+    If mySheet.Range("M" & rowNum, "N" & rowNum).Interior.Color <> 12566463 Then
+        mySheet.Range("M" & rowNum, "N" & rowNum).Interior.Color = 12566463
+    End If
     
-    Set ColorCells = mySheet.Range("U" & rowNum, "W" & rowNum)
-    With ColorCells.Interior
-        .Color = RGB(255, 192, 0)
-    End With
+    If mySheet.Range("O" & rowNum, "Q" & rowNum).Interior.Color <> 5287936 Then
+        mySheet.Range("O" & rowNum, "Q" & rowNum).Interior.Color = 5287936
+    End If
     
-    Set ColorCells = mySheet.Range("X" & rowNum, "Z" & rowNum)
-    With ColorCells.Interior
-        .Color = RGB(255, 0, 0)
-    End With
+    If mySheet.Range("R" & rowNum, "T" & rowNum).Interior.Color <> 65535 Then
+        mySheet.Range("R" & rowNum, "T" & rowNum).Interior.Color = 65535
+    End If
     
-    Set ColorCells = mySheet.Range("AA" & rowNum, "AC" & rowNum)
-    With ColorCells.Interior
-        .Color = RGB(242, 242, 242)
-    End With
+    If mySheet.Range("U" & rowNum, "W" & rowNum).Interior.Color <> 49407 Then
+        mySheet.Range("U" & rowNum, "W" & rowNum).Interior.Color = 49407
+    End If
+
+    If mySheet.Range("X" & rowNum, "Z" & rowNum).Interior.Color <> 255 Then
+        mySheet.Range("X" & rowNum, "Z" & rowNum).Interior.Color = 255
+    End If
     
-    Set ColorCells = mySheet.Range("AD" & rowNum, "AD" & rowNum)
-    With ColorCells.Interior
-        .Color = RGB(221, 217, 196)
-    End With
+    If mySheet.Range("AA" & rowNum, "AC" & rowNum).Interior.Color <> 15921906 Then
+        mySheet.Range("AA" & rowNum, "AC" & rowNum).Interior.Color = 15921906
+    End If
     
+    If mySheet.Range("AD" & rowNum).Interior.Color <> 12900829 Then
+        mySheet.Range("AD" & rowNum).Interior.Color = 12900829
+    End If
         
 ElseIf GoodBad = "Good" And whichSheet = "User" Then
 
@@ -1333,25 +1337,29 @@ Function ArrayIndex(ByVal searchArray As Variant, ByVal value As String, Optiona
 End Function
 
 Private Sub checkXMLchars(ByVal target As Range)
-
-     For i = 1 To Len(target.value)
-        If InStr("&", Mid(target.value, i, 1)) Then
-            MsgBox "WARNING: We have detected an & in this cell. Unless you are using the ampersand as an escape character " & _
-                "this text will not be presented correctly in the ShakeCast application."
-                
-            
-            Exit Sub
-        End If
-     Next i
+    
+     
+     If Not IsError(target) Then
+        For i = 1 To Len(target.value)
+           If InStr("&", Mid(target.value, i, 1)) Then
+               MsgBox "WARNING: We have detected an & in this cell. Unless you are using the ampersand as an escape character " & _
+                   "this text will not be presented correctly in the ShakeCast application."
+                   
+               
+               Exit Sub
+           End If
+        Next i
+    End If
+    
 End Sub
 
 Private Sub protectWorkbook()
 
-    For Each Sheet In Application.ThisWorkbook.Sheets
+    For Each sheet In Application.ThisWorkbook.Sheets
 
-        Sheet.Protect AllowFormattingCells:=True, AllowDeletingRows:=True, AllowInsertingRows:=True, UserInterfaceOnly:=True
+        sheet.Protect AllowFormattingCells:=True, AllowDeletingRows:=True, AllowInsertingRows:=True, UserInterfaceOnly:=True
 
-    Next Sheet
+    Next sheet
 
 End Sub
 
@@ -1381,7 +1389,7 @@ On Error Resume Next
 ActiveSheet.Rows("4:4").EntireRow.Clear
 ActiveSheet.Rows("4:4").EntireRow.Locked = False
     
-ActiveSheet.Rows(startRow & ":" & endRow).EntireRow.Delete
+ActiveSheet.Rows(startRow & ":" & endRow).EntireRow.delete
     
     
 If ActiveSheet.Name = "Facility XML" Then

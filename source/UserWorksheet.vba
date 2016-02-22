@@ -261,6 +261,7 @@ Sub UserXML(master As String, _
                     Optional ByVal docMax As Integer = 15000, _
                     Optional ByVal docStr As String = "")
 
+UpdateGroupsButton
 
 Dim docArr() As String
 
@@ -443,7 +444,7 @@ Dim indent As Integer
 row = 4                   ' The first row that holds data
 indent = 0                ' Keeps track of how many parents each tag has
 Do While row < endRow
-
+    
     If progressCount > progressWhen Then
         
         pcntDone = ((row - 4) / (endRow - 3))
@@ -859,7 +860,7 @@ Dim endCol As Integer
 
 startRow = 4
 startCol = 1
-endRow = mySheet.Cells(Rows.count, "F").End(xlUp).row
+endRow = mySheet.Cells(Rows.count, "A").End(xlUp).row
 endCol = 10
 
 ' Create variable to monitor how many rows of the XML table are filled. The integer keeps track of
@@ -927,10 +928,10 @@ Do While UserRow < endRow + 1
     For UserCol = startCol To endCol
         
             ' This is the cell that we are about to write to in the XML table
-            Set XMLcell = XMLSheet.Cells(XMLrow, XMLcol)
+            Set XMLCell = XMLSheet.Cells(XMLrow, XMLcol)
             Set UserCell = mySheet.Cells(UserRow, UserCol)
         
-            XMLcell.value = UserCell.value
+            XMLCell.value = UserCell.value
             
             XMLcol = XMLcol + 1
             
@@ -1144,7 +1145,7 @@ For i = 0 To UBound(GroupNames)
         GoTo NextOne
     End If
 
-    Set chkBox = GroupCheckBox.Controls.Add("Forms.CheckBox.1", "CheckBox_" & i)
+    Set chkBox = GroupCheckBox.Controls.add("Forms.CheckBox.1", "CheckBox_" & i)
     chkBox.Caption = GroupNames(i)
     chkBox.Left = 5
     chkBox.Top = 5 + (i * 20 - a * 20)

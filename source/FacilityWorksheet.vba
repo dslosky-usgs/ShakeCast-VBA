@@ -209,8 +209,8 @@ Set ModTypeCells = hazSheet.Range("A2:A" & lastHaz)
 
 If target.Column = 1 Then
     With FacType.Validation
-        .Delete
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+        .delete
+        .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
         Operator:=xlBetween, Formula1:="='" & LookUpSheet.Name & "'!" & FacTypeCells.Address
         .IgnoreBlank = True
         .InCellDropdown = True
@@ -225,8 +225,8 @@ End If
 
 If target.Column = 1 Then
     With ModType.Validation
-        .Delete
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+        .delete
+        .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
         Operator:=xlBetween, Formula1:="='" & hazSheet.Name & "'!" & ModTypeCells.Address
         .IgnoreBlank = True
         .InCellDropdown = True
@@ -520,7 +520,12 @@ Do While row < endRow
             FieldValue = Field.value
             SubfValue = Subf.value
             HeadValue = Head.value
-            CellValue = CurCell.value
+            
+            If Not IsError(CurCell) Then
+                CellValue = CurCell.value
+            Else
+                CellValue = "EXCEL ERROR"
+            End If
             
             ' check if we should close the field
             Set NextField = XMLSheet.Cells(1, col + 1)
@@ -591,10 +596,12 @@ Do While row < endRow
                     For Each entry In attArr
                     
                         eachAtt = Split(entry, ":")
-                    
+                        
                         HeadValue = eachAtt(0)
-                        CellValue = eachAtt(1)
-                    
+                        eachAtt(0) = ""
+                        CellValue = Join(eachAtt, ":")
+                        CellValue = Right(CellValue, Len(CellValue) - 1)
+
                         If entry = attArr(0) Then
                             printStr = printStr & vbTab & vbTab & vbTab & _
                                 "<" & HeadValue & ">" & CellValue & "</" & HeadValue & ">"
@@ -997,10 +1004,12 @@ Do While FacRow < endRow + 1
     ' copy data from Facility Sheet to the XML table
     XMLSheet.Range("A" & XMLrow, "B" & XMLrow).value = FacSheet.Range("A" & FacRow, "B" & FacRow).value
     XMLSheet.Range("C" & XMLrow, "H" & XMLrow).value = FacSheet.Range("D" & FacRow, "I" & FacRow).value
-    XMLSheet.Range("I" & XMLrow).value = ManLatLong(FacSheet.Range("J" & FacRow), FacSheet.Range("K" & FacRow))
+    'XMLSheet.Range("I" & XMLrow) = Join(ManLatLong(FacSheet.Range("J" & FacRow), FacSheet.Range("K" & FacRow)), "")
     XMLSheet.Range("J" & XMLrow, "K" & XMLrow).value = FacSheet.Range("L" & FacRow, "M" & FacRow).value
     XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).value = FacSheet.Range("O" & FacRow, "AD" & FacRow).value
-            
+    XMLSheet.Range("I" & XMLrow).Formula = "=ManLatLong('Facility XML'!J" & FacRow & ",'Facility XML'!K" & FacRow & ")"
+    ' make the lat/lon string and stick it in the right place
+    'Application.Run "makeLatLonStr", FacSheet.Range("J" & FacRow), FacSheet.Range("K" & FacRow), XMLSheet.Range("I" & XMLrow)
     
     XMLrow = XMLrow + 1
     
@@ -1279,8 +1288,8 @@ End Function
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-Function ManLatLong(LatCell As Range, _
-                    LongCell As Range)
+Function ManLatLong(ByVal LatCell As Range, _
+                                   ByVal LongCell As Range)
 
  
 Dim LatRows As Integer     ' The number of rows in the latitude column
@@ -1288,6 +1297,7 @@ Dim LongRows2 As Integer   ' Number of rows in the longitude column
 Dim LatArray As Variant    ' Array of latitude rows
 Dim LongArray As Variant   ' Array of longitude rows
 Dim printStr As String
+Dim print_array() As Variant
  
 If IsEmpty(LatCell) Or IsEmpty(LongCell) Or IsError(LatCell) Or IsError(LongCell) Then
     ManLatLong = ""
@@ -1325,25 +1335,107 @@ If LatRows > LongRows Or LatRows < LongRows Then
     
 ElseIf LatRows = 1 And LongRows = 1 Then
     printStr = printStr & LongCell.value & "," & LatCell.value & ",0"
+    ReDim str_array(0 To 1)
+    str_array(0) = printStr
+    str_array(1) = ""
 Else
     printStr = ""
     
     Dim i As Integer
+    ReDim str_array(0 To UBound(LatArray))
     For i = 0 To UBound(LatArray)
     
         If i = 0 Then
             printStr = printStr & LongArray(i) & "," & LatArray(i) & ",0"
         Else
-        printStr = printStr & " " & LongArray(i) & "," & LatArray(i) & ",0"
+            printStr = printStr & " " & LongArray(i) & "," & LatArray(i) & ",0"
         End If
+    
+        str_array(i) = printStr
     
     Next i
     
 End If
 
+'ManLatLong = printStr
 ManLatLong = printStr
 
 End Function
+
+Private Sub makeLatLonStr(LatCell As Range, _
+                                          LongCell As Range, _
+                                          XMLCell As Range)
+
+ 
+Dim LatRows As Integer     ' The number of rows in the latitude column
+Dim LongRows2 As Integer   ' Number of rows in the longitude column
+Dim LatArray As Variant    ' Array of latitude rows
+Dim LongArray As Variant   ' Array of longitude rows
+Dim printStr As String
+Dim print_array() As Variant
+ 
+If IsEmpty(LatCell) Or IsEmpty(LongCell) Or IsError(LatCell) Or IsError(LongCell) Then
+    'ManLatLong = ""
+    Exit Sub
+    
+' Get Row lengths for latitude
+ElseIf InStr(LatCell.value, ";") = 0 Then
+    LatRows = 1
+    
+Else
+    ' lets also check if the row number the user provided is not too big.
+    LatArray = Split(LatCell.value, ";")
+    LatRows = UBound(LatArray) + 1
+End If
+
+
+' Get Row lengths for longitude
+If InStr(LongCell.value, ";") = 0 Then
+    LongRows = 1
+
+Else
+    ' lets also check if the row number the user provided is not too big.
+    LongArray = Split(LongCell.value, ";")
+    LongRows = UBound(LongArray) + 1
+    
+End If
+
+
+' Check that the latitude and longitude inputs have the same amount of rows
+If LatRows > LongRows Or LatRows < LongRows Then
+    'ManLatLong = "ERROR: CHECK LAT LONG"
+    MsgBox "Error: IT looks like your latitude and longitude in row " & LatCell.row & " doesn't make sense! " & _
+        "Check to make sure you have the same number of latitude and longitude entries."
+    Exit Sub
+    
+ElseIf LatRows = 1 And LongRows = 1 Then
+    printStr = printStr & LongCell.value & "," & LatCell.value & ",0"
+    ReDim str_array(0 To 1)
+    str_array(0) = printStr
+    str_array(1) = ""
+Else
+    printStr = ""
+    
+    Dim i As Integer
+    ReDim str_array(0 To UBound(LatArray))
+    For i = 0 To UBound(LatArray)
+    
+        If i = 0 Then
+            printStr = printStr & LongArray(i) & "," & LatArray(i) & ",0"
+        Else
+            printStr = printStr & " " & LongArray(i) & "," & LatArray(i) & ",0"
+        End If
+    
+        str_array(i) = printStr
+    
+    Next i
+    
+End If
+
+'ManLatLong = printStr
+XMLCell.value = Join(str_array, "")
+
+End Sub
 
 
 Private Sub RefreshButton()

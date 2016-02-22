@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FacSheetForm 
    Caption         =   "Facility Worksheet Information"
    ClientHeight    =   8280.001
-   ClientLeft      =   -40
-   ClientTop       =   -2840
+   ClientLeft      =   -360
+   ClientTop       =   -4680
    ClientWidth     =   10360
    OleObjectBlob   =   "FacSheetForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 
@@ -42,28 +43,43 @@ If ActiveSheet.Range("A1").value = "Facility Worksheet" Then
     
         FacSheetForm.AdvUser.Caption = "Access General User Worksheet"
     
-    ' Unhide HAZUS worksheet
+        ' Unhide HAZUS worksheet
     
         Sheets("HAZUS Facility Model Data").Unprotect
         Sheets("HAZUS Facility Model Data").Visible = True
     
-    ' Unhide Component and Component Class
-    ' Unhide geometry info
+        ' Unhide Component and Component Class
+        ' Unhide geometry info
     
-        Range("D:E, I:I, AE:AE").EntireColumn.Hidden = False
+        Range("D:E, I:I, AD:AD").EntireColumn.Hidden = False
     
-    ' Change the color of the headers
+        ' Change the color of the headers
     
         ChangeColors "Advanced", Range("A1", "AE2"), "Facility"
     
-    ' Change Adv/Gen user caption
+        ' Change Adv/Gen user caption
     
-        Range("A2").Select
-        Selection.value = "Advanced User"
+        Range("A4").Select
+        Range("A2").value = "Advanced User"
         
-        With Selection.Font
+        With Range("A2").Font
             .Color = RGB(31, 73, 152)
         End With
+    
+        FacSheetForm.DialogueBox.Text = vbTab & vbTab & vbTab & "               " & _
+            "The Advanced Facility Spreadsheet" & _
+            vbNewLine & _
+            vbTab & vbTab & vbTab & "          " & _
+            "---------------------------------------------------" & _
+            vbNewLine & vbNewLine & _
+            "The advanced user spreadsheet can be used to manually enter components, component " & _
+            "classes, and fragility information. " & vbNewLine & vbNewLine & _
+            "You can manually set component and component class " & _
+            "information in the columns of this spreadsheet." & vbNewLine & vbNewLine & _
+            "In order to edit fragility data, click over to the ""HAZUS Facility Model Data"" " & _
+            "spreadsheet. From here you can edit the values we have input for specific facility models " & _
+            "or create your own facility by adding your own row to the bottom of the sheet."
+
     
         Application.Run "FacAdvInfo"
         
@@ -80,7 +96,7 @@ If ActiveSheet.Range("A1").value = "Facility Worksheet" Then
     ' hide Component and Component Class
     ' hide geometry info
     
-        Range("D:E, I:I, AE:AE").EntireColumn.Hidden = True
+        Range("D:E, I:I, AD:AE").EntireColumn.Hidden = True
     
     
     

@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ManageAtts 
    Caption         =   "Manage Attributes"
    ClientHeight    =   5220
-   ClientLeft      =   -40
-   ClientTop       =   -2840
+   ClientLeft      =   -200
+   ClientTop       =   -3760
    ClientWidth     =   6240
    OleObjectBlob   =   "ManageAtts.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 
@@ -117,7 +118,7 @@ Dim i           As Long
 Dim chkBox      As MSForms.CheckBox
 
 For i = 0 To UBound(attList)
-    Set chkBox = Me.AttFrame.Add("Forms.CheckBox.1", "CheckBox_" & i)
+    Set chkBox = Me.AttFrame.add("Forms.CheckBox.1", "CheckBox_" & i)
     chkBox.Caption = attList(i)
     chkBox.Left = 5
     chkBox.Top = 5 + (i * 20)
@@ -159,7 +160,7 @@ Set mySheet = Worksheets("ShakeCast Ref Lookup Values")
 ' get rid of any checkboxes that currently exist
 For Each Control In Me.AttFrame.Controls
     If TypeOf Control Is MSForms.CheckBox Then
-    Control.Delete
+    Control.delete
     End If
 Next Control
 
@@ -189,7 +190,7 @@ Dim i           As Long
 Dim chkBox      As MSForms.CheckBox
 
 For i = 0 To UBound(attList)
-    Set chkBox = Me.AttFrame.Add("Forms.CheckBox.1", "CheckBox_" & i)
+    Set chkBox = Me.AttFrame.add("Forms.CheckBox.1", "CheckBox_" & i)
     chkBox.Caption = attList(i)
     chkBox.Left = 5
     chkBox.Top = 5 + (i * 28)

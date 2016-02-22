@@ -82,8 +82,8 @@ FacilityDrop:
             Set FacTypeCells = LookUpSheet.Range("C1:C" & lastFac)
             
             With FacType.Validation
-                .Delete
-                .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+                .delete
+                .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
                 Operator:=xlBetween, Formula1:="='" & LookUpSheet.Name & "'!" & FacTypeCells.Address
                 .IgnoreBlank = True
                 .InCellDropdown = True
@@ -105,8 +105,8 @@ NotTypeDrop:
         NotTypes(1) = "DAMAGE"
         
         With NotType.Validation
-            .Delete
-            .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+            .delete
+            .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
             Operator:=xlBetween, Formula1:=Join(NotTypes, ",")
             .IgnoreBlank = True
             .InCellDropdown = True
@@ -123,15 +123,16 @@ PrioDrop:
     
     Set InsPrio = Me.Range("E" & (rowNum))
     ' create an array for inspection priority
-    Dim InsPrios(0 To 3) As String
-    InsPrios(0) = "GREEN"
-    InsPrios(1) = "YELLOW"
-    InsPrios(2) = "ORANGE"
-    InsPrios(3) = "RED"
+    Dim InsPrios(0 To 4) As String
+    InsPrios(0) = "GREY"
+    InsPrios(1) = "GREEN"
+    InsPrios(2) = "YELLOW"
+    InsPrios(3) = "ORANGE"
+    InsPrios(4) = "RED"
     
     With InsPrio.Validation
-        .Delete
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+        .delete
+        .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
         Operator:=xlBetween, Formula1:=Join(InsPrios, ",")
         .IgnoreBlank = True
         .InCellDropdown = True
@@ -164,8 +165,8 @@ EventDrop:
     End If
     
     With EvType.Validation
-        .Delete
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+        .delete
+        .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
         Operator:=xlBetween, Formula1:=Join(EvTypeStr, ",")
         .IgnoreBlank = True
         .InCellDropdown = True
@@ -189,8 +190,8 @@ NotFormatDrop:
     NotForms(2) = "PAGER"
     
     With NotForm.Validation
-        .Delete
-        .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+        .delete
+        .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
         Operator:=xlBetween, Formula1:=Join(NotForms, ",")
         .IgnoreBlank = True
         .InCellDropdown = True
@@ -206,6 +207,8 @@ ExitHandler:
     Application.EnableEvents = True
     Application.Run "ProtectWorkbook"
 End Sub
+
+
 
 
 

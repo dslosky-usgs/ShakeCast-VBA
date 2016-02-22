@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AddAtt 
    Caption         =   "Add an Attribute"
    ClientHeight    =   2080
-   ClientLeft      =   -40
-   ClientTop       =   -2840
+   ClientLeft      =   -520
+   ClientTop       =   -5600
    ClientWidth     =   5540
    OleObjectBlob   =   "AddAtt.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,14 +13,17 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+Private Sub AttName_Change()
 
-
-
-
-
-
-
-
+    If Right(Me.AttName.Text, 1) = "%" Then
+        Me.AttName.Text = Left(Me.AttName.Text, Len(Me.AttName.Text) - 1)
+        MsgBox "Sorry: ""%"" is an invalid character"
+    ElseIf Right(Me.AttName.Text, 1) = ":" Then
+        Me.AttName.Text = Left(Me.AttName.Text, Len(Me.AttName.Text) - 1)
+        MsgBox "Sorry: "":"" is an invalid character"
+    End If
+    
+End Sub
 
 Private Sub CancelButton_Click()
 
@@ -97,7 +100,7 @@ If Me.Caption = "Add an Attribute" Then
             GoTo Nexti
         End If
     
-        Set chkBox = ManageAtts.AttFrame.Add("Forms.CheckBox.1", "CheckBox_" & i)
+        Set chkBox = ManageAtts.AttFrame.add("Forms.CheckBox.1", "CheckBox_" & i)
         chkBox.Caption = attList(i)
         chkBox.Left = 5
         chkBox.Top = 5 + (i * 28) - (subPos * 28)

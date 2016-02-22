@@ -411,9 +411,10 @@ If mySheet.Range("D" & rowNum).value = "NEW_EVENT" Then
             
 ElseIf mySheet.Range("D" & rowNum).value = "DAMAGE" Then
     
-    With mySheet.Range("F" & rowNum).Interior
-        .ColorIndex = 16
-    End With
+    ' Allow these values to be defined
+    'With mySheet.Range("F" & rowNum).Interior
+    '    .ColorIndex = 16
+    'End With
                 
 End If
 
@@ -438,8 +439,9 @@ If mySheet.Range("D" & rowNum).value = "NEW_EVENT" Then
             
 ElseIf mySheet.Range("D" & rowNum).value = "DAMAGE" Then
     
-    mySheet.Range("F" & rowNum) = Empty
-    
+    If mySheet.Range("F" & rowNum) = Empty Then
+        mySheet.Range("F" & rowNum) = 0
+    End If
             
     If IsEmpty(mySheet.Range("E" & rowNum).value) Then
         mySheet.Range("E" & rowNum).value = "GREEN"
@@ -565,8 +567,8 @@ NotForms(2) = "PAGER"
 
 ' now that we have the arrays defined, we can create the drop down menus
 With FacType.Validation
-    .Delete
-    .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+    .delete
+    .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
     Operator:=xlBetween, Formula1:="='" & LookUpSheet.Name & "'!" & FacTypeCells.Address
     .IgnoreBlank = True
     .InCellDropdown = True
@@ -579,8 +581,8 @@ With FacType.Validation
 End With
 
 With NotType.Validation
-    .Delete
-    .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+    .delete
+    .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
     Operator:=xlBetween, Formula1:=Join(NotTypes, ",")
     .IgnoreBlank = True
     .InCellDropdown = True
@@ -593,8 +595,8 @@ With NotType.Validation
 End With
 
 With InsPrio.Validation
-    .Delete
-    .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+    .delete
+    .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
     Operator:=xlBetween, Formula1:=Join(InsPrios, ",")
     .IgnoreBlank = True
     .InCellDropdown = True
@@ -607,8 +609,8 @@ With InsPrio.Validation
 End With
 
 With EvType.Validation
-    .Delete
-    .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+    .delete
+    .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
     Operator:=xlBetween, Formula1:=Join(EvTypes, ",")
     .IgnoreBlank = True
     .InCellDropdown = True
@@ -621,8 +623,8 @@ With EvType.Validation
 End With
 
 With NotForm.Validation
-    .Delete
-    .Add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
+    .delete
+    .add Type:=xlValidateList, AlertStyle:=xlValidAlertStop, _
     Operator:=xlBetween, Formula1:=Join(NotForms, ",")
     .IgnoreBlank = True
     .InCellDropdown = True
@@ -1380,7 +1382,7 @@ Do While NotRow < endRow + 1
     For NotCol = startCol To endCol
 
         ' This is the cell that we are about to write to in the XML table
-        Set XMLcell = XMLSheet.Cells(XMLrow, XMLcol)
+        Set XMLCell = XMLSheet.Cells(XMLrow, XMLcol)
         Set NotCell = notSheet.Cells(NotRow, NotCol)
         
         Dim NotCellValue As String
@@ -1400,7 +1402,7 @@ Do While NotRow < endRow + 1
         
         
         
-        XMLcell.value = NotCellValue
+        XMLCell.value = NotCellValue
             
         XMLcol = XMLcol + 1
         
