@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} OptionsForm 
    Caption         =   "Spreadsheet Options"
    ClientHeight    =   1580
-   ClientLeft      =   -600
-   ClientTop       =   -7900
+   ClientLeft      =   -1720
+   ClientTop       =   -14340
    ClientWidth     =   8060
    OleObjectBlob   =   "OptionsForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 Private Sub ComboBox1_Change()
 
@@ -54,6 +55,27 @@ ElseIf Me.OptionCombo.value = "Export XML" Then
         Worksheets("Facility XML").Unprotect
         
         Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "FacilityXML"
+    
+        ProgressForm.Show vbModeless
+        
+    ElseIf ActiveSheet.Name = "Notification XML" Then
+        Worksheets("Notification XML").Unprotect
+        
+        Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "GroupXML"
+        ProgressForm.Show vbModeless
+    ElseIf ActiveSheet.Name = "User XML" Then
+        Worksheets("User XML").Unprotect
+        
+        Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "UserXML"
+        ProgressForm.Show vbModeless
+    End If
+    
+ElseIf Me.OptionCombo.value = "Export JSON" Then
+
+    If ActiveSheet.Name = "Facility XML" Then
+        Worksheets("Facility XML").Unprotect
+        
+        Worksheets("ShakeCast Ref Lookup Values").Range("Q2").value = "exportFacilityJson"
     
         ProgressForm.Show vbModeless
         
@@ -353,6 +375,7 @@ If ActiveSheet.Name = "Facility XML" Then
         End If
         
         Me.OptionCombo.AddItem "Export XML"
+        Me.OptionCombo.AddItem "Export JSON"
         Me.OptionCombo.AddItem "Export Master XML"
         Me.OptionCombo.AddItem "Update Worksheet"
         Me.OptionCombo.AddItem "Unlock Data"
@@ -360,6 +383,7 @@ If ActiveSheet.Name = "Facility XML" Then
         Me.OptionCombo.AddItem "Access General User Worksheet"
     Else
         Me.OptionCombo.AddItem "Export XML"
+        Me.OptionCombo.AddItem "Export JSON"
         Me.OptionCombo.AddItem "Export Master XML"
         Me.OptionCombo.AddItem "Update Worksheet"
         Me.OptionCombo.AddItem "Unlock Data"

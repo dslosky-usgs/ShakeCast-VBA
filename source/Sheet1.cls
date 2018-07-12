@@ -15,8 +15,7 @@ Private Sub Worksheet_Change(ByVal target As Range)
     On Error GoTo ExitHandler
     If Intersect(target, Me.Range("A:M")) Is Nothing Then Exit Sub
     Application.EnableEvents = False 'to prevent endless loop
-    Application.ScreenUpdating = False
-
+    Application.ScreenUpdating = Falserr
     Me.Unprotect
     
     Dim interCol As String
@@ -26,10 +25,9 @@ Private Sub Worksheet_Change(ByVal target As Range)
     Dim lastRow As Long
     
     lastRow = Me.Cells(Rows.count, "A").End(xlUp).row
-    
     If target.Cells.CountLarge = 1 Then
         
-        If Intersect(Me.Range("M:M"), target) Is Nothing Then
+        If Intersect(Me.Range("facility_mbt"), target) Is Nothing Then
             CheckFacilities Me.Range("A" & target.row)
         Else
             CheckFacilities target
@@ -39,29 +37,10 @@ Private Sub Worksheet_Change(ByVal target As Range)
          Application.Run "checkXMLchars", target
          
     ElseIf target.Rows.CountLarge = 1 Then
-    
-        
-        If Intersect(Me.Range("M:M"), target) Is Nothing Then
+        If Intersect(Me.Range("facility_mbt"), target) Is Nothing Then
             interCol = "A"
-        ElseIf Intersect(Me.Range("N:N"), target) Is Nothing And _
-            Intersect(Me.Range("O:O"), target) Is Nothing And _
-            Intersect(Me.Range("P:P"), target) Is Nothing And _
-            Intersect(Me.Range("Q:Q"), target) Is Nothing And _
-            Intersect(Me.Range("R:R"), target) Is Nothing And _
-            Intersect(Me.Range("S:S"), target) Is Nothing And _
-            Intersect(Me.Range("T:T"), target) Is Nothing And _
-            Intersect(Me.Range("U:U"), target) Is Nothing And _
-            Intersect(Me.Range("V:V"), target) Is Nothing And _
-            Intersect(Me.Range("W:W"), target) Is Nothing And _
-            Intersect(Me.Range("X:X"), target) Is Nothing And _
-            Intersect(Me.Range("Y:Y"), target) Is Nothing And _
-            Intersect(Me.Range("Z:Z"), target) Is Nothing And _
-            Intersect(Me.Range("AA:AA"), target) Is Nothing And _
-            Intersect(Me.Range("AB:AB"), target) Is Nothing And _
-            Intersect(Me.Range("AC:AC"), target) Is Nothing Then
-
+        ElseIf Intersect(Me.Range("facility_fragility"), target) Is Nothing Then
             interCol = "M"
-            
         Else
             interCol = "A"
         End If
@@ -69,37 +48,16 @@ Private Sub Worksheet_Change(ByVal target As Range)
         CheckFacilities Me.Range(interCol & target.row)
         
     ElseIf target.Rows.CountLarge < 100 Then
-    
-    
         If endRow > lastRow Then Exit Sub
         
         TargetLoc = Split(target.Address(False, False), ":")
-        
         startRow = Me.Range("A" & TargetLoc(0)).row
         endRow = Me.Range("A" & TargetLoc(1)).row
         
-        
-        If Intersect(Me.Range("M:M"), target) Is Nothing Then
+        If Intersect(Me.Range("facility_mbt"), target) Is Nothing Then
             interCol = "A"
-        ElseIf Intersect(Me.Range("N:N"), target) Is Nothing And _
-            Intersect(Me.Range("O:O"), target) Is Nothing And _
-            Intersect(Me.Range("P:P"), target) Is Nothing And _
-            Intersect(Me.Range("Q:Q"), target) Is Nothing And _
-            Intersect(Me.Range("R:R"), target) Is Nothing And _
-            Intersect(Me.Range("S:S"), target) Is Nothing And _
-            Intersect(Me.Range("T:T"), target) Is Nothing And _
-            Intersect(Me.Range("U:U"), target) Is Nothing And _
-            Intersect(Me.Range("V:V"), target) Is Nothing And _
-            Intersect(Me.Range("W:W"), target) Is Nothing And _
-            Intersect(Me.Range("X:X"), target) Is Nothing And _
-            Intersect(Me.Range("Y:Y"), target) Is Nothing And _
-            Intersect(Me.Range("Z:Z"), target) Is Nothing And _
-            Intersect(Me.Range("AA:AA"), target) Is Nothing And _
-            Intersect(Me.Range("AB:AB"), target) Is Nothing And _
-            Intersect(Me.Range("AC:AC"), target) Is Nothing Then
-
+        ElseIf Intersect(Me.Range("facility_fragility"), target) Is Nothing Then
             interCol = "M"
-            
         Else
             interCol = "A"
         End If
@@ -120,25 +78,8 @@ Private Sub Worksheet_Change(ByVal target As Range)
         
         If Intersect(Me.Range("N:N"), target) Is Nothing Then
             interCol = "B"
-        ElseIf Intersect(Me.Range("N:N"), target) Is Nothing And _
-            Intersect(Me.Range("O:O"), target) Is Nothing And _
-            Intersect(Me.Range("P:P"), target) Is Nothing And _
-            Intersect(Me.Range("Q:Q"), target) Is Nothing And _
-            Intersect(Me.Range("R:R"), target) Is Nothing And _
-            Intersect(Me.Range("S:S"), target) Is Nothing And _
-            Intersect(Me.Range("T:T"), target) Is Nothing And _
-            Intersect(Me.Range("U:U"), target) Is Nothing And _
-            Intersect(Me.Range("V:V"), target) Is Nothing And _
-            Intersect(Me.Range("W:W"), target) Is Nothing And _
-            Intersect(Me.Range("X:X"), target) Is Nothing And _
-            Intersect(Me.Range("Y:Y"), target) Is Nothing And _
-            Intersect(Me.Range("Z:Z"), target) Is Nothing And _
-            Intersect(Me.Range("AA:AA"), target) Is Nothing And _
-            Intersect(Me.Range("AB:AB"), target) Is Nothing And _
-            Intersect(Me.Range("AC:AC"), target) Is Nothing Then
-
+        ElseIf Intersect(Me.Range("facility_fragility"), target) Is Nothing Then
             interCol = "M"
-            
         Else
             interCol = "B"
         End If
@@ -275,6 +216,8 @@ ExitHandler:
     Application.Run "ProtectWorkbook"
     
 End Sub
+
+
 
 
 

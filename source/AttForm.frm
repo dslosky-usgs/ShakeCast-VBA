@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AttForm 
    Caption         =   "Facility Attributes"
    ClientHeight    =   5120
-   ClientLeft      =   -1240
-   ClientTop       =   -9740.001
+   ClientLeft      =   -1400
+   ClientTop       =   -10660
    ClientWidth     =   8040
    OleObjectBlob   =   "AttForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 

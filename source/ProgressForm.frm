@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} ProgressForm 
    Caption         =   "Progress"
    ClientHeight    =   1720
-   ClientLeft      =   -200
-   ClientTop       =   -7900
+   ClientLeft      =   -600
+   ClientTop       =   -10200
    ClientWidth     =   5680
    OleObjectBlob   =   "ProgressForm.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 
 
@@ -57,6 +58,12 @@ Private Sub UserForm_Activate()
     
         ProgressForm.ProcessName.Caption = "Make Facility XML Table"
         Application.Run "FacilityXMLButton"
+        
+    ElseIf process = "exportFacilityJson" Then
+    
+        ProgressForm.ProcessName.Caption = "Export Facility JSON"
+        Application.Run "exportFacilityJson"
+        
         
     ElseIf process = "GroupXML" Then
     

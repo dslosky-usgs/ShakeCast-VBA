@@ -2,8 +2,8 @@ VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} AddAtt 
    Caption         =   "Add an Attribute"
    ClientHeight    =   2080
-   ClientLeft      =   -520
-   ClientTop       =   -5600
+   ClientLeft      =   -680
+   ClientTop       =   -6520
    ClientWidth     =   5540
    OleObjectBlob   =   "AddAtt.frx":0000
    StartUpPosition =   1  'CenterOwner
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 Private Sub AttName_Change()
 
     If Right(Me.AttName.Text, 1) = "%" Then

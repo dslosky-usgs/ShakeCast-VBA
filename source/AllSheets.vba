@@ -839,7 +839,7 @@ Dim facErrStr As String
 Dim groupErrStr As String
 Dim userErrStr As String
 
-facErrStr = MakeErrStr(facXMLInfo, "Facility")
+facErrStr = MakeErrStr(facXMLInfo(2), "Facility")
 groupErrStr = MakeErrStr(groupXMLInfo, "Group")
 userErrStr = MakeErrStr(userXMLInfo, "User")
 
@@ -1116,7 +1116,7 @@ End Sub
 ''
 ''
 ''
-Function MakeErrStr(ErrAdd As Variant, _
+Function MakeErrStr(ByVal errFacs As Variant, _
                         whichSheet)
 
 Dim rangeStart As String
@@ -1129,7 +1129,7 @@ If whichSheet = "Facility" Then
     rangeEnd = "AD"
     
     required = "A,B,D,E,F,G,H,I,J,K,L,N,P,Q,R,S,T,U,V,W,X,Y,Z,AA,AB,AC,AD"
-
+    
 ElseIf whichSheet = "Group" Then
     Set mySheet = Worksheets("Notification XML")
     rangeStart = "A"
@@ -1152,12 +1152,10 @@ tabSpace = "      "
 rowCheck = 0
 
 
-If ErrAdd(1) > 0 Then
+If errFacs(UBound(errFacs)) <> Empty Then
 
-    For Each row In ErrAdd(2)
-
+    For Each row In errFacs
         Set RowRange = mySheet.Range(rangeStart & row, rangeEnd & row)
-    
         rowCheck = 0
     
         If row > 9 And row < 100 Then

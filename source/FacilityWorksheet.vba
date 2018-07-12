@@ -1,4 +1,631 @@
 Attribute VB_Name = "FacilityWorksheet"
+Function q(ByVal str As String)
+
+    q = Chr(34) & str & Chr(34)
+
+End Function
+
+Function getJsonGeom(latCell As Range, _
+                                        lonCell As Range)
+    
+Dim LatRows As Integer     ' The number of rows in the latitude column
+Dim LongRows2 As Integer   ' Number of rows in the longitude column
+Dim LatArray As Variant    ' Array of latitude rows
+Dim LongArray As Variant   ' Array of longitude rows
+Dim printStr As String
+Dim print_array() As Variant
+ 
+If IsEmpty(latCell) Or IsEmpty(lonCell) Or IsError(latCell) Or IsError(lonCell) Then
+    getJsonGeom = "[]"
+    Exit Function
+    
+' Get Row lengths for latitude
+ElseIf InStr(latCell.value, ";") = 0 Then
+    LatRows = 1
+    
+Else
+    ' lets also check if the row number the user provided is not too big.
+    LatArray = Split(latCell.value, ";")
+    LatRows = UBound(LatArray) + 1
+End If
+
+
+' Get Row lengths for longitude
+If InStr(lonCell.value, ";") = 0 Then
+    LongRows = 1
+
+Else
+    ' lets also check if the row number the user provided is not too big.
+    LongArray = Split(lonCell.value, ";")
+    LongRows = UBound(LongArray) + 1
+    
+End If
+
+
+' Check that the latitude and longitude inputs have the same amount of rows
+If LatRows > LongRows Or LatRows < LongRows Then
+    MsgBox "Error: Geometry in row " & latCell.row & " doesn't make sense! " & _
+        "Check to make sure you have the same number of latitude and longitude entries."
+        
+    getJsonGeom = "[]"
+    Exit Function
+    
+ElseIf LatRows = 1 And LongRows = 1 Then
+    printStr = "[" & lonCell & ", " & latCell & "]"
+
+Else
+    printStr = "["
+    
+    Dim i As Integer
+    ReDim str_array(0 To UBound(LatArray))
+    For i = 0 To UBound(LatArray)
+    
+        If i = 0 Then
+            printStr = printStr & "[" & LongArray(i) & ", " & LatArray(i) & "]"
+        Else
+            printStr = printStr & ", " & "[" & LongArray(i) & ", " & LatArray(i) & "]"
+        End If
+    Next i
+    
+    printStr = printStr & "]"
+End If
+
+getJsonGeom = printStr
+                                        
+End Function
+
+Sub exportFacilityJson(Optional master As String = "notMaster", _
+                    Optional ByVal docCount As Integer = 0, _
+                    Optional ByVal overFlowCount As Integer = 0, _
+                    Optional ByVal docMax As Integer = 15000, _
+                    Optional ByVal docStr As String = "")
+                                        
+'On Error GoTo XMLFinish
+'On Error Resume Next
+Set facSheet = Worksheets("Facility XML")
+
+Dim docArr() As String
+
+Dim getOS As String
+getOS = Application.OperatingSystem
+
+If master = "Master" Then
+    docArr = Split(docStr, ",")
+    GoTo MasterSkip1
+End If
+
+Application.EnableEvents = False
+Application.ScreenUpdating = False
+ActiveSheet.Unprotect
+
+Close #2
+
+
+'                          ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'                 OPEN XML FILE FOR WRITING, AND DETERMINE THE START AND END CELLS TO BE EXAMINED
+
+' open file location
+Dim dir As String
+dir = Application.ActiveWorkbook.Path
+
+Dim docNum As Double
+Dim facCount As Double
+facCount = facSheet.Cells(Rows.count, "B").End(xlUp).row - 3
+docNum = facCount / docMax
+
+If docNum <= 1 Then
+    docNum = 1
+    docStr = "facilities.json"
+Else
+    docNum = Application.WorksheetFunction.Ceiling(docNum, 1)
+    docStr = "facilities1.json"
+    For i = 2 To docNum
+        docStr = docStr & "," & "facilities" & i & ".json"
+    Next i
+End If
+
+ExportXML.Label1.Caption = "Export JSON"
+ExportXML.FileDest.Text = dir
+ExportXML.FileName = docStr
+
+DoEvents
+ExportXML.Show
+DoEvents
+
+ProgressForm.ProcessName.Caption = "Exporting JSON"
+ProgressForm.ProgressLabel.Width = 0
+ProgressForm.ProgressFrame.Caption = "0" & "%"
+
+DoEvents
+
+docArr = Split(ExportXML.FileName, ",")
+overFlowCount = 0
+
+If UBound(docArr) < 0 Then
+    ReDim docArr(0 To 0)
+    docArr(0) = ""
+End If
+
+If InStr(getOS, "Windows") = 0 Then
+    XMLPath = ExportXML.FileDest.Text & ":" & docArr(docCount)       ' We save the .xml here for Macs
+Else
+    XMLPath = ExportXML.FileDest.Text & "\" & docArr(docCount)      ' Save XML for PC
+End If
+
+If XMLPath = "\" Or XMLPath = ":" Then
+    GoTo XMLFinish
+End If
+
+Open XMLPath For Output As #2
+
+MasterSkip1:
+
+Dim startRow As Integer
+Dim endRow As Long
+
+startRow = 4
+' This will pull cells with formulas and no values, but we can filter those out!
+endRow = facSheet.Cells(Rows.count, "B").End(xlUp).row + 1
+
+Dim skip() As Variant
+ReDim skip(0)
+
+Dim accepted As Integer
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''' BEGIN JSON '''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim printStr As String
+
+printStr = "{" & vbNewLine & vbTab & _
+                    q("type") & ": " & q("FeatureCollection") & "," & _
+                    vbNewLine & vbTab & _
+                    q("features") & ": [" & _
+                    vbNewLine
+
+Print #2, printStr
+
+printStr = ""
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''' Write XML '''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim TestCell As Range         ' Used to decide if the row is empty or not
+
+' when to progress the progress bar
+' set up progress bar
+Dim progressCount As Long
+Dim progressWhen As Long
+Dim pcntDone As Double
+
+' initialize progress bar values
+progressCount = 0
+progressWhen = endRow * 0.01
+pcntDone = 0
+ProgressForm.ProcessName.Caption = "Exporting Facility XML"
+
+' create variables to deal with attribute fields
+Dim attStr As String
+Dim attArr() As String
+Dim eachAtt() As String
+attStr = ""
+
+Dim oneTab As String
+Dim twoTabs As String
+Dim threeTabs As String
+Dim fourTabs As String
+onTab = vbTab
+twoTabs = vbTab & vbTab
+threeTabs = vbTab & vbTab & vbTab
+fourTabs = vbTab & vbTab & vbTab & vbTab
+fiveTabs = vbTab & vbTab & vbTab & vbTab & vbTab
+sixTabs = vbTab & vbTab & vbTab & vbTab & vbTab & vbTab
+sevenTabs = vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab
+
+' This loop will run through all the cells in the XML region of the document.
+Dim row As Long
+row = 4                   ' The first row that holds data
+Do While row < endRow
+
+    If progressCount > progressWhen Then
+        
+        pcntDone = ((row - 4) / (endRow - 3))
+        
+        ProgressForm.ProgressLabel.Width = pcntDone * ProgressForm.MaxWidth.Caption
+        ProgressForm.ProgressFrame.Caption = Round(pcntDone * 100, 0) & "%"
+        
+        DoEvents
+        progressCount = 0
+        
+    End If
+
+    Set TestCell = facSheet.Cells(row, 1) ' This is the first XML cell, which should be filled for any valid entry
+    
+    If Not validFac(row) Then
+    
+        If skip(UBound(skip)) <> Empty Then
+            ReDim Preserve skip(UBound(skip) + 1)
+        End If
+        
+        skip(UBound(skip)) = row
+        GoTo ContinueLoop
+    End If
+    
+    accepted = accepted + 1
+        
+    ' validate the facility row
+    
+    ' Since there IS data for this row, we start a new entry
+    If printStr <> "" Then
+        printStr = ","
+    Else
+        printStr = ""
+    End If
+        
+    printStr = printStr & twoTabs & "{" & _
+                        vbNewLine & threeTabs & q("type") & ": " & q("Feature") & ","
+    
+    If Not IsEmpty(facSheet.Range("facility_geom_type").Cells(row)) Then
+        geom_type = sanitize(facSheet.Range("facility_geom_type").Cells(row))
+        
+        If geom_type = "POINT" Then
+            geom_type = "Point"
+        ElseIf geom_type = "POLYGON" Then
+            geom_type = "Polygon"
+        ElseIf geom_type = "POLYLINE" Then
+            geom_type = "LineString"
+        End If
+        
+        printStr = printStr & vbNewLine & threeTabs & _
+                            q("geometry") & ": {" _
+                            & vbNewLine & fourTabs & _
+                            q("type") & ": " & q(geom_type) & "," & _
+                            vbNewLine & fourTabs & _
+                            q("coordinates") & ": " & getJsonGeom(facSheet.Range("facility_lat").Cells(row), _
+                                                                                facSheet.Range("facility_lon").Cells(row)) & _
+                            vbNewLine & threeTabs & _
+                            "},"
+    End If
+    
+    printStr = printStr & vbNewLine & threeTabs & _
+                        q("properties") & ": {"
+    
+    printStr = printStr & vbNewLine & fourTabs & _
+                            q("id") & ": "
+    
+    If Not IsEmpty(facSheet.Range("facility_id").Cells(row)) Then
+        printStr = printStr & q(sanitize(facSheet.Range("facility_id").Cells(row)))
+    Else
+        printStr = printStr & "null"
+    End If
+    
+    printStr = printStr & "," & vbNewLine & fourTabs & _
+                            q("type") & ": "
+    
+    If Not IsEmpty(facSheet.Range("facility_type").Cells(row)) Then
+        printStr = printStr & q(sanitize(facSheet.Range("facility_type").Cells(row)))
+    Else
+        printStr = printStr & "null"
+    End If
+    
+    printStr = printStr & "," & vbNewLine & fourTabs & _
+                            q("componentClass") & ": "
+    
+    If Not IsEmpty(facSheet.Range("facility_comp_class").Cells(row)) Then
+        printStr = printStr & q(sanitize(facSheet.Range("facility_comp_class").Cells(row)))
+    Else
+        printStr = printStr & "null"
+    End If
+    
+    printStr = printStr & "," & vbNewLine & fourTabs & _
+                            q("component") & ": "
+    
+    If Not IsEmpty(facSheet.Range("facility_comp").Cells(row)) Then
+        printStr = printStr & q(sanitize(facSheet.Range("facility_comp").Cells(row)))
+    Else
+        printStr = printStr & "null"
+    End If
+    
+    printStr = printStr & "," & vbNewLine & fourTabs & _
+                            q("name") & ": "
+    
+    If Not IsEmpty(facSheet.Range("facility_name").Cells(row)) Then
+        printStr = printStr & q(sanitize(facSheet.Range("facility_name").Cells(row)))
+    Else
+        printStr = printStr & "null"
+    End If
+    
+    printStr = printStr & "," & vbNewLine & fourTabs & _
+                            q("html") & ": "
+    
+    If Not IsEmpty(facSheet.Range("facility_html").Cells(row)) Then
+        printStr = printStr & q(sanitize(facSheet.Range("facility_html").Cells(row)))
+    Else
+        printStr = printStr & "null"
+    End If
+    
+    
+    printStr = printStr & "," & vbNewLine & fourTabs & _
+                            q("fragility") & ": {" & _
+                            vbNewLine & fiveTabs & _
+                            q("type") & ": "
+    
+    If Not IsEmpty(facSheet.Range("facility_mbt").Cells(row)) Then
+        printStr = printStr & q(sanitize(facSheet.Range("facility_mbt").Cells(row)))
+    Else
+        printStr = printStr & "null"
+    End If
+    
+    printStr = printStr & "," & vbNewLine & fiveTabs & _
+                            q("levels") & ": ["
+    
+    If Not IsEmpty(facSheet.Range("facility_mbt").Cells(row)) Then
+
+        
+        If Not IsEmpty(facSheet.Range("facility_green_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_green_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_green_beta").Cells(row)) Then
+            printStr = printStr & vbNewLine & sixTabs & "{" & _
+                                vbNewLine & sevenTabs & _
+                                q("level") & ": " & q("green") & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("metric") & ": " & q(sanitize(facSheet.Range("facility_green_metric").Cells(row))) & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("alpha") & ": " & sanitize(facSheet.Range("facility_green_alpha").Cells(row)) & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("beta") & ": " & sanitize(facSheet.Range("facility_green_beta").Cells(row)) & _
+                                vbNewLine & sixTabs & "}"
+        End If
+        
+        If Not IsEmpty(facSheet.Range("facility_yellow_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_yellow_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_yellow_beta").Cells(row)) Then
+
+            printStr = printStr & "," & vbNewLine & sixTabs & "{" & _
+                                vbNewLine & sevenTabs & _
+                                q("level") & ": " & q("yellow") & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("metric") & ": " & q(sanitize(facSheet.Range("facility_yellow_metric").Cells(row))) & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("alpha") & ": " & sanitize(facSheet.Range("facility_yellow_alpha").Cells(row)) & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("beta") & ": " & sanitize(facSheet.Range("facility_yellow_beta").Cells(row)) & _
+                                vbNewLine & sixTabs & "}"
+
+        End If
+        
+        If Not IsEmpty(facSheet.Range("facility_orange_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_orange_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_orange_beta").Cells(row)) Then
+
+            printStr = printStr & "," & vbNewLine & sixTabs & "{" & _
+                                vbNewLine & sevenTabs & _
+                                q("level") & ": " & q("orange") & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("metric") & ": " & q(sanitize(facSheet.Range("facility_orange_metric").Cells(row))) & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("alpha") & ": " & sanitize(facSheet.Range("facility_orange_alpha").Cells(row)) & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("beta") & ": " & sanitize(facSheet.Range("facility_orange_beta").Cells(row)) & _
+                                vbNewLine & sixTabs & "}"
+
+        End If
+        
+        If Not IsEmpty(facSheet.Range("facility_red_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_red_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_red_beta").Cells(row)) Then
+
+            printStr = printStr & "," & vbNewLine & sixTabs & "{" & _
+                                vbNewLine & sevenTabs & _
+                                q("level") & ": " & q("red") & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("metric") & ": " & q(sanitize(facSheet.Range("facility_red_metric").Cells(row))) & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("alpha") & ": " & sanitize(facSheet.Range("facility_red_alpha").Cells(row)) & "," & _
+                                vbNewLine & sevenTabs & _
+                                q("beta") & ": " & sanitize(facSheet.Range("facility_red_beta").Cells(row)) & _
+                                vbNewLine & sixTabs & "}"
+            
+        End If
+    End If
+    
+    ' Close levels list and fragility object
+    printStr = printStr & vbNewLine & fiveTabs & "]" & _
+                            vbNewLine & fourTabs & "}," & _
+                            vbNewLine & fourTabs & _
+                            q("attributes") & ": ["
+    
+    If Not IsEmpty(facSheet.Range("facility_attributes").Cells(row)) Then
+        attStr = facSheet.Range("facility_attributes").Cells(row)
+        attArr = Split(attStr, "%")
+        
+        For Each entry In attArr
+        
+            eachAtt = Split(entry, ":")
+            
+            HeadValue = eachAtt(0)
+            CellValue = eachAtt(1)
+            
+            If entry <> attArr(0) Then
+                printStr = printStr & ","
+            End If
+            
+            printStr = printStr & vbNewLine & fiveTabs & "{" & _
+                                vbNewLine & fiveTabs & _
+                                q("name") & ": " & q(HeadValue) & "," & _
+                                vbNewLine & fiveTabs & _
+                                q("value") & ": " & q(CellValue) & _
+                                vbNewLine & fiveTabs & "}"
+        Next entry
+    End If
+    
+    ' close up attributes and facility feature entry
+    printStr = printStr & vbNewLine & fourTabs & "]" & _
+                        vbNewLine & threeTabs & "}" & _
+                        vbNewLine & twoTabs & "}"
+
+    Print #2, printStr
+
+    ' count how many entries rows are in the current XML doc
+    overFlowCount = overFlowCount + 1
+
+    ' check if a new XML document should be started
+    If overFlowCount > docMax - 1 Then
+        Print #2, vbTab & "]" & _
+                            vbNewLine & "}"
+        
+        'If master = "Master" Then
+        '    Print #2, "</Inventory>"
+       ' End If
+        
+        Close #2
+    
+        docCount = docCount + 1
+        If docCount > UBound(docArr) Then GoTo AfterXML
+        
+        If InStr(getOS, "Windows") = 0 Then
+            XMLPath = ExportXML.FileDest.Text & ":" & docArr(docCount)       ' We save the .xml here for Macs
+        Else
+            XMLPath = ExportXML.FileDest.Text & "\" & docArr(docCount)      ' Save XML for PC
+        End If
+    
+    
+        If XMLPath = "\" Or XMLPath = ":" Then
+            GoTo XMLFinish
+        End If
+    
+        Open XMLPath For Output As #2
+    
+        overFlowCount = 0
+    
+        If row + 1 < endRow And master = "Master" Then
+            ' start the new XML document
+            printStr = "<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>" & vbNewLine & _
+                        "<Inventory>" & vbNewLine & _
+                        "<FacilityTable>"
+               
+            Print #2, printStr
+            
+        ElseIf row + 1 < endRow Then
+            printStr = "{" & vbNewLine & vbTab & _
+                                q("type") & ": " & q("FeatureCollection") & "," & _
+                                vbNewLine & vbTab & _
+                                q("features") & ": [" & _
+                                vbNewLine
+                        
+            Print #2, printStr
+            
+        Else: GoTo AfterXML
+        
+        End If
+        
+        
+    End If
+    
+    ' The software skips here if the first value in the XML table is blank
+ContinueLoop:
+    progressCount = progressCount + 1
+    row = row + 1
+Loop
+
+ProgressForm.ProgressLabel.Width = ProgressForm.MaxWidth.Caption
+ProgressForm.ProgressFrame.Caption = "100" & "%"
+
+' Close the root
+Print #2, vbTab & "]" & _
+                vbNewLine & "}"
+
+
+AfterXML:
+
+If master = "Master" Then GoTo MasterSkip3
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''' Make Error Statement ''''''''''''''''''''''''''''''''''''''''
+Dim errStr As String
+errStr = MakeErrStr(skip, "Facility")
+
+Dim DiaStr As String
+
+DiaStr = "Your JSON data has been exported. It's file location is: " & _
+    vbNewLine & vbNewLine
+    
+For Each doc In docArr
+    If InStr(getOS, "Windows") = 0 Then
+        DiaStr = DiaStr & ExportXML.FileDest.Text & ":" & doc & vbNewLine
+    Else
+        DiaStr = DiaStr & ExportXML.FileDest.Text & "\" & doc & vbNewLine
+    End If
+Next doc
+
+
+DiaStr = DiaStr & vbNewLine & vbNewLine & _
+    "Facilities Accepted: " & accepted
+    
+If errStr <> "" Then
+    DiaStr = DiaStr & _
+        vbNewLine & _
+        "Facilities Declined: " & UBound(skip) - LBound(skip) + 1 & _
+        vbNewLine & vbNewLine & _
+        "--------------------------------------------------------------------------" & vbNewLine & _
+        "--------------------------------------------------------------------------"
+          
+            
+    DiaStr = DiaStr & _
+        vbNewLine & vbNewLine & _
+        "Errors: "
+    
+    If errStr <> "" Then
+    
+        DiaStr = DiaStr & _
+            vbNewLine & vbNewLine & _
+            "Any facilities that you attempted to include in your XML document that were rejected are highlighted " & _
+            "in blue." & _
+            vbNewLine & vbNewLine & _
+            "The following cells contain invalid entries and are stopping some facilities from being included in the XML document: " & _
+            vbNewLine & vbNewLine & _
+            errStr
+
+    Else
+        DiaStr = DiaStr & vbNewLine & vbNewLine & _
+            "All facility information has been converted to XML."
+    
+    End If
+End If
+
+
+'Worksheets("Dialogue").Activate
+'Set DialogBox = DiaSheet.Label21
+
+'DialogBox.Caption = DiaStr
+Unload ProgressForm
+
+DialogueForm.DialogueBox.Text = DiaStr
+DialogueForm.Show
+
+' close the paths to the XML document and the text Dialogue
+Close #2
+
+' If the user exits the export box, we don't want to export the info!
+XMLFinish:
+If XMLPath = "\" Or XMLPath = ":" Or Err Then
+    If Err Then
+        MsgBox "Your XML document was not exported due to:" & _
+            vbNewLine & _
+            Err.Description
+    Else
+        MsgBox "Your XML document was not exported"
+    End If
+        
+End If
+
+Application.Run "protectWorkbook"
+Application.ScreenUpdating = True
+Application.EnableEvents = True
+MasterSkip3:
+
+End Sub
+
+
+
 '' CheckFacilities
 '' Daniel Slosky
 '' Last Update: 3/3/2015
@@ -283,7 +910,7 @@ End Sub
 ''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Sub FacilityXML(master As String, _
+Sub oldFacilityXML(master As String, _
                     Optional ByVal docCount As Integer = 0, _
                     Optional ByVal overFlowCount As Integer = 0, _
                     Optional ByVal docMax As Integer = 15000, _
@@ -334,7 +961,7 @@ If WorksheetFunction.Ceiling(docNum, 1) = docNum Then
     docNum = infoAcc / docMax
 End If
 
-If docNum < 1 Then
+If docNum <= 1 Then
     docNum = 1
     docStr = "FacilityXML.xml"
 Else
@@ -739,13 +1366,6 @@ If overFlowCount > docMax - 1 Then
     
 End If
 
-
-
-
-
-
-
-
 ' The software skips here if the first value in the XML table is blank
 ContinueLoop:
 
@@ -886,13 +1506,13 @@ Dim ErrAdd() As Variant          ' ErrAdd is an array that holds the addresses o
 
 
 ' create some handles to access the worksheets
-Set FacSheet = Worksheets("Facility XML")
+Set facSheet = Worksheets("Facility XML")
 Set XMLSheet = Worksheets("FacilityXMLexport")
 
 ' Start with a fresh XML table
 Dim lastRow As Long
 Dim lastCol As Integer
-lastRow = FacSheet.Cells(Rows.count, "F").End(xlUp).row
+lastRow = facSheet.Cells(Rows.count, "F").End(xlUp).row
 
 
 LastXML = XMLSheet.Cells(Rows.count, "A").End(xlUp).row
@@ -914,7 +1534,7 @@ Dim endCol As Integer
 
 startRow = 4
 startCol = 1
-endRow = FacSheet.Cells(Rows.count, "F").End(xlUp).row
+endRow = facSheet.Cells(Rows.count, "F").End(xlUp).row
 endCol = 31
 
 ' Create variable to monitor how many rows of the XML table are filled. The integer keeps track of
@@ -968,17 +1588,17 @@ Do While FacRow < endRow + 1
         ' ChangeColors "Good", Range(RowRange1, RowRange2), "Facility"
         GoTo ContinueLoop
         
-    ElseIf IsEmpty(FacSheet.Range("A" & FacRow)) Or _
-        IsEmpty(FacSheet.Range("B" & FacRow)) Or _
-        IsEmpty(FacSheet.Range("F" & FacRow)) Or _
-        IsEmpty(FacSheet.Range("J" & FacRow)) Or _
-        IsEmpty(FacSheet.Range("K" & FacRow)) Then
+    ElseIf IsEmpty(facSheet.Range("A" & FacRow)) Or _
+        IsEmpty(facSheet.Range("B" & FacRow)) Or _
+        IsEmpty(facSheet.Range("F" & FacRow)) Or _
+        IsEmpty(facSheet.Range("J" & FacRow)) Or _
+        IsEmpty(facSheet.Range("K" & FacRow)) Then
             
             ' Count the number of facilities that will be rejected
             xmlNums(1) = xmlNums(1) + 1
             
-            If FacSheet.Range("AE" & FacRow).value <> "bad" Then
-                FacSheet.Range("AE" & FacRow).value = "bad"
+            If facSheet.Range("AE" & FacRow).value <> "bad" Then
+                facSheet.Range("AE" & FacRow).value = "bad"
                 ChangeColors "Bad", Range(RowRange1, RowRange2), "Facility"
             End If
             
@@ -1002,11 +1622,11 @@ Do While FacRow < endRow + 1
     
 
     ' copy data from Facility Sheet to the XML table
-    XMLSheet.Range("A" & XMLrow, "B" & XMLrow).value = FacSheet.Range("A" & FacRow, "B" & FacRow).value
-    XMLSheet.Range("C" & XMLrow, "H" & XMLrow).value = FacSheet.Range("D" & FacRow, "I" & FacRow).value
+    XMLSheet.Range("A" & XMLrow, "B" & XMLrow).value = facSheet.Range("A" & FacRow, "B" & FacRow).value
+    XMLSheet.Range("C" & XMLrow, "H" & XMLrow).value = facSheet.Range("D" & FacRow, "I" & FacRow).value
     'XMLSheet.Range("I" & XMLrow) = Join(ManLatLong(FacSheet.Range("J" & FacRow), FacSheet.Range("K" & FacRow)), "")
-    XMLSheet.Range("J" & XMLrow, "K" & XMLrow).value = FacSheet.Range("L" & FacRow, "M" & FacRow).value
-    XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).value = FacSheet.Range("O" & FacRow, "AD" & FacRow).value
+    XMLSheet.Range("J" & XMLrow, "K" & XMLrow).value = facSheet.Range("L" & FacRow, "M" & FacRow).value
+    XMLSheet.Range("L" & XMLrow, "AA" & XMLrow).value = facSheet.Range("O" & FacRow, "AD" & FacRow).value
     XMLSheet.Range("I" & XMLrow).Formula = "=ManLatLong('Facility XML'!J" & FacRow & ",'Facility XML'!K" & FacRow & ")"
     ' make the lat/lon string and stick it in the right place
     'Application.Run "makeLatLonStr", FacSheet.Range("J" & FacRow), FacSheet.Range("K" & FacRow), XMLSheet.Range("I" & XMLrow)
@@ -1127,16 +1747,16 @@ Else
     Dim LatLonArr As Variant
     LatLonArr = Split(LatLon, " ")
     
-    Dim Lats As Variant
+    Dim lats As Variant
     Dim Longs As Variant
     
-    Lats = LatLonArr
+    lats = LatLonArr
     Longs = LatLonArr
     
     For i = 0 To UBound(LatLonArr)
     
         Point = Split(LatLonArr(i), ",")
-        Lats(i) = Point(0)
+        lats(i) = Point(0)
         Longs(i) = Point(1)
        
     Next i
@@ -1148,7 +1768,7 @@ If UBound(LatLonArr) > 0 And UBound(LatLonArr) <= 2 Then
     
     Exit Function
 ' Check for the special case of a rectangle
-ElseIf UBound(LatLonArr) = 4 And (StrComp(Lats(0), Lats(UBound(Lats))) = 0 And _
+ElseIf UBound(LatLonArr) = 4 And (StrComp(lats(0), lats(UBound(lats))) = 0 And _
         StrComp(Longs(0), Longs(UBound(Longs)) = 0)) Then
     
     ' We can think of this as all the x-coordinates being in the Lats array and all the y-coordinates in the
@@ -1158,10 +1778,10 @@ ElseIf UBound(LatLonArr) = 4 And (StrComp(Lats(0), Lats(UBound(Lats))) = 0 And _
     ' fourth coordinates are subtracted from the third coordinate, the result should be ZERO.
     
 
-    If ((StrComp(Lats(0), Lats(1)) = 0 And StrComp(Longs(0), Longs(3)) = 0) Or _
-       (StrComp(Lats(0), Lats(3)) = 0 And StrComp(Longs(0), Longs(1)) = 0)) And _
-       ((StrComp(Lats(2), Lats(1)) = 0 And StrComp(Longs(2), Longs(3)) = 0) Or _
-       (StrComp(Lats(2), Lats(3)) = 0 And StrComp(Longs(2), Longs(1)) = 0)) Then
+    If ((StrComp(lats(0), lats(1)) = 0 And StrComp(Longs(0), Longs(3)) = 0) Or _
+       (StrComp(lats(0), lats(3)) = 0 And StrComp(Longs(0), Longs(1)) = 0)) And _
+       ((StrComp(lats(2), lats(1)) = 0 And StrComp(Longs(2), Longs(3)) = 0) Or _
+       (StrComp(lats(2), lats(3)) = 0 And StrComp(Longs(2), Longs(1)) = 0)) Then
        
         ' don't support rectangle anymore
         ' GeomType = "RECTANGLE"
@@ -1176,7 +1796,7 @@ ElseIf UBound(LatLonArr) = 4 And (StrComp(Lats(0), Lats(UBound(Lats))) = 0 And _
     End If
     
 ' If not a rectangle but the starting point is the same as the end point, we have a polyline!
-ElseIf UBound(LatLonArr) > 2 And (StrComp(Lats(0), Lats(UBound(Lats))) = 0 And _
+ElseIf UBound(LatLonArr) > 2 And (StrComp(lats(0), lats(UBound(lats))) = 0 And _
         StrComp(Longs(0), Longs(UBound(Longs)) = 0)) Then
     
     GeomType = "POLYGON"
@@ -1288,7 +1908,7 @@ End Function
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-Function ManLatLong(ByVal LatCell As Range, _
+Function ManLatLong(ByVal latCell As Range, _
                                    ByVal LongCell As Range)
 
  
@@ -1299,17 +1919,17 @@ Dim LongArray As Variant   ' Array of longitude rows
 Dim printStr As String
 Dim print_array() As Variant
  
-If IsEmpty(LatCell) Or IsEmpty(LongCell) Or IsError(LatCell) Or IsError(LongCell) Then
+If IsEmpty(latCell) Or IsEmpty(LongCell) Or IsError(latCell) Or IsError(LongCell) Then
     ManLatLong = ""
     Exit Function
     
 ' Get Row lengths for latitude
-ElseIf InStr(LatCell.value, ";") = 0 Then
+ElseIf InStr(latCell.value, ";") = 0 Then
     LatRows = 1
     
 Else
     ' lets also check if the row number the user provided is not too big.
-    LatArray = Split(LatCell.value, ";")
+    LatArray = Split(latCell.value, ";")
     LatRows = UBound(LatArray) + 1
 End If
 
@@ -1329,12 +1949,12 @@ End If
 ' Check that the latitude and longitude inputs have the same amount of rows
 If LatRows > LongRows Or LatRows < LongRows Then
     ManLatLong = "ERROR: CHECK LAT LONG"
-    MsgBox "Error: IT looks like your latitude and longitude in row " & LatCell.row & " doesn't make sense! " & _
+    MsgBox "Error: IT looks like your latitude and longitude in row " & latCell.row & " doesn't make sense! " & _
         "Check to make sure you have the same number of latitude and longitude entries."
     Exit Function
     
 ElseIf LatRows = 1 And LongRows = 1 Then
-    printStr = printStr & LongCell.value & "," & LatCell.value & ",0"
+    printStr = printStr & LongCell.value & "," & latCell.value & ",0"
     ReDim str_array(0 To 1)
     str_array(0) = printStr
     str_array(1) = ""
@@ -1362,7 +1982,7 @@ ManLatLong = printStr
 
 End Function
 
-Private Sub makeLatLonStr(LatCell As Range, _
+Private Sub makeLatLonStr(latCell As Range, _
                                           LongCell As Range, _
                                           XMLCell As Range)
 
@@ -1374,17 +1994,17 @@ Dim LongArray As Variant   ' Array of longitude rows
 Dim printStr As String
 Dim print_array() As Variant
  
-If IsEmpty(LatCell) Or IsEmpty(LongCell) Or IsError(LatCell) Or IsError(LongCell) Then
+If IsEmpty(latCell) Or IsEmpty(LongCell) Or IsError(latCell) Or IsError(LongCell) Then
     'ManLatLong = ""
     Exit Sub
     
 ' Get Row lengths for latitude
-ElseIf InStr(LatCell.value, ";") = 0 Then
+ElseIf InStr(latCell.value, ";") = 0 Then
     LatRows = 1
     
 Else
     ' lets also check if the row number the user provided is not too big.
-    LatArray = Split(LatCell.value, ";")
+    LatArray = Split(latCell.value, ";")
     LatRows = UBound(LatArray) + 1
 End If
 
@@ -1404,12 +2024,12 @@ End If
 ' Check that the latitude and longitude inputs have the same amount of rows
 If LatRows > LongRows Or LatRows < LongRows Then
     'ManLatLong = "ERROR: CHECK LAT LONG"
-    MsgBox "Error: IT looks like your latitude and longitude in row " & LatCell.row & " doesn't make sense! " & _
+    MsgBox "Error: IT looks like your latitude and longitude in row " & latCell.row & " doesn't make sense! " & _
         "Check to make sure you have the same number of latitude and longitude entries."
     Exit Sub
     
 ElseIf LatRows = 1 And LongRows = 1 Then
-    printStr = printStr & LongCell.value & "," & LatCell.value & ",0"
+    printStr = printStr & LongCell.value & "," & latCell.value & ",0"
     ReDim str_array(0 To 1)
     str_array(0) = printStr
     str_array(1) = ""
@@ -1438,219 +2058,11 @@ XMLCell.value = Join(str_array, "")
 End Sub
 
 
-Private Sub RefreshButton()
-
-Dim refreshInfo() As Variant
-refreshInfo = Application.Run("RefreshFormulas")
-
-Dim DiaStr As String
-
-DiaStr = "Your Formulas have been refreshed!" & _
-    vbNewLine & vbNewLine & _
-    "--------------------------------------------------------------------------" & _
-    "--------------------------------------------------------------------------" & _
-    vbNewLine & vbNewLine & _
-    "Formulas Refreshed: " & refreshInfo(0) & _
-    vbNewLine & vbNewLine
-
-If refreshInfo(1) <> "" Then
-    DiaStr = DiaStr & _
-        refreshInfo(1) & _
-        vbNewLine & vbNewLine
-        
-End If
-      
-        
-DiaStr = DiaStr & _
-    "--------------------------------------------------------------------------" & _
-    "--------------------------------------------------------------------------"
-
-
-DialogueForm.DialogueBox.Text = DiaStr
-DialogueForm.Show
-
-
-End Sub
-
-Function RefreshFormulas() As Variant
-
-Set FacSheet = Worksheets("Facility XML")
-
-Dim refreshStr As String
-Dim rowCheck As Integer
-Dim total As Integer
-Dim tabSpace As String
-
-refreshStr = ""  ' Used to build a string which describes the fields that were refreshed
-rowCheck = 0     ' If rowCheck = 0, then a new cell header is created. Otherwise, it isn't!
-total = 0        ' count the total amount of cells refreshed
-tabSpace = "      "
-
-
-startRow = 4
-endRow = FacSheet.Cells(Rows.count, "B").End(xlUp).row + 1
-
-For i = startRow To endRow
-
-    If i > 9 And i < 100 Then
-        tabSpace = "    "
-                
-    ElseIf i > 99 And i < 1000 Then
-        tabSpace = "   "
-        
-    ElseIf i > 999 And i < 10000 Then
-        tabSpace = "  "
-        
-    ElseIf i > 9999 And i < 100000 Then
-    
-        tabSpace = " "
-    
-    End If
-    
-    Dim row As Range
-    Set row = FacSheet.Cells.Range("A" & i, "AD" & i)
-    
-    If Application.WorksheetFunction.CountBlank(row) < 30 Then
-        
-        For Each cell In row.Cells
-            
-            If (cell.Column = 4 Or cell.Column = 5) And (IsError(cell) _
-                Or IsEmpty(cell)) Then
-                
-                cell.Formula = "=FillSystem(B" & cell.row & ")"
-              
-                cell.HorizontalAlignment = xlLeft
-                
-                ' add the cell address the the refreshStr which will be exported
-                If rowCheck = 0 Then
-                    refreshStr = refreshStr & "Row " & cell.row & ": " & tabSpace & cell.Address(False, False)
-                Else
-                    refreshStr = refreshStr & " :: " & cell.Address(False, False)
-                End If
-                    
-                rowCheck = rowCheck + 1
-                    
-            ElseIf cell.Column = 9 And (IsError(cell) _
-                Or IsEmpty(cell)) Then
-                
-                cell.Formula = "=GeomType(J" & cell.row & ")"
-                
-                ' add the cell address the the refreshStr which will be exported
-                If rowCheck = 0 Then
-                    refreshStr = refreshStr & "Row " & cell.row & ": " & tabSpace & cell.Address(False, False)
-                Else
-                    refreshStr = refreshStr & " :: " & cell.Address(False, False)
-                End If
-                
-                rowCheck = rowCheck + 1
-                
-            ElseIf cell.Column = 10 And (IsError(cell) _
-                Or IsEmpty(cell)) Then
-                
-                cell.Formula = "=ManLatLong(K" & cell.row & ", L" & cell.row & ")"
-                
-                
-                ' add the cell address the the refreshStr which will be exported
-                If rowCheck = 0 Then
-                    refreshStr = refreshStr & "Row " & cell.row & ": " & tabSpace & cell.Address(False, False)
-                Else
-                    refreshStr = refreshStr & " :: " & cell.Address(False, False)
-                End If
-                
-                rowCheck = rowCheck + 1
-                
-                
-            ElseIf cell.Column > 14 And (IsError(cell) _
-                Or IsEmpty(cell)) Then
-                
-                cell.Formula = "=FillFacility($N" & cell.row & "," & cell.Address(False, False) & ")"
-                
-                cell.HorizontalAlignment = xlCenter
-                
-                ' add the cell address the the refreshStr which will be exported
-                If rowCheck = 0 Then
-                    refreshStr = refreshStr & "Row " & cell.row & ": " & tabSpace & cell.Address(False, False)
-                Else
-                    refreshStr = refreshStr & " :: " & cell.Address(False, False)
-                End If
-                
-                rowCheck = rowCheck + 1
-                
-                
-                
-            ElseIf cell.Column = 3 And (IsError(cell) _
-                Or IsEmpty(cell)) Then
-                
-                cell.Formula = "=FillFacility($B" & cell.row & "," & cell.Address(False, False) & ")"
-                
-                cell.HorizontalAlignment = xlLeft
-                
-                ' add the cell address the the refreshStr which will be exported
-                If rowCheck = 0 Then
-                    refreshStr = refreshStr & "Row " & cell.row & ": " & tabSpace & cell.Address(False, False)
-                Else
-                    refreshStr = refreshStr & " :: " & cell.Address(False, False)
-                End If
-                
-                rowCheck = rowCheck + 1
-                
-                
-            End If
-            
-            If cell.row > 9 And cell.row < 100 Then
-                tabSpace = "   "
-                
-            ElseIf cell.row > 99 And cell.row < 1000 Then
-                tabSpace = "  "
-            
-            End If
-            
-            If rowCheck = 12 Or rowCheck = 24 Then
-
-                If cell.row < 10 Then
-                    refreshStr = refreshStr & vbNewLine & "                      "
-                ElseIf cell.row > 9 And cell.row < 100 Then
-                    refreshStr = refreshStr & vbNewLine & "                        "
-                ElseIf cell.row > 99 And cell.row < 1000 Then
-                    refreshStr = refreshStr & vbNewLine & "                           "
-                ElseIf cell.row > 999 And cell.row < 10000 Then
-                    refreshStr = refreshStr & vbNewLine & "                              "
-                ElseIf cell.row > 9999 And cell.row < 100000 Then
-                    refreshStr = refreshStr & vbNewLine & "                                 "
-                    
-                End If
-                
-                
-            End If
-            
-        Next cell
-    End If
-    
-    If rowCheck > 0 Then
-        
-        refreshStr = refreshStr & vbNewLine & vbNewLine
-        
-        total = total + rowCheck
-        
-        rowCheck = 0
-        
-    End If
-Next i
-
-Dim refInfo(0 To 1) As Variant
-
-refInfo(0) = total
-refInfo(1) = refreshStr
-
-RefreshFormulas = refInfo
-
-End Function
-
 Sub UpdateFacButton()
     Application.EnableEvents = False
     
     ' create some handles to access the worksheets
-    Set FacSheet = Worksheets("Facility XML")
+    Set facSheet = Worksheets("Facility XML")
     
     ' These values are used to determine starting and ending position for the loops used to read the
     ' facility worksheet
@@ -1663,10 +2075,10 @@ Sub UpdateFacButton()
     startRow = 4
     startCol = 1
     
-    If FacSheet.Cells(Rows.count, "A").End(xlUp).row > FacSheet.Cells(Rows.count, "AD").End(xlUp).row Then
-        endRow = FacSheet.Cells(Rows.count, "A").End(xlUp).row
+    If facSheet.Cells(Rows.count, "A").End(xlUp).row > facSheet.Cells(Rows.count, "AD").End(xlUp).row Then
+        endRow = facSheet.Cells(Rows.count, "A").End(xlUp).row
     Else
-        endRow = FacSheet.Cells(Rows.count, "AD").End(xlUp).row
+        endRow = facSheet.Cells(Rows.count, "AD").End(xlUp).row
     End If
     
     endCol = 30
@@ -1699,10 +2111,10 @@ Sub UpdateFacButton()
             
         End If
     
-        If WorksheetFunction.CountBlank(FacSheet.Range("N" & FacRow, "AC" & FacRow)) = 16 Then
-            CheckFacilities FacSheet.Range("M" & FacRow)
+        If WorksheetFunction.CountBlank(facSheet.Range("N" & FacRow, "AC" & FacRow)) = 16 Then
+            CheckFacilities facSheet.Range("M" & FacRow)
         Else
-            CheckFacilities FacSheet.Range("B" & FacRow)
+            CheckFacilities facSheet.Range("B" & FacRow)
         End If
         
         
@@ -1929,3 +2341,570 @@ Private Sub FacGenInfo()
     End If
 
 End Sub
+
+
+Sub FacilityXML(Optional master As String = "notMaster", _
+                    Optional ByVal docCount As Integer = 0, _
+                    Optional ByVal overFlowCount As Integer = 0, _
+                    Optional ByVal docMax As Integer = 15000, _
+                    Optional ByVal docStr As String = "")
+                                        
+'On Error GoTo XMLFinish
+'On Error Resume Next
+Set facSheet = Worksheets("Facility XML")
+
+Dim docArr() As String
+
+Dim getOS As String
+getOS = Application.OperatingSystem
+
+If master = "Master" Then
+    docArr = Split(docStr, ",")
+    GoTo MasterSkip1
+End If
+
+Application.EnableEvents = False
+Application.ScreenUpdating = False
+ActiveSheet.Unprotect
+
+Close #2
+
+
+'                          ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'                 OPEN XML FILE FOR WRITING, AND DETERMINE THE START AND END CELLS TO BE EXAMINED
+
+' open file location
+Dim dir As String
+dir = Application.ActiveWorkbook.Path
+
+Dim docNum As Double
+Dim facCount As Double
+facCount = facSheet.Cells(Rows.count, "B").End(xlUp).row - 3
+docNum = facCount / docMax
+
+If docNum <= 1 Then
+    docNum = 1
+    docStr = "FacilityXML.xml"
+Else
+    docNum = Application.WorksheetFunction.Ceiling(docNum, 1)
+    docStr = "FacilityXML1.xml"
+    For i = 2 To docNum
+        docStr = docStr & "," & "FacilityXML" & i & ".xml"
+    Next i
+End If
+
+ExportXML.FileDest.Text = dir
+ExportXML.FileName = docStr
+
+DoEvents
+ExportXML.Show
+DoEvents
+
+ProgressForm.ProcessName.Caption = "Exporting XML"
+ProgressForm.ProgressLabel.Width = 0
+ProgressForm.ProgressFrame.Caption = "0" & "%"
+
+DoEvents
+
+docArr = Split(ExportXML.FileName, ",")
+overFlowCount = 0
+
+If UBound(docArr) < 0 Then
+    ReDim docArr(0 To 0)
+    docArr(0) = ""
+End If
+
+If InStr(getOS, "Windows") = 0 Then
+    XMLPath = ExportXML.FileDest.Text & ":" & docArr(docCount)       ' We save the .xml here for Macs
+Else
+    XMLPath = ExportXML.FileDest.Text & "\" & docArr(docCount)      ' Save XML for PC
+End If
+
+If XMLPath = "\" Or XMLPath = ":" Then
+    GoTo XMLFinish
+End If
+
+Open XMLPath For Output As #2
+
+MasterSkip1:
+
+Dim startRow As Integer
+Dim endRow As Long
+
+startRow = 4
+' This will pull cells with formulas and no values, but we can filter those out!
+endRow = facSheet.Cells(Rows.count, "B").End(xlUp).row + 1
+
+Dim skip() As Variant
+ReDim skip(0)
+
+Dim accepted As Integer
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''' BEGIN XML '''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim printStr As String
+If master <> "Master" Then
+    printStr = "<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>" & vbNewLine
+End If
+
+printStr = printStr & "<FacilityTable>"
+Print #2, printStr
+
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''' Write XML '''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Dim TestCell As Range         ' Used to decide if the row is empty or not
+
+' when to progress the progress bar
+' set up progress bar
+Dim progressCount As Long
+Dim progressWhen As Long
+Dim pcntDone As Double
+
+' initialize progress bar values
+progressCount = 0
+progressWhen = endRow * 0.01
+pcntDone = 0
+ProgressForm.ProcessName.Caption = "Exporting Facility XML"
+
+' create variables to deal with attribute fields
+Dim attStr As String
+Dim attArr() As String
+Dim eachAtt() As String
+attStr = ""
+
+Dim oneTab As String
+Dim twoTabs As String
+Dim threeTabs As String
+Dim fourTabs As String
+onTab = vbTab
+twoTabs = vbTab & vbTab
+threeTabs = vbTab & vbTab & vbTab
+fourTabs = vbTab & vbTab & vbTab & vbTab
+fiveTabs = vbTab & vbTab & vbTab & vbTab & vbTab
+
+' This loop will run through all the cells in the XML region of the document.
+Dim row As Long
+row = 4                   ' The first row that holds data
+Do While row < endRow
+
+    If progressCount > progressWhen Then
+        
+        pcntDone = ((row - 4) / (endRow - 3))
+        
+        ProgressForm.ProgressLabel.Width = pcntDone * ProgressForm.MaxWidth.Caption
+        ProgressForm.ProgressFrame.Caption = Round(pcntDone * 100, 0) & "%"
+        
+        DoEvents
+        progressCount = 0
+        
+    End If
+
+    Set TestCell = facSheet.Cells(row, 1) ' This is the first XML cell, which should be filled for any valid entry
+    
+    If Not validFac(row) Then
+    
+        If skip(UBound(skip)) <> Empty Then
+            ReDim Preserve skip(UBound(skip) + 1)
+        End If
+        
+        skip(UBound(skip)) = row
+        GoTo ContinueLoop
+    End If
+    
+    accepted = accepted + 1
+        
+    ' validate the facility row
+    
+    ' Since there IS data for this row, we start a new entry in the XML page
+    printStr = vbTab & "<FacilityRow>" & vbNewLine
+    
+    If Not IsEmpty(facSheet.Range("facility_id").Cells(row)) Then
+        printStr = printStr & twoTabs & "<EXTERNAL_FACILITY_ID>"
+        printStr = printStr & sanitize(facSheet.Range("facility_id").Cells(row))
+        printStr = printStr & "</EXTERNAL_FACILITY_ID>" & vbNewLine
+    End If
+    
+    If Not IsEmpty(facSheet.Range("facility_type").Cells(row)) Then
+        printStr = printStr & twoTabs & "<FACILITY_TYPE>"
+        printStr = printStr & sanitize(facSheet.Range("facility_type").Cells(row))
+        printStr = printStr & "</FACILITY_TYPE>" & vbNewLine
+    End If
+    
+    If Not IsEmpty(facSheet.Range("facility_comp_class").Cells(row)) Then
+        printStr = printStr & twoTabs & "<COMPONENT_CLASS>"
+        printStr = printStr & sanitize(facSheet.Range("facility_comp_class").Cells(row))
+        printStr = printStr & "</COMPONENT_CLASS>" & vbNewLine
+    End If
+    
+    If Not IsEmpty(facSheet.Range("facility_comp").Cells(row)) Then
+        printStr = printStr & twoTabs & "<COMPONENT>"
+        printStr = printStr & sanitize(facSheet.Range("facility_comp").Cells(row))
+        printStr = printStr & "</COMPONENT>" & vbNewLine
+    End If
+    
+    If Not IsEmpty(facSheet.Range("facility_name").Cells(row)) Then
+        printStr = printStr & twoTabs & "<FACILITY_NAME>"
+        printStr = printStr & sanitize(facSheet.Range("facility_name").Cells(row))
+        printStr = printStr & "</FACILITY_NAME>" & vbNewLine
+    End If
+    
+    If Not IsEmpty(facSheet.Range("facility_geom_type").Cells(row)) Then
+        printStr = printStr & twoTabs & "<FEATURE>" & vbNewLine
+        printStr = printStr & threeTabs & "<GEOM_TYPE>"
+        printStr = printStr & sanitize(facSheet.Range("facility_geom_type").Cells(row))
+        printStr = printStr & "</GEOM_TYPE>" & vbNewLine
+        printStr = printStr & threeTabs & "<GEOM>"
+        printStr = printStr & ManLatLong(facSheet.Range("facility_lat").Cells(row), _
+                                                                                facSheet.Range("facility_lon").Cells(row))
+        printStr = printStr & "</GEOM>" & vbNewLine
+        
+        If Not IsEmpty(facSheet.Range("facility_html").Cells(row)) Then
+            printStr = printStr & threeTabs & "<DESCRIPTION>"
+            printStr = printStr & sanitize(facSheet.Range("facility_html").Cells(row))
+            printStr = printStr & "</DESCRIPTION>" & vbNewLine
+        End If
+        
+        printStr = printStr & twoTabs & "</FEATURE>" & vbNewLine
+    End If
+    
+    If Not IsEmpty(facSheet.Range("facility_mbt").Cells(row)) Then
+        printStr = printStr & twoTabs & "<FACILITY_MODEL>"
+        printStr = printStr & sanitize(facSheet.Range("facility_mbt").Cells(row))
+        printStr = printStr & "</FACILITY_MODEL>" & vbNewLine
+        
+        printStr = printStr & twoTabs & "<FRAGILITY>" & vbNewLine
+        If Not IsEmpty(facSheet.Range("facility_grey_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_grey_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_grey_beta").Cells(row)) Then
+            printStr = printStr & threeTabs & "<GREY>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<METRIC>"
+            printStr = printStr & sanitize(facSheet.Range("facility_grey_metric").Cells(row))
+            printStr = printStr & "</METRIC>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<ALPHA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_grey_alpha").Cells(row))
+            printStr = printStr & "</ALPHA>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<BETA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_grey_beta").Cells(row))
+            printStr = printStr & "</BETA>" & vbNewLine
+            
+            printStr = printStr & threeTabs & "</GREY>" & vbNewLine
+        End If
+        
+        If Not IsEmpty(facSheet.Range("facility_green_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_green_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_green_beta").Cells(row)) Then
+            printStr = printStr & threeTabs & "<GREEN>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<METRIC>"
+            printStr = printStr & sanitize(facSheet.Range("facility_green_metric").Cells(row))
+            printStr = printStr & "</METRIC>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<ALPHA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_green_alpha").Cells(row))
+            printStr = printStr & "</ALPHA>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<BETA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_green_beta").Cells(row))
+            printStr = printStr & "</BETA>" & vbNewLine
+            
+            printStr = printStr & threeTabs & "</GREEN>" & vbNewLine
+        End If
+        
+        If Not IsEmpty(facSheet.Range("facility_yellow_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_yellow_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_yellow_beta").Cells(row)) Then
+            printStr = printStr & threeTabs & "<YELLOW>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<METRIC>"
+            printStr = printStr & sanitize(facSheet.Range("facility_yellow_metric").Cells(row))
+            printStr = printStr & "</METRIC>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<ALPHA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_yellow_alpha").Cells(row))
+            printStr = printStr & "</ALPHA>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<BETA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_yellow_beta").Cells(row))
+            printStr = printStr & "</BETA>" & vbNewLine
+            
+            printStr = printStr & threeTabs & "</YELLOW>" & vbNewLine
+        End If
+        
+        If Not IsEmpty(facSheet.Range("facility_orange_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_orange_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_orange_beta").Cells(row)) Then
+            printStr = printStr & threeTabs & "<ORANGE>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<METRIC>"
+            printStr = printStr & sanitize(facSheet.Range("facility_orange_metric").Cells(row))
+            printStr = printStr & "</METRIC>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<ALPHA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_orange_alpha").Cells(row))
+            printStr = printStr & "</ALPHA>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<BETA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_orange_beta").Cells(row))
+            printStr = printStr & "</BETA>" & vbNewLine
+            
+            printStr = printStr & threeTabs & "</ORANGE>" & vbNewLine
+        End If
+        
+        If Not IsEmpty(facSheet.Range("facility_red_metric").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_red_alpha").Cells(row)) And _
+                Not IsEmpty(facSheet.Range("facility_red_beta").Cells(row)) Then
+            printStr = printStr & threeTabs & "<RED>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<METRIC>"
+            printStr = printStr & sanitize(facSheet.Range("facility_red_metric").Cells(row))
+            printStr = printStr & "</METRIC>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<ALPHA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_red_alpha").Cells(row))
+            printStr = printStr & "</ALPHA>" & vbNewLine
+            
+            printStr = printStr & fourTabs & "<BETA>"
+            printStr = printStr & sanitize(facSheet.Range("facility_red_beta").Cells(row))
+            printStr = printStr & "</BETA>" & vbNewLine
+            
+            printStr = printStr & threeTabs & "</RED>" & vbNewLine
+            
+        End If
+        
+        printStr = printStr & twoTabs & "</FRAGILITY>" & vbNewLine
+    End If
+    
+    If Not IsEmpty(facSheet.Range("facility_attributes").Cells(row)) Then
+        attStr = facSheet.Range("facility_attributes").Cells(row)
+        attArr = Split(attStr, "%")
+        
+        printStr = printStr & twoTabs & "<ATTRIBUTE>" & vbNewLine
+        For Each entry In attArr
+        
+            eachAtt = Split(entry, ":")
+            
+            HeadValue = eachAtt(0)
+            eachAtt(0) = ""
+            CellValue = Join(eachAtt, ":")
+            CellValue = Right(CellValue, Len(CellValue) - 1)
+
+            If entry = attArr(0) Then
+                printStr = printStr & threeTabs & _
+                    "<" & HeadValue & ">" & CellValue & "</" & HeadValue & ">"
+            Else
+                 printStr = printStr & vbNewLine & threeTabs & _
+                    "<" & HeadValue & ">" & CellValue & "</" & HeadValue & ">"
+            End If
+        Next entry
+        
+        printStr = printStr & vbNewLine & twoTabs & "</ATTRIBUTE>" & vbNewLine
+    End If
+    
+    ' When finished going through the columns, we close the facility row
+    printStr = printStr & vbTab & "</FacilityRow>"
+
+    Print #2, printStr
+
+    ' count how many entries rows are in the current XML doc
+    overFlowCount = overFlowCount + 1
+
+    ' check if a new XML document should be started
+    If overFlowCount > docMax - 1 Then
+        Print #2, "</FacilityTable>"
+        
+        If master = "Master" Then
+            Print #2, "</Inventory>"
+        End If
+        
+        Close #2
+    
+        docCount = docCount + 1
+        If docCount > UBound(docArr) Then GoTo AfterXML
+        
+        If InStr(getOS, "Windows") = 0 Then
+            XMLPath = ExportXML.FileDest.Text & ":" & docArr(docCount)       ' We save the .xml here for Macs
+        Else
+            XMLPath = ExportXML.FileDest.Text & "\" & docArr(docCount)      ' Save XML for PC
+        End If
+    
+    
+        If XMLPath = "\" Or XMLPath = ":" Then
+            GoTo XMLFinish
+        End If
+    
+        Open XMLPath For Output As #2
+    
+        overFlowCount = 0
+    
+        If row + 1 < endRow And master = "Master" Then
+            ' start the new XML document
+            printStr = "<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>" & vbNewLine & _
+                        "<Inventory>" & vbNewLine & _
+                        "<FacilityTable>"
+               
+            Print #2, printStr
+            
+        ElseIf row + 1 < endRow Then
+            printStr = "<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>" & vbNewLine & _
+                        "<FacilityTable>"
+                        
+            Print #2, printStr
+            
+        Else: GoTo AfterXML
+        
+        End If
+        
+        
+    End If
+    
+    ' The software skips here if the first value in the XML table is blank
+ContinueLoop:
+    progressCount = progressCount + 1
+    row = row + 1
+Loop
+
+ProgressForm.ProgressLabel.Width = ProgressForm.MaxWidth.Caption
+ProgressForm.ProgressFrame.Caption = "100" & "%"
+
+' Close the root XML tag
+Print #2, "</FacilityTable>"
+
+
+AfterXML:
+
+If master = "Master" Then GoTo MasterSkip3
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''' Make Error Statement ''''''''''''''''''''''''''''''''''''''''
+Dim errStr As String
+errStr = MakeErrStr(skip, "Facility")
+
+Dim DiaStr As String
+
+DiaStr = "Your XML worksheet has been created. It's file location is: " & _
+    vbNewLine & vbNewLine
+    
+For Each doc In docArr
+    If InStr(getOS, "Windows") = 0 Then
+        DiaStr = DiaStr & ExportXML.FileDest.Text & ":" & doc & vbNewLine
+    Else
+        DiaStr = DiaStr & ExportXML.FileDest.Text & "\" & doc & vbNewLine
+    End If
+Next doc
+
+
+DiaStr = DiaStr & vbNewLine & vbNewLine & _
+    "Facilities Accepted: " & accepted
+    
+If errStr <> "" Then
+    DiaStr = DiaStr & _
+        vbNewLine & _
+        "Facilities Declined: " & UBound(skip) - LBound(skip) + 1 & _
+        vbNewLine & vbNewLine & _
+        "--------------------------------------------------------------------------" & vbNewLine & _
+        "--------------------------------------------------------------------------"
+          
+            
+    DiaStr = DiaStr & _
+        vbNewLine & vbNewLine & _
+        "Errors: "
+    
+    If errStr <> "" Then
+    
+        DiaStr = DiaStr & _
+            vbNewLine & vbNewLine & _
+            "Any facilities that you attempted to include in your XML document that were rejected are highlighted " & _
+            "in blue." & _
+            vbNewLine & vbNewLine & _
+            "The following cells contain invalid entries and are stopping some facilities from being included in the XML document: " & _
+            vbNewLine & vbNewLine & _
+            errStr
+
+    Else
+        DiaStr = DiaStr & vbNewLine & vbNewLine & _
+            "All facility information has been converted to XML."
+    
+    End If
+End If
+
+
+'Worksheets("Dialogue").Activate
+'Set DialogBox = DiaSheet.Label21
+
+'DialogBox.Caption = DiaStr
+Unload ProgressForm
+
+DialogueForm.DialogueBox.Text = DiaStr
+DialogueForm.Show
+
+' close the paths to the XML document and the text Dialogue
+Close #2
+
+' If the user exits the export box, we don't want to export the info!
+XMLFinish:
+If XMLPath = "\" Or XMLPath = ":" Or Err Then
+    If Err Then
+        MsgBox "Your XML document was not exported due to:" & _
+            vbNewLine & _
+            Err.Description
+    Else
+        MsgBox "Your XML document was not exported"
+    End If
+        
+End If
+
+Application.Run "protectWorkbook"
+Application.ScreenUpdating = True
+Application.EnableEvents = True
+MasterSkip3:
+
+End Sub
+
+Public Function sanitize(ByVal str As String)
+
+    str = replace(str, "&", "&amp;")
+    str = replace(str, "<", "&lt;")
+    str = replace(str, ">", "&gt;")
+    str = replace(str, "'", "&apos;")
+
+    Dim allowed As String
+    allowed = "[-;:?!_,.@#$%^&*=+~{}()/\ a-zA-Z0-9]"
+    
+    If Not str Like WorksheetFunction.Rept(allowed, Len(str)) Then
+        Dim char_ As String
+        For count = 1 To Len(str)
+            char_ = Mid(str, count, 1)
+            If Not char_ Like allowed Then
+                str = replace(str, char_, "*")
+            End If
+        Next
+    End If
+    
+
+    sanitize = str
+End Function
+
+Public Function validFac(ByVal row As Integer)
+    Set facSheet = Worksheets("Facility XML")
+    validFac = Not IsEmpty(facSheet.Range("facility_id").Cells(row)) And _
+                            Not IsEmpty(facSheet.Range("facility_type").Cells(row)) And _
+                            Not IsEmpty(facSheet.Range("facility_comp_class").Cells(row)) And _
+                            Not IsEmpty(facSheet.Range("facility_comp").Cells(row)) And _
+                            Not IsEmpty(facSheet.Range("facility_name").Cells(row)) And _
+                            Not IsEmpty(facSheet.Range("facility_geom_type").Cells(row))
+End Function
+
+Public Function GetStrippedText(txt As String) As String
+    Dim regEx As Object
+
+    Set regEx = CreateObject("vbscript.regexp")
+    regEx.Pattern = "[^\u0000-\u007F]"
+    GetStrippedText = regEx.replace(txt, "")
+
+End Function
+
